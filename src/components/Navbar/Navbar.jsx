@@ -4,10 +4,15 @@ import { HiOutlineSearch } from "react-icons/hi";
 import { AiOutlineMenu } from "react-icons/ai";
 import { Link, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
+import Offcanvas from "react-bootstrap/Offcanvas";
+import { GrFormClose } from "react-icons/gr";
+import OffcanvasBgImg from "../../assets/images/become-a-seller-bg.png";
+import PlayIcon from "../../assets/images/play-icon.png";
 
 export const Navbar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { pathname } = useLocation();
+  const [menuOpen, setMenuOpen] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -89,12 +94,56 @@ export const Navbar = () => {
           </ul>
         </div>
       ) : (
-        <div className="home-page-menu-icon">
+        <div
+          className="home-page-menu-icon"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
           <div className="top line"></div>
           <div className="mid line"></div>
           <div className="bottom line"></div>
         </div>
       )}
+
+      <Offcanvas
+        show={menuOpen}
+        onHide={() => setMenuOpen(false)}
+        placement={"top"}
+      >
+        <div className="offcanvas-header">
+          <img src={Logo} alt="logo" className="logo-img" />
+          <GrFormClose className="icon" onClick={() => setMenuOpen(false)} />
+        </div>
+        <Offcanvas.Body className="offcanvas-body">
+          <div className="offcanvas-inner">
+            <div className="image">
+              <img src={OffcanvasBgImg} alt="" className="main-img" />
+              <img src={PlayIcon} alt="" className="play-icon" />
+            </div>
+            <div className="options">
+              <ul>
+                <Link className="underline-none">
+                  <li>shop</li>
+                </Link>
+                <Link className="underline-none">
+                  <li>about us</li>
+                </Link>
+                <Link className="underline-none">
+                  <li>contact us</li>
+                </Link>
+                <Link className="underline-none">
+                  <li>become a seller</li>
+                </Link>
+                <Link className="underline-none">
+                  <li>become a freelancer</li>
+                </Link>
+                <Link className="underline-none">
+                  <li>build custom art</li>
+                </Link>
+              </ul>
+            </div>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
     </div>
   );
 };
