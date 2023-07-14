@@ -9,6 +9,15 @@ import { GrFormClose } from "react-icons/gr";
 import OffcanvasBgImg from "../../assets/images/become-a-seller-bg.png";
 import PlayIcon from "../../assets/images/play-icon.png";
 
+const menuOptions = [
+  { title: "shop", url: "/shop" },
+  { title: "about us", url: "/" },
+  { title: "contact us", url: "/" },
+  { title: "become a seller", url: "/" },
+  { title: "become a freelancer", url: "/" },
+  { title: "build custom art", url: "/" },
+];
+
 export const Navbar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { pathname } = useLocation();
@@ -70,7 +79,7 @@ export const Navbar = () => {
       {pathname !== "/" ? (
         <div className="options">
           <ul>
-            <Link className="underline-none">
+            <Link to={'/shop'} className="underline-none">
               <li>shop</li>
             </Link>
             <Link className="underline-none">
@@ -121,24 +130,13 @@ export const Navbar = () => {
             </div>
             <div className="options">
               <ul>
-                <Link className="underline-none">
-                  <li>shop</li>
-                </Link>
-                <Link className="underline-none">
-                  <li>about us</li>
-                </Link>
-                <Link className="underline-none">
-                  <li>contact us</li>
-                </Link>
-                <Link className="underline-none">
-                  <li>become a seller</li>
-                </Link>
-                <Link className="underline-none">
-                  <li>become a freelancer</li>
-                </Link>
-                <Link className="underline-none">
-                  <li>build custom art</li>
-                </Link>
+                {menuOptions.map((option) => {
+                  return (
+                    <Link to={option.url} className="underline-none">
+                      <li>{option.title}</li>
+                    </Link>
+                  );
+                })}
               </ul>
             </div>
           </div>

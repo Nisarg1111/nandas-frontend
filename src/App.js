@@ -5,6 +5,7 @@ import { Navbar } from "./components/Navbar/Navbar";
 import { Login } from "./pages/Login/Login";
 import { Home } from "./pages/Home/Home";
 import { Footer } from "./components/Footer/Footer";
+import { Shop } from "./pages/Shop/Shop";
 
 function App() {
   return (
@@ -35,6 +36,16 @@ function App() {
               <>
                 <Navbar />
                 <Home />
+                <Footer/>
+              </>
+            }
+          />
+          <Route
+            path="/shop"
+            element={
+              <>
+                <Navbar />
+                <Shop />
                 <Footer/>
               </>
             }

@@ -8,7 +8,7 @@ export const ProductItem = ({ item }) => {
   const [liked, setLiked] = useState(false);
   return (
     <div className="art slider-item">
-      <img src={item} alt="" className="slider-img" />
+      <img src={item} alt="product-image" className="slider-img" />
       <div className="details">
         <div className="flex-between">
           <span>Structural Landscape</span>
