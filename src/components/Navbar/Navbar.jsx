@@ -12,7 +12,7 @@ import PlayIcon from "../../assets/images/play-icon.png";
 export const Navbar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
   const { pathname } = useLocation();
-  const [menuOpen, setMenuOpen] = useState(true);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {

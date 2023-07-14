@@ -183,6 +183,7 @@
   .offcanvas-header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     .logo-img {
       width: 5rem;
       height: 5rem;
@@ -197,6 +198,7 @@
     .offcanvas-inner {
       display: flex;
       justify-content: space-between;
+      align-items: center;
       gap: 1rem;
       @media (max-width: 1092px) {
         justify-content: flex-end;
