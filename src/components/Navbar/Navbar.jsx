@@ -79,7 +79,7 @@ export const Navbar = () => {
       {pathname !== "/" ? (
         <div className="options">
           <ul>
-            <Link to={'/shop'} className="underline-none">
+            <Link to={"/shop"} className="underline-none">
               <li>shop</li>
             </Link>
             <Link className="underline-none">
@@ -132,7 +132,11 @@ export const Navbar = () => {
               <ul>
                 {menuOptions.map((option) => {
                   return (
-                    <Link to={option.url} className="underline-none">
+                    <Link
+                      to={option.url}
+                      className="underline-none"
+                      onClick={() => setMenuOpen(false)}
+                    >
                       <li>{option.title}</li>
                     </Link>
                   );
