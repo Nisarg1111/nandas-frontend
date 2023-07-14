@@ -32,21 +32,21 @@ export const Home = () => {
       breakpoint: 1190,
       settings: {
         slidesToShow: 5,
-        slidesToScroll: 3,
+        slidesToScroll: 2,
       },
     },
     {
       breakpoint: 990,
       settings: {
         slidesToShow: 4,
-        slidesToScroll: 3,
+        slidesToScroll: 2,
       },
     },
     {
       breakpoint: 520,
       settings: {
         slidesToShow: 3,
-        slidesToScroll: 3,
+        slidesToScroll: 1,
       },
     },
     {
@@ -67,10 +67,11 @@ export const Home = () => {
           slidesToScroll={2}
           slidesToShow={5}
           indicators={false}
+          transitionDuration={600}
           responsive={responsiveSettings}
           prevArrow={<IoIosArrowBack className="slick-prev" />}
           nextArrow={<IoIosArrowForward className="slick-next" />}
-          autoplay={false}
+          autoplay={true}
         >
           {artsImages.map((item) => {
             return <ProductCard item={item} />;
@@ -111,10 +112,11 @@ export const Home = () => {
             slidesToScroll={2}
             slidesToShow={5}
             indicators={false}
+            transitionDuration={600}
             responsive={responsiveSettings}
             prevArrow={<IoIosArrowBack className="slick-prev" />}
             nextArrow={<IoIosArrowForward className="slick-next" />}
-            autoplay={false}
+            autoplay={true}
           >
             {artsImages.map((item) => {
               return <ProductItem item={item} />;
