@@ -4,10 +4,10 @@
   display: grid;
   grid-template-columns: repeat(1, 1fr);
   gap: 0.3rem;
-  font-size: 1.14286rem;
+  font-size: 1.2rem;
   margin-bottom: 0.8rem;
   .question {
-    padding: 0.5rem;
+    padding: 0.7rem;
     background-color: $color-secondary;
     display: flex;
     justify-content: space-between;
@@ -17,7 +17,7 @@
     }
   }
   #accordion-description {
-    padding: 0.5rem;
+    padding: 0.7rem;
     background-color: $color-secondary;
     border-left: 2px solid #6b6f80;
     padding-left: 0.5rem;
