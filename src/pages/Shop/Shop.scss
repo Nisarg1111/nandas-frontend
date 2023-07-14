@@ -23,6 +23,9 @@
       color: $color-secondary;
       display: flex;
       gap: 0.8rem;
+      @media (min-width: 975px) {
+        display: none;
+      }
     }
   }
   .products-container {
