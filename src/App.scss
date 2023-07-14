@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,200;1,300;1,400;1,500;1,600;1,700&display=swap");
+
+$color-primary: #000;
+$color-secondary: #fff;
+
+*,
+*::after,
+*::before {
+  margin: 0;
+  padding: 0;
+  box-sizing: inherit;
+  font-family: "Crimson Pro", serif;
+}
+
+body {
+  box-sizing: border-box;
+}
+
+html {
+  // 1rem = 14px.
+  font-size: 87.5%;
+}
+
+@media only screen and (max-width: 600px) {
+  html {
+    font-size: 75%;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  scroll-behavior: smooth;
+}
+
+::-webkit-scrollbar-thumb {
+  border-radius: 4px;
+  background-color: $color-primary;
+}
+
+.slick-prev,
+.slick-next {
+  color: $color-primary;
+  font-size: 2rem !important;
+  border-radius: 50%;
+  cursor: pointer;
+  width: 2.5rem;
+  height: 2.5rem;
+  z-index: 50;
+  transition: 0.5s ease-out;
+  position: absolute;
+  top: 50%;
+  &:hover {
+    background-color: #fff;
+    color: $color-primary;
+  }
+}
+.react-slideshow-container {
+  position: relative;
+}
+
+.slick-prev {
+  margin-left: 4rem;
+  left: 4rem;
+}
+.slick-next {
+  right: 4rem;
+  margin-right: 4rem;
+}
+
+.react-slideshow-container .nav {
+  top: 12rem;
+  @media (min-width: 600px) {
+    top: 15rem;
+  }
+}
+
+@media only screen and (max-width: 500px) {
+  .slick-next,
+  .slick-arrow,
+  .slick-prev {
+    display: none !important;
+  }
+}
+
+@mixin buttonStyles() {
+  padding: 0.5rem 1rem;
+  text-transform: capitalize;
+  border: 1px solid $color-primary;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+
+.underline-none {
+  text-decoration: none;
+}
+
+.flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
