@@ -1,5 +1,6 @@
 export const initialState = {
   userLoggedIn: sessionStorage.getItem("token") ? true : false,
+  showProfileOptions: false,
 };
 
 function reducer(state, action) {
@@ -9,6 +10,11 @@ function reducer(state, action) {
       return {
         ...state,
         userLoggedIn: action.status,
+      };
+    case "PROFILE_OPTIONS_VIEW":
+      return {
+        ...state,
+        showProfileOptions: action.status,
       };
     default:
       return state;

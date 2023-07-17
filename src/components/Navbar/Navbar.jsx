@@ -8,6 +8,8 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { GrFormClose } from "react-icons/gr";
 import OffcanvasBgImg from "../../assets/images/become-a-seller-bg.png";
 import PlayIcon from "../../assets/images/play-icon.png";
+import { PiCaretDownBold } from "react-icons/pi";
+import { useStateValue } from "../../StateProvider";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -20,8 +22,10 @@ const menuOptions = [
 
 export const Navbar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
+  const [{ showProfileOptions }, dispatch] = useStateValue();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userLoggedIn, setUserLoggedIn] = useState(true);
 
   useEffect(() => {
     const handleResize = () => {
@@ -94,12 +98,35 @@ export const Navbar = () => {
             <Link className="underline-none">
               <li>contact us</li>
             </Link>
-            <Link to={"/login"}>
-              <button className="btn-secondary button">log in</button>
-            </Link>
-            <Link to={"/signup"}>
-              <button className="btn-primary button">sign up</button>
-            </Link>
+            {pathname !== "/signup" && pathname !== "/login" ? (
+              <li>
+                <div
+                  className="profile"
+                  onClick={() =>
+                    dispatch({
+                      type: "PROFILE_OPTIONS_VIEW",
+                      status: !showProfileOptions,
+                    })
+                  }
+                >
+                  <img
+                    src="https://img.freepik.com/free-icon/user_318-159711.jpg"
+                    alt="profile"
+                  />
+                  Pranav
+                  <PiCaretDownBold className="icon" />
+                </div>
+              </li>
+            ) : (
+              <>
+                <Link to={"/login"}>
+                  <button className="btn-secondary button">log in</button>
+                </Link>
+                <Link to={"/signup"}>
+                  <button className="btn-primary button">sign up</button>
+                </Link>
+              </>
+            )}
           </ul>
         </div>
       ) : (

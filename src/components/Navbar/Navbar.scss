@@ -81,7 +81,7 @@
     gap: 1rem;
     align-items: center;
     justify-content: space-between;
-
+    position: relative;
     ul {
       display: flex;
       list-style: none;
@@ -93,6 +93,18 @@
         text-decoration: none;
         color: $color-primary;
         text-transform: uppercase;
+        .profile {
+          display: flex;
+          align-items: center;
+          gap: 0.3rem;
+          cursor: pointer;
+          img {
+            width: 2.5rem;
+            height: 2.5rem;
+            object-fit: cover;
+            border-radius: 50%;
+          }
+        }
       }
     }
     .button {

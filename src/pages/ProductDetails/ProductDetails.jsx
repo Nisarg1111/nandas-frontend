@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ProductDetails.scss";
 import { PiCaretRight, PiCaretLeft } from "react-icons/pi";
 import artImage from "../../assets/arts/art (3).png";
@@ -17,6 +17,7 @@ import { Accordion } from "../Home/components/Accordion/Accordion";
 
 export const ProductDetails = () => {
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
   const imagesArr = [
     artImage,
     artImage2,
@@ -125,8 +126,18 @@ export const ProductDetails = () => {
           <h2>₹1,85,323</h2>
           <p>EMI starts at ₹6045/month.</p>
           <div className="buttons">
-            <button className="btn-secondary">add to bag</button>
-            <button className="btn-primary">buy now</button>
+            <button
+              className="btn-secondary"
+              onClick={() => navigate("/checkout")}
+            >
+              add to bag
+            </button>
+            <button
+              className="btn-primary"
+              onClick={() => navigate("/checkout")}
+            >
+              buy now
+            </button>
           </div>
           <button className="btn-secondary">Rent from ₹6045/Month</button>
           <div className="delivery-input">
