@@ -15,6 +15,7 @@ import GridImg1 from "../../assets/images/become-a-seller-bg.png";
 import GridImg2 from "../../assets/images/become-a-freelancer-bg.png";
 import PlayIcon from "../../assets/images/play-icon.png";
 import { Accordion } from "./components/Accordion/Accordion";
+import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
 
 const artsImages = [art2, art3, art4, art5, art7, art2, art3, art4, art5, art7];
 
@@ -105,25 +106,8 @@ export const Home = () => {
           </div>
         </div>
       </section>
-      <section className="popular-artwork">
-        <h2>Popular Artwork</h2>
-        <div className="slider">
-          <Slide
-            slidesToScroll={2}
-            slidesToShow={5}
-            indicators={false}
-            transitionDuration={600}
-            responsive={responsiveSettings}
-            prevArrow={<IoIosArrowBack className="slick-prev" />}
-            nextArrow={<IoIosArrowForward className="slick-next" />}
-            autoplay={true}
-          >
-            {artsImages.map((item) => {
-              return <ProductItem item={item} />;
-            })}
-          </Slide>
-        </div>
-      </section>
+
+      <PopularArtworks />
 
       <section className="grid-2-sections">
         <div className="grid-box">

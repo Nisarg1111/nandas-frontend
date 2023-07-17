@@ -42,22 +42,6 @@
     width: fit-content;
     @include buttonStyles();
   }
-  .btn-primary {
-    background-color: $color-primary;
-    color: $color-secondary;
-    &:hover {
-      background-color: #3f3f3f;
-      color: $color-secondary;
-    }
-  }
-  .btn-secondary {
-    background-color: $color-secondary;
-    color: $color-primary;
-    &:hover {
-      color: $color-secondary;
-      background-color: #3f3f3f;
-    }
-  }
   .logo-and-search {
     display: flex;
     align-items: center;
@@ -239,7 +223,10 @@
             color: $color-primary;
             font-size: 3rem;
             text-transform: capitalize;
-            &:hover{
+            @media (max-width: 370px) {
+              font-size: 2rem;
+            }
+            &:hover {
               color: #52382b;
               text-decoration: underline;
             }

@@ -101,3 +101,22 @@ html {
   align-items: center;
   width: 100%;
 }
+
+.btn-primary {
+  background-color: $color-primary;
+  color: $color-secondary;
+  @include buttonStyles();
+  &:hover {
+    background-color: #3f3f3f;
+    color: $color-secondary;
+  }
+}
+.btn-secondary {
+  background-color: $color-secondary;
+  color: $color-primary;
+  @include buttonStyles();
+  &:hover {
+    color: $color-secondary;
+    background-color: #3f3f3f;
+  }
+}

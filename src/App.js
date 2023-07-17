@@ -6,6 +6,7 @@ import { Login } from "./pages/Login/Login";
 import { Home } from "./pages/Home/Home";
 import { Footer } from "./components/Footer/Footer";
 import { Shop } from "./pages/Shop/Shop";
+import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
 
 function App() {
   return (
@@ -36,7 +37,7 @@ function App() {
               <>
                 <Navbar />
                 <Home />
-                <Footer/>
+                <Footer />
               </>
             }
           />
@@ -46,7 +47,17 @@ function App() {
               <>
                 <Navbar />
                 <Shop />
-                <Footer/>
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/product-details"
+            element={
+              <>
+                <Navbar />
+                <ProductDetails />
+                <Footer />
               </>
             }
           />

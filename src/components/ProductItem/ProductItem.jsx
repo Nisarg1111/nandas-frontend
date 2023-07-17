@@ -3,12 +3,19 @@ import TickIcon from "../../assets/images/tick-bg-blue.png";
 import "./ProductItem.scss";
 import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
+import { useNavigate } from "react-router";
 
 export const ProductItem = ({ item }) => {
   const [liked, setLiked] = useState(false);
+  const navigate = useNavigate();
   return (
     <div className="art slider-item">
-      <img src={item} alt="product-image" className="slider-img" />
+      <img
+        onClick={() => navigate("/product-details")}
+        src={item}
+        alt="product-image"
+        className="slider-img"
+      />
       <div className="details">
         <div className="flex-between">
           <span>Structural Landscape</span>
