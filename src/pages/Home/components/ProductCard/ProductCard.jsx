@@ -3,17 +3,19 @@ import TickIcon from "../../../../assets/images/tick-bg-blue.png";
 import "./ProductCard.scss";
 import { useState } from "react";
 import { AiOutlineHeart } from "react-icons/ai";
+import { useNavigate } from "react-router";
 
 export const ProductCard = ({ item }) => {
   const [liked, setLiked] = useState(false);
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate()
   return (
     <div
       className="art slider-item"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <img src={item} alt="" className="slider-img" />
+      <img onClick={()=>navigate('/product-details')} src={item} alt="" className="slider-img" />
       {hovered && (
         <div className="details">
           <div className="flex-between">
