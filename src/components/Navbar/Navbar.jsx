@@ -40,24 +40,13 @@ export const Navbar = () => {
   }, []);
 
   const customStyles = {
-    borderBottom: "1px solid #c2c2c2",
-    backgroundColor: pathname === "/" && "#fff",
-    gridTemplateColumns: isSmallScreen ? "1fr" : "",
+    borderBottom: pathname !== "/" ? "1px solid #c2c2c2" : "",
+    backgroundColor: pathname === "/" && "#fffbf6",
+    gridTemplateColumns: pathname === "/" ? "1fr 1fr" : undefined,
   };
 
   return (
-    <div
-      className="navbar-main"
-      style={
-        pathname !== "/"
-          ? customStyles
-          : isSmallScreen && pathname === "/"
-          ? { borderBottom: "1px solid #c2c2c2" }
-          : pathname === "/"
-          ? { backgroundColor: "#fffbf6" }
-          : undefined
-      }
-    >
+    <div className="navbar-main" style={customStyles}>
       {pathname !== "/" && (
         <div className="buttons sm-view-btns">
           <Link to={"/login"}>
