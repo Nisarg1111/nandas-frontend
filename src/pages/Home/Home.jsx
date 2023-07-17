@@ -51,7 +51,7 @@ export const Home = () => {
       },
     },
     {
-      breakpoint: 350,
+      breakpoint: 250,
       settings: {
         slidesToShow: 2.25,
         slidesToScroll: 1,

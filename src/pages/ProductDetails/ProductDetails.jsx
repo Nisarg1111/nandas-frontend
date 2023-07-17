@@ -19,17 +19,18 @@ export const ProductDetails = () => {
   const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
   const imagesArr = [
-    artImage,
     artImage2,
+    artImage,
     artImage1,
-    artImage,
     artImage2,
+    artImage,
     artImage1,
-    artImage,
     artImage2,
+    artImage,
     artImage1,
-    artImage,
     artImage2,
+    artImage,
+    artImage1,
   ];
   const [currentSlide, setCurrentSlide] = useState(0);
   const changeCurrentSlide = (type) => {
