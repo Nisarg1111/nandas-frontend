@@ -1,20 +1,25 @@
 import { Link } from "react-router-dom";
 import "./Checkout.scss";
 import { PiCaretRight } from "react-icons/pi";
+import { BiShield } from "react-icons/bi";
 import ArtImg1 from "../../assets/arts/art (4).png";
 import ArtImg2 from "../../assets/arts/art (7).png";
+import OrderSuccessImg from "../../assets/images/green-bg-success.png";
 import { useState } from "react";
+import { Modal } from "react-bootstrap";
 
 export const Checkout = () => {
   const arts = [ArtImg1, ArtImg2];
   const [editOpen, setEditOpen] = useState(false);
-  //   const [showProtectArtModal, setShowProtectArtModel] = useState(false);
-  //   const placeOrder = () => {
-  //     setShowProtectArtModel(true);
-  //     setTimeout(() => {
-  //       setShowProtectArtModel(false);
-  //     }, 2000);
-  //   };
+  const [showProtectArtModal, setShowProtectArtModel] = useState(false);
+  const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
+
+  const placeOrder = () => {
+    setShowOrderSuccessModal(true);
+    setTimeout(() => {
+      setShowOrderSuccessModal(false);
+    }, 2000);
+  };
   return (
     <div className="main-container">
       <div className="routes">
@@ -121,7 +126,14 @@ export const Checkout = () => {
                     <p>
                       Lorem ipsum dolor sit amet consectetur adipisicing elit.
                       Tempore vel similique quasi illo nulla mollitia, eos odio.
-                      <span className="link">Learn More</span>
+                      <span
+                        className="link"
+                        onClick={() =>
+                          setShowProtectArtModel(!showProtectArtModal)
+                        }
+                      >
+                        Learn More
+                      </span>
                     </p>
                     <span className="remove">Remove</span>
                   </div>
@@ -153,10 +165,63 @@ export const Checkout = () => {
               </div>
             </div>
             <span className="link">Explore EMI Option</span>
-            <button className="btn-primary">Pay ₹1,85,323</button>
+            <button onClick={placeOrder} className="btn-primary">
+              Pay ₹1,85,323
+            </button>
           </div>
         </div>
       </div>
+      <ProtectYourArtModal
+        show={showProtectArtModal}
+        onHide={() => setShowProtectArtModel(false)}
+      />
+      <OrderSuccessModal
+        show={showOrderSuccessModal}
+        onHide={() => setShowOrderSuccessModal(false)}
+      />
     </div>
   );
 };
+
+function ProtectYourArtModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="sm"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Body className="checkout-modal">
+        <BiShield className="icon" />
+        <h4>Protect your Art</h4>
+        <h5>From ₹6045/mo.</h5>
+        <p>
+          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Expedita
+          consequatur excepturi distinctio laudantium quos recusandae rerum non
+          optio, quae, est similique enim, molestiae id ex doloribus numquam
+          harum illum aliquam?
+        </p>
+        <h4>Have more questions?</h4>
+        <span>+91 9547565652</span>
+      </Modal.Body>
+    </Modal>
+  );
+}
+
+function OrderSuccessModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="sm"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Body className="checkout-modal">
+        <img src={OrderSuccessImg} alt="" />
+        <h4>Order placed, thank you!</h4>
+        <p>Confirmation will be sent to your email.</p>
+        <h4>Delivery date: Feb 18, 2022</h4>
+      </Modal.Body>
+    </Modal>
+  );
+}

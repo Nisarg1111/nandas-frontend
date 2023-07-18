@@ -159,7 +159,7 @@ function RentalInfoModal(props) {
       aria-labelledby="contained-modal-title-vcenter"
       centered
     >
-      <Modal.Body>
+      <Modal.Body className="rental-modal-body">
         <h4>Art Rentals</h4>
         <p>
           Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
