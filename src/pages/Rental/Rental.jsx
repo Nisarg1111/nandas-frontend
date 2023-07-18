@@ -1,20 +1,16 @@
 import { Link } from "react-router-dom";
-import "./Checkout.scss";
+import "./Rental.scss";
 import { PiCaretRight } from "react-icons/pi";
 import ArtImg1 from "../../assets/arts/art (4).png";
 import ArtImg2 from "../../assets/arts/art (7).png";
 import { useState } from "react";
+import { AiOutlineInfoCircle } from "react-icons/ai";
+import { Modal } from "react-bootstrap";
 
-export const Checkout = () => {
-  const arts = [ArtImg1, ArtImg2];
+export const Rental = () => {
+  const arts = [ArtImg1];
   const [editOpen, setEditOpen] = useState(false);
-  //   const [showProtectArtModal, setShowProtectArtModel] = useState(false);
-  //   const placeOrder = () => {
-  //     setShowProtectArtModel(true);
-  //     setTimeout(() => {
-  //       setShowProtectArtModel(false);
-  //     }, 2000);
-  //   };
+  const [showRentalInfo, setShowRentalInfo] = useState(false);
   return (
     <div className="main-container">
       <div className="routes">
@@ -30,7 +26,7 @@ export const Checkout = () => {
           Structural Landscape
         </Link>
         <PiCaretRight className="icon" />
-        <Link className="underline-none">Checkout</Link>
+        <Link className="underline-none">Your Rental</Link>
       </div>
       <div className="checkout-grid">
         <div className="form-side">
@@ -85,7 +81,13 @@ export const Checkout = () => {
           )}
         </div>
         <div className="summary">
-          <h1>Order Summary</h1>
+          <h1>
+            Your Rental{" "}
+            <AiOutlineInfoCircle
+              onClick={() => setShowRentalInfo(!showRentalInfo)}
+              className="icon"
+            />
+          </h1>
           <div className="order-details">
             {arts.map((product) => {
               return (
@@ -106,29 +108,16 @@ export const Checkout = () => {
                           </select>
                         </div>
                         <div>
-                          <span>₹1,85,323</span>
-                          <p>₹6045/month with EMI</p>
+                          <span className="amt">₹6045/month</span>
                         </div>
                       </div>
                       <div className="remove">Remove</div>
                     </div>
                   </div>
                   <hr />
-                  <div className="art-protection">
-                    <h3>Protect your Art</h3>
-                    <h4>₹6900.00</h4>
-                    <hr />
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Tempore vel similique quasi illo nulla mollitia, eos odio.
-                      <span className="link">Learn More</span>
-                    </p>
-                    <span className="remove">Remove</span>
-                  </div>
                 </div>
               );
             })}
-            <hr />
             <div className="flex-between">
               <span>Sub Total</span>
               <span>₹1,85,323</span>
@@ -145,18 +134,52 @@ export const Checkout = () => {
             <div className="flex-between">
               <div>
                 <h4>Total</h4>
-                <span>Monthly Payment</span>
               </div>
               <div>
-                <h4>₹3,76,691</h4>
-                <span>₹6045/month with EMI</span>
+                <h4>₹6045/month</h4>
               </div>
             </div>
-            <span className="link">Explore EMI Option</span>
-            <button className="btn-primary">Pay ₹1,85,323</button>
+            <button className="btn-primary">Pay ₹6045/month</button>
           </div>
         </div>
       </div>
+      <RentalInfoModal
+        show={showRentalInfo}
+        onHide={() => setShowRentalInfo(false)}
+      />
     </div>
   );
 };
+
+function RentalInfoModal(props) {
+  return (
+    <Modal
+      {...props}
+      size="sm"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Body>
+        <h4>Art Rentals</h4>
+        <p>
+          Cras mattis consectetur purus sit amet fermentum. Cras justo odio,
+          dapibus ac facilisis in, egestas eget quam. Morbi leo risus, porta ac
+          consectetur ac, vestibulum at eros.
+        </p>
+        <ul>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste quod,
+          </li>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste quod,
+          </li>
+          <li>
+            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Iste quod,
+          </li>
+        </ul>
+        <h4>Have more questions?</h4>
+        <span>+91 9547565652</span>
+      </Modal.Body>
+    </Modal>
+  );
+}

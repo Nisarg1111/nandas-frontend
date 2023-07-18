@@ -55,6 +55,7 @@
         .remember-me {
           display: flex;
           gap: 0.5rem;
+          align-items: center;
           p {
             color: $color-primary;
           }

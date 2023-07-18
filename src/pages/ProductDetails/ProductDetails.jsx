@@ -140,7 +140,9 @@ export const ProductDetails = () => {
               buy now
             </button>
           </div>
-          <button className="btn-secondary">Rent from ₹6045/Month</button>
+          <button onClick={() => navigate("/rental")} className="btn-secondary">
+            Rent from ₹6045/Month
+          </button>
           <div className="delivery-input">
             <label htmlFor="">Check Delivery Dates</label>
             <div className="input-box">

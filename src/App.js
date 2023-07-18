@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { ProfileOptions } from "./components/ProfileOptions/ProfileOptions";
 import { Checkout } from "./pages/Checkout/Checkout";
 import { useStateValue } from "./StateProvider";
+import { Rental } from "./pages/Rental/Rental";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -87,6 +88,16 @@ function App() {
               <>
                 <Navbar />
                 <Checkout />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/rental"
+            element={
+              <>
+                <Navbar />
+                <Rental />
                 <Footer />
               </>
             }
