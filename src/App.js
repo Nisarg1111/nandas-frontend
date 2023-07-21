@@ -7,11 +7,13 @@ import { Home } from "./pages/Home/Home";
 import { Footer } from "./components/Footer/Footer";
 import { Shop } from "./pages/Shop/Shop";
 import { ProductDetails } from "./pages/ProductDetails/ProductDetails";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { ProfileOptions } from "./components/ProfileOptions/ProfileOptions";
 import { Checkout } from "./pages/Checkout/Checkout";
 import { useStateValue } from "./StateProvider";
 import { Rental } from "./pages/Rental/Rental";
+import { Settings } from "./pages/Settings/Settings";
+import { Dashboard } from "./pages/Dashboard/Dashboard";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -30,8 +32,8 @@ function App() {
         dispatch({ type: "PROFILE_OPTIONS_VIEW", status: false })
       }
     >
-      {showProfileOptions && <ProfileOptions />}
       <BrowserRouter>
+        {showProfileOptions && <ProfileOptions />}
         <ScrollToTop />
         <Routes>
           <Route
@@ -99,6 +101,25 @@ function App() {
                 <Navbar />
                 <Rental />
                 <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/settings/:page"
+            element={
+              <>
+                <Navbar />
+                <Settings />
+                <Footer />
+              </>
+            }
+          />
+          <Route
+            path="/dashboard/:page"
+            element={
+              <>
+                <Navbar />
+                <Dashboard />
               </>
             }
           />

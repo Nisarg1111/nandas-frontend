@@ -141,6 +141,7 @@ html {
       display: flex;
       align-items: center;
       gap: 0.4rem;
+      color: $color-primary;
       cursor: pointer;
       .icon {
         font-size: 1.1rem;
@@ -151,4 +152,8 @@ html {
 
 .uppercase {
   text-transform: uppercase;
+}
+
+.icon-heart {
+  font-size: 1.6rem;
 }

@@ -1,8 +1,8 @@
 import "./Navbar.scss";
 import Logo from "../../assets/images/logo.png";
 import { HiOutlineSearch } from "react-icons/hi";
-import { AiOutlineMenu } from "react-icons/ai";
-import { Link, useLocation } from "react-router-dom";
+import { AiOutlineMenu, AiOutlineMessage } from "react-icons/ai";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { GrFormClose } from "react-icons/gr";
@@ -10,6 +10,7 @@ import OffcanvasBgImg from "../../assets/images/become-a-seller-bg.png";
 import PlayIcon from "../../assets/images/play-icon.png";
 import { PiCaretDownBold } from "react-icons/pi";
 import { useStateValue } from "../../StateProvider";
+import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -26,6 +27,8 @@ export const Navbar = () => {
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [userLoggedIn, setUserLoggedIn] = useState(true);
+  const [showDashboardMenu, setShowDashboardMenu] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -58,7 +61,22 @@ export const Navbar = () => {
         </div>
       )}
       <div className="logo-and-search">
-        {pathname !== "/" && <AiOutlineMenu className="menu-icon" />}
+        {pathname !== "/" &&
+        pathname !== "/dashboard/dashboard" &&
+        pathname !== "/dashboard/message" &&
+        pathname !== "/dashboard/settings" &&
+        pathname !== "/dashboard/support-ticket" ? (
+          <AiOutlineMenu className="menu-icon" />
+        ) : null}
+        {pathname === "/dashboard/dashboard" ||
+        pathname === "/dashboard/message" ||
+        pathname === "/dashboard/settings" ||
+        pathname === "/dashboard/support-ticket" ? (
+          <AiOutlineMenu
+            onClick={() => setShowDashboardMenu(!showDashboardMenu)}
+            className="menu-icon"
+          />
+        ) : null}
         <Link to={"/"}>
           <img src={Logo} alt="logo" className="logo-img" />
         </Link>
@@ -158,6 +176,64 @@ export const Navbar = () => {
                   );
                 })}
               </ul>
+            </div>
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
+
+      <Offcanvas
+        show={showDashboardMenu}
+        onHide={() => setShowDashboardMenu(false)}
+        placement={"start"}
+      >
+        <div className="offcanvas-header-dashboard">
+          <GrFormClose
+            className="icon"
+            onClick={() => setShowDashboardMenu(false)}
+          />
+        </div>
+        <Offcanvas.Body className="dashboard-offcanvas-body">
+          <div className="offcanvas-inner">
+            <div className="options">
+              <div
+                onClick={() => {
+                  navigate(`/dashboard/${"dashboard"}`);
+                  setShowDashboardMenu(false);
+                }}
+                className={`option`}
+              >
+                <LuLayoutDashboard className="icon" />
+                Dashboard
+              </div>
+              <div
+                onClick={() => {
+                  navigate(`/dashboard/${"message"}`);
+                  setShowDashboardMenu(false);
+                }}
+                className={`option`}
+              >
+                <AiOutlineMessage className="icon" />
+                Message
+              </div>
+              <div
+                onClick={() => {
+                  navigate(`/dashboard/${"settings"}`);
+                  setShowDashboardMenu(false);
+                }}
+                className={`option`}
+              >
+                <LuSettings className="icon" />
+                Settings
+              </div>
+              <div
+                onClick={() => {
+                  navigate(`/dashboard/${"support-ticket"}`);
+                  setShowDashboardMenu(false);
+                }}
+                className={`option`}
+              >
+                Support Ticket
+              </div>
             </div>
           </div>
         </Offcanvas.Body>

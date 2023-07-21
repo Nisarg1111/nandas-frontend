@@ -185,10 +185,13 @@
             font-size: 1.1rem;
           }
         }
-    }
-    .accordion-box{
-        border-block: 1px solid #525252 !important;
-    }
+      }
+      .accordion-box {
+        border-block: 1px solid #6b6f80 !important;
+        #accordion-description {
+          border-left: none !important;
+        }
+      }
     }
   }
 }
