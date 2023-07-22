@@ -16,6 +16,7 @@ import { Settings } from "./pages/Settings/Settings";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
 import { BuildCustomArt } from "./pages/BuildCustomArt/BuildCustomArt";
 import { ForgotPassword } from "./pages/ForgotPassword/ForgotPassword";
+import { ContactUs } from "./pages/ContactUs/ContactUs";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -140,6 +141,16 @@ function App() {
               <>
                 <Navbar />
                 <ForgotPassword />
+              </>
+            }
+          />
+          <Route
+            path="/contact-us"
+            element={
+              <>
+                <Navbar />
+                <ContactUs />
+                <Footer />
               </>
             }
           />

@@ -15,7 +15,7 @@ import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 const menuOptions = [
   { title: "shop", url: "/shop" },
   { title: "about us", url: "/" },
-  { title: "contact us", url: "/" },
+  { title: "contact us", url: "/contact-us" },
   { title: "become a seller", url: "/" },
   { title: "become a freelancer", url: "/" },
   { title: "build custom art", url: "/build-custom-art" },
@@ -66,7 +66,10 @@ export const Navbar = () => {
         pathname !== "/dashboard/message" &&
         pathname !== "/dashboard/settings" &&
         pathname !== "/dashboard/support-ticket" ? (
-          <AiOutlineMenu className="menu-icon" />
+          <AiOutlineMenu
+            onClick={() => setMenuOpen(!menuOpen)}
+            className="menu-icon"
+          />
         ) : null}
         {pathname === "/dashboard/dashboard" ||
         pathname === "/dashboard/message" ||
@@ -96,13 +99,13 @@ export const Navbar = () => {
             <Link className="underline-none">
               <li>become a seller</li>
             </Link>
-            <Link to={'/build-custom-art'} className="underline-none">
+            <Link to={"/build-custom-art"} className="underline-none">
               <li>build custom art</li>
             </Link>
             <Link className="underline-none">
               <li>about us</li>
             </Link>
-            <Link className="underline-none">
+            <Link to={"/contact-us"} className="underline-none">
               <li>contact us</li>
             </Link>
             {pathname !== "/signup" && pathname !== "/login" ? (
