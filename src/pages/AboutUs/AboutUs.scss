@@ -1,0 +1,103 @@
+@import "../../App.scss";
+
+.about-us-main {
+  .header {
+    height: fit-content;
+    padding: 3rem 2rem;
+    background-position: center;
+    background-size: contain;
+    font-size: 1.1rem;
+    .content {
+      background-color: #fff;
+      padding: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      @media (max-width: 980px) {
+        gap: 1rem;
+        grid-template-columns: 1fr;
+      }
+      .left {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        @media (max-width: 980px) {
+          gap: 0;
+        }
+        h1 {
+          color: #52382b;
+          font-size: 2.2rem;
+        }
+        h2 {
+          font-size: 2.2rem;
+          width: 70%;
+          @media (max-width: 980px) {
+            width: 100%;
+          }
+        }
+      }
+    }
+  }
+  .our-story {
+    padding: 3rem 2rem;
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 500;
+    }
+  }
+  .banner-art {
+    width: 100%;
+    height: 60vh;
+    object-fit: cover;
+    @media (max-width: 750px) {
+      height: 40vh;
+    }
+  }
+  .team {
+    padding: 3rem 2rem;
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 500;
+    }
+    p {
+      width: 60%;
+      @media (max-width: 980px) {
+        width: 100%;
+      }
+    }
+    .team-members {
+      margin-top: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+      gap: 1rem;
+      justify-items: center;
+      @media (max-width: 938px) {
+        grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+      }
+      @media (max-width: 812px) {
+        display: flex;
+        overflow: scroll;
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
+      .artist {
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        img {
+          width: 100%;
+          @media (max-width: 812px) {
+            width: 18rem;
+            object-fit: cover;
+          }
+        }
+        span {
+          &:first-of-type {
+            font-size: 1.2rem;
+          }
+        }
+      }
+    }
+  }
+}

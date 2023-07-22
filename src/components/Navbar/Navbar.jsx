@@ -14,7 +14,7 @@ import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
-  { title: "about us", url: "/" },
+  { title: "about us", url: "/about-us" },
   { title: "contact us", url: "/contact-us" },
   { title: "become a seller", url: "/" },
   { title: "become a freelancer", url: "/" },
@@ -102,7 +102,7 @@ export const Navbar = () => {
             <Link to={"/build-custom-art"} className="underline-none">
               <li>build custom art</li>
             </Link>
-            <Link className="underline-none">
+            <Link to={'/about-us'} className="underline-none">
               <li>about us</li>
             </Link>
             <Link to={"/contact-us"} className="underline-none">
