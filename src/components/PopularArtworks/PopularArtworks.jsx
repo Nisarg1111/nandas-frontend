@@ -61,7 +61,7 @@ export const PopularArtworks = () => {
           slidesToScroll={2}
           slidesToShow={5}
           indicators={false}
-          transitionDuration={600}
+          transitionDuration={700}
           responsive={responsiveSettings}
           prevArrow={<IoIosArrowBack className="slick-prev" />}
           nextArrow={<IoIosArrowForward className="slick-next" />}

@@ -14,6 +14,8 @@ import { useStateValue } from "./StateProvider";
 import { Rental } from "./pages/Rental/Rental";
 import { Settings } from "./pages/Settings/Settings";
 import { Dashboard } from "./pages/Dashboard/Dashboard";
+import { BuildCustomArt } from "./pages/BuildCustomArt/BuildCustomArt";
+import { ForgotPassword } from "./pages/ForgotPassword/ForgotPassword";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -120,6 +122,24 @@ function App() {
               <>
                 <Navbar />
                 <Dashboard />
+              </>
+            }
+          />
+          <Route
+            path="/build-custom-art"
+            element={
+              <>
+                <Navbar />
+                <BuildCustomArt />
+              </>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <>
+                <Navbar />
+                <ForgotPassword />
               </>
             }
           />

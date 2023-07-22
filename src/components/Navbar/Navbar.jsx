@@ -18,7 +18,7 @@ const menuOptions = [
   { title: "contact us", url: "/" },
   { title: "become a seller", url: "/" },
   { title: "become a freelancer", url: "/" },
-  { title: "build custom art", url: "/" },
+  { title: "build custom art", url: "/build-custom-art" },
 ];
 
 export const Navbar = () => {
@@ -96,7 +96,7 @@ export const Navbar = () => {
             <Link className="underline-none">
               <li>become a seller</li>
             </Link>
-            <Link className="underline-none">
+            <Link to={'/build-custom-art'} className="underline-none">
               <li>build custom art</li>
             </Link>
             <Link className="underline-none">
