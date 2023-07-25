@@ -106,30 +106,33 @@ export const Navbar = () => {
         <Link to={"/"}>
           <img src={Logo} alt="logo" className="logo-img" />
         </Link>
-        {pathname !== "/" && userLoggedIn ? (
+        {pathname !== "/" && (
           <>
             <div className="search-box">
               <input type="text" placeholder="Search" />
               <HiOutlineSearch className="icon" />
             </div>
-            <div
-              className="profile sm-view-profile"
-              onClick={() =>
-                dispatch({
-                  type: "PROFILE_OPTIONS_VIEW",
-                  status: !showProfileOptions,
-                })
-              }
-            >
-              <img
-                src="https://img.freepik.com/free-icon/user_318-159711.jpg"
-                alt="profile"
-                className="profile-img"
-              />
-              <span>{userDetails?.name || userEmail}</span>
-              <PiCaretDownBold className="icon" />
-            </div>
           </>
+        )}
+        {userLoggedIn && pathname !== "/" ? (
+          <div
+            className="profile sm-view-profile"
+            onClick={() =>
+              dispatch({
+                type: "PROFILE_OPTIONS_VIEW",
+                status: !showProfileOptions,
+              })
+            }
+          >
+            <img
+              src="https://img.freepik.com/free-icon/user_318-159711.jpg"
+              alt="profile"
+              className="profile-img"
+            />
+            {/* <span>User</span> */}
+            {/* <span>{userDetails?.name || userEmail}</span> */}
+            <PiCaretDownBold className="icon" />
+          </div>
         ) : null}
       </div>
       {pathname !== "/" ? (
