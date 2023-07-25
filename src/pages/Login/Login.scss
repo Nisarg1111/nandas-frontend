@@ -57,7 +57,7 @@
           display: flex;
           justify-content: space-between;
           color: $color-primary;
-          span{
+          span {
             cursor: pointer;
           }
           .remember-me {
@@ -68,6 +68,7 @@
               color: $color-primary;
             }
             input {
+              margin-bottom: 0.9rem;
               accent-color: $color-primary;
             }
           }

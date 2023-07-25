@@ -11,6 +11,9 @@ import PlayIcon from "../../assets/images/play-icon.png";
 import { PiCaretDownBold } from "react-icons/pi";
 import { useStateValue } from "../../StateProvider";
 import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
+import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
+import { LiaHeart } from "react-icons/lia";
+import { MdOutlineLocalShipping } from "react-icons/md";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -21,14 +24,26 @@ const menuOptions = [
   { title: "build custom art", url: "/build-custom-art" },
 ];
 
+const dashboardOptions = [
+  { url: "dashboard", icon: LuLayoutDashboard, title: "Dashboard" },
+  { url: "my-orders", icon: FaRegCalendarCheck, title: "My Orders" },
+  { url: "favorites", icon: LiaHeart, title: "Favorites" },
+  { url: "message", icon: AiOutlineMessage, title: "Message" },
+  { url: "settings", icon: LuSettings, title: "Settings" },
+  { url: "edit-profile", icon: FaUserEdit, title: "Edit Profile" },
+  { url: "shipping", icon: MdOutlineLocalShipping, title: "Shipping" },
+  { url: "support-ticket", title: "Support Ticket" },
+];
+
 export const Navbar = () => {
   const [isSmallScreen, setIsSmallScreen] = useState(false);
-  const [{ showProfileOptions }, dispatch] = useStateValue();
+  const [{ showProfileOptions, userLoggedIn }, dispatch] = useStateValue();
   const { pathname } = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
-  const [userLoggedIn, setUserLoggedIn] = useState(true);
   const [showDashboardMenu, setShowDashboardMenu] = useState(false);
   const navigate = useNavigate();
+  const userDetails = JSON.parse(sessionStorage.getItem("user_details"));
+  const userEmail = userDetails?.email.split("@")[0];
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,7 +65,7 @@ export const Navbar = () => {
 
   return (
     <div className="navbar-main" style={customStyles}>
-      {pathname !== "/" && (
+      {pathname !== "/" && !userLoggedIn ? (
         <div className="buttons sm-view-btns">
           <Link to={"/login"}>
             <button className="btn-secondary button">log in</button>
@@ -59,11 +74,15 @@ export const Navbar = () => {
             <button className="btn-primary button">sign up</button>
           </Link>
         </div>
-      )}
+      ) : null}
       <div className="logo-and-search">
         {pathname !== "/" &&
         pathname !== "/dashboard/dashboard" &&
         pathname !== "/dashboard/message" &&
+        pathname !== "/dashboard/my-orders" &&
+        pathname !== "/dashboard/favorites" &&
+        pathname !== "/dashboard/edit-profile" &&
+        pathname !== "/dashboard/shipping" &&
         pathname !== "/dashboard/settings" &&
         pathname !== "/dashboard/support-ticket" ? (
           <AiOutlineMenu
@@ -73,6 +92,10 @@ export const Navbar = () => {
         ) : null}
         {pathname === "/dashboard/dashboard" ||
         pathname === "/dashboard/message" ||
+        pathname === "/dashboard/my-orders" ||
+        pathname === "/dashboard/favorites" ||
+        pathname === "/dashboard/edit-profile" ||
+        pathname === "/dashboard/shipping" ||
         pathname === "/dashboard/settings" ||
         pathname === "/dashboard/support-ticket" ? (
           <AiOutlineMenu
@@ -83,12 +106,31 @@ export const Navbar = () => {
         <Link to={"/"}>
           <img src={Logo} alt="logo" className="logo-img" />
         </Link>
-        {pathname !== "/" && (
-          <div className="search-box">
-            <input type="text" placeholder="Search" />
-            <HiOutlineSearch className="icon" />
-          </div>
-        )}
+        {pathname !== "/" && userLoggedIn ? (
+          <>
+            <div className="search-box">
+              <input type="text" placeholder="Search" />
+              <HiOutlineSearch className="icon" />
+            </div>
+            <div
+              className="profile sm-view-profile"
+              onClick={() =>
+                dispatch({
+                  type: "PROFILE_OPTIONS_VIEW",
+                  status: !showProfileOptions,
+                })
+              }
+            >
+              <img
+                src="https://img.freepik.com/free-icon/user_318-159711.jpg"
+                alt="profile"
+                className="profile-img"
+              />
+              <span>{userDetails?.name || userEmail}</span>
+              <PiCaretDownBold className="icon" />
+            </div>
+          </>
+        ) : null}
       </div>
       {pathname !== "/" ? (
         <div className="options">
@@ -102,13 +144,13 @@ export const Navbar = () => {
             <Link to={"/build-custom-art"} className="underline-none">
               <li>build custom art</li>
             </Link>
-            <Link to={'/about-us'} className="underline-none">
+            <Link to={"/about-us"} className="underline-none">
               <li>about us</li>
             </Link>
             <Link to={"/contact-us"} className="underline-none">
               <li>contact us</li>
             </Link>
-            {pathname !== "/signup" && pathname !== "/login" ? (
+            {userLoggedIn ? (
               <li>
                 <div
                   className="profile"
@@ -122,8 +164,9 @@ export const Navbar = () => {
                   <img
                     src="https://img.freepik.com/free-icon/user_318-159711.jpg"
                     alt="profile"
+                    className="profile-img"
                   />
-                  Pranav
+                  <span>{userDetails.name || userEmail}</span>
                   <PiCaretDownBold className="icon" />
                 </div>
               </li>
@@ -167,9 +210,10 @@ export const Navbar = () => {
             </div>
             <div className="options">
               <ul>
-                {menuOptions.map((option) => {
+                {menuOptions.map((option, i) => {
                   return (
                     <Link
+                      key={i}
                       to={option.url}
                       className="underline-none"
                       onClick={() => setMenuOpen(false)}
@@ -198,45 +242,19 @@ export const Navbar = () => {
         <Offcanvas.Body className="dashboard-offcanvas-body">
           <div className="offcanvas-inner">
             <div className="options">
-              <div
-                onClick={() => {
-                  navigate(`/dashboard/${"dashboard"}`);
-                  setShowDashboardMenu(false);
-                }}
-                className={`option`}
-              >
-                <LuLayoutDashboard className="icon" />
-                Dashboard
-              </div>
-              <div
-                onClick={() => {
-                  navigate(`/dashboard/${"message"}`);
-                  setShowDashboardMenu(false);
-                }}
-                className={`option`}
-              >
-                <AiOutlineMessage className="icon" />
-                Message
-              </div>
-              <div
-                onClick={() => {
-                  navigate(`/dashboard/${"settings"}`);
-                  setShowDashboardMenu(false);
-                }}
-                className={`option`}
-              >
-                <LuSettings className="icon" />
-                Settings
-              </div>
-              <div
-                onClick={() => {
-                  navigate(`/dashboard/${"support-ticket"}`);
-                  setShowDashboardMenu(false);
-                }}
-                className={`option`}
-              >
-                Support Ticket
-              </div>
+              {dashboardOptions.map((option, i) => (
+                <div
+                  onClick={() => {
+                    navigate(`/dashboard/${option.url}`);
+                    setShowDashboardMenu(false);
+                  }}
+                  className={`option`}
+                  key={i}
+                >
+                  {option.icon && <option.icon className="icon" />}
+                  {option.title}
+                </div>
+              ))}
             </div>
           </div>
         </Offcanvas.Body>

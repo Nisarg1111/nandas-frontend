@@ -137,14 +137,14 @@ html {
     top: 4rem;
     background-color: $color-secondary;
     .option {
-      font-size: 1.2rem;
+      font-size: 1.4rem;
       display: flex;
       align-items: center;
       gap: 0.4rem;
       color: $color-primary;
       cursor: pointer;
       .icon {
-        font-size: 1.1rem;
+        font-size: 1.3rem;
       }
     }
   }
@@ -156,4 +156,9 @@ html {
 
 .icon-heart {
   font-size: 1.6rem;
+}
+
+.error {
+  color: #ff0000;
+  text-align: start;
 }

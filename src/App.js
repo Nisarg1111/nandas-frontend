@@ -18,6 +18,8 @@ import { BuildCustomArt } from "./pages/BuildCustomArt/BuildCustomArt";
 import { ForgotPassword } from "./pages/ForgotPassword/ForgotPassword";
 import { ContactUs } from "./pages/ContactUs/ContactUs";
 import { AboutUs } from "./pages/AboutUs/AboutUs";
+import { Toaster } from "react-hot-toast";
+import { ProtectRoute, PublicRoute } from "./ProtectRoutes";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -37,25 +39,26 @@ function App() {
       }
     >
       <BrowserRouter>
+        <Toaster position="top-center" reverseOrder={false} />
         {showProfileOptions && <ProfileOptions />}
         <ScrollToTop />
         <Routes>
           <Route
             path="/signup"
             element={
-              <>
+              <PublicRoute>
                 <Navbar />
                 <Signup />
-              </>
+              </PublicRoute>
             }
           />
           <Route
             path="/login"
             element={
-              <>
+              <PublicRoute>
                 <Navbar />
                 <Login />
-              </>
+              </PublicRoute>
             }
           />
           <Route
@@ -108,32 +111,32 @@ function App() {
               </>
             }
           />
-          <Route
+          {/* <Route
             path="/settings/:page"
             element={
-              <>
+              <ProtectRoute>
                 <Navbar />
                 <Settings />
                 <Footer />
-              </>
+              </ProtectRoute>
             }
-          />
+          /> */}
           <Route
             path="/dashboard/:page"
             element={
-              <>
+              <ProtectRoute>
                 <Navbar />
                 <Dashboard />
-              </>
+              </ProtectRoute>
             }
           />
           <Route
             path="/build-custom-art"
             element={
-              <>
+              <ProtectRoute>
                 <Navbar />
                 <BuildCustomArt />
-              </>
+              </ProtectRoute>
             }
           />
           <Route

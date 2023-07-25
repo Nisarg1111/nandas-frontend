@@ -30,7 +30,7 @@ const OrderDetails = () => {
           <p>Order delivered: April 6, 3:00 PM by Raju</p>
           <StepProgressbar />
           <div className="art-details">
-            <img src={artImg} alt="art-image" />
+            <img src={artImg} alt="art" />
             <div className="details">
               <div className="info">
                 <span>Structural Landscape</span>

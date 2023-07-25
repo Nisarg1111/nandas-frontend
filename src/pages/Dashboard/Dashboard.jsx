@@ -7,6 +7,41 @@ import { useNavigate, useParams } from "react-router";
 import { Chat } from "./components/Chat/Chat";
 import { Link } from "react-router-dom";
 import { PiCaretRight } from "react-icons/pi";
+import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
+import { LiaHeart } from "react-icons/lia";
+import { MdOutlineLocalShipping } from "react-icons/md";
+import OrderDetails from "./components/OrderDetails/OrderDetails";
+import artImg1 from "../../assets/arts/art (2).png";
+import artImg2 from "../../assets/arts/art (3).png";
+import artImg3 from "../../assets/arts/art (4).png";
+import artImg4 from "../../assets/arts/art (5).png";
+import artImg5 from "../../assets/arts/art (7).png";
+import { ProductItem } from "../../components/ProductItem/ProductItem";
+import { Shipping } from "./components/Shipping/Shipping";
+
+const options = [
+  { url: "dashboard", icon: LuLayoutDashboard, title: "Dashboard" },
+  { url: "my-orders", icon: FaRegCalendarCheck, title: "My Orders" },
+  { url: "favorites", icon: LiaHeart, title: "Favorites" },
+  { url: "message", icon: AiOutlineMessage, title: "Message" },
+  { url: "settings", icon: LuSettings, title: "Settings" },
+  { url: "edit-profile", icon: FaUserEdit, title: "Edit Profile" },
+  { url: "shipping", icon: MdOutlineLocalShipping, title: "Shipping" },
+  { url: "support-ticket", title: "Support Ticket" },
+];
+
+const imagesArr = [
+  artImg1,
+  artImg2,
+  artImg3,
+  artImg4,
+  artImg5,
+  artImg1,
+  artImg2,
+  artImg3,
+  artImg4,
+  artImg5,
+];
 
 export const Dashboard = () => {
   const navigate = useNavigate();
@@ -18,47 +53,35 @@ export const Dashboard = () => {
   useEffect(() => {
     setPage(params.page);
   }, [params.page]);
+
+  const pageTitle = options.find((option) => option.url === page);
   return (
     <div className="dashboard-container">
       <div className="options">
-        <div
-          onClick={() => {
-            navigate(`/dashboard/${"dashboard"}`);
-          }}
-          on
-          className={`option ${page === "dashboard" && "active"}`}
-        >
-          <LuLayoutDashboard className="icon" />
-          Dashboard
-        </div>
-        <div
-          onClick={() => {
-            navigate(`/dashboard/${"message"}`);
-          }}
-          className={`option ${page === "message" && "active"}`}
-        >
-          <AiOutlineMessage className="icon" />
-          Message
-        </div>
-        <div
-          onClick={() => {
-            navigate(`/dashboard/${"settings"}`);
-          }}
-          className={`option ${page === "settings" && "active"}`}
-        >
-          <LuSettings className="icon" />
-          Settings
-        </div>
-        <div
-          onClick={() => {
-            navigate(`/dashboard/${"support-ticket"}`);
-          }}
-          className={`option ${page === "support-ticket" && "active"}`}
-        >
-          Support Ticket
-        </div>
+        {options.map((option, i) => (
+          <div
+            onClick={() => {
+              navigate(`/dashboard/${option.url}`);
+            }}
+            className={`option ${page === option.url && "active"}`}
+          >
+            {option.icon && <option.icon className="icon" />}
+            {option.title}
+          </div>
+        ))}
       </div>
       <div className="right-side">
+        {page !== "message" && (
+          <div className="routes">
+            <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
+              Dashboard
+            </Link>
+            <PiCaretRight className="icon" />
+            <Link to={`/dashboard/${pageTitle.url}`} className="underline-none">
+              {pageTitle.title}
+            </Link>
+          </div>
+        )}
         {page === "dashboard" && (
           <div className="dashboard">
             <h1>Welcome!</h1>
@@ -101,9 +124,22 @@ export const Dashboard = () => {
             <Chat />
           </div>
         )}
-        {page === "settings" && (
-          <div className="settings">
-            <div className="routes">
+        {page === "favorites" && (
+          <div className="favorites">
+            {imagesArr.map((art, i) => {
+              return <ProductItem item={art} key={i} />;
+            })}
+          </div>
+        )}
+        {page === "my-orders" && (
+          <div className="my-orders">
+            <OrderDetails />
+            <OrderDetails />
+          </div>
+        )}
+        {page === "edit-profile" && (
+          <div className="edit-profile">
+            {/* <div className="routes">
               <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
                 Dashboard
               </Link>
@@ -111,7 +147,41 @@ export const Dashboard = () => {
               <Link to={`/dashboard/${"settings"}`} className="underline-none">
                 Settings
               </Link>
-            </div>
+            </div> */}
+            <form action="">
+              <div className="input-box">
+                <label htmlFor="">Name</label>
+                <input type="text" />
+              </div>
+              <div className="input-box">
+                <label htmlFor="">Email</label>
+                <input type="email" />
+              </div>
+              <div className="input-box">
+                <label htmlFor="">Password</label>
+                <input type="password" />
+                <span>Forgot Password ?</span>
+              </div>
+              <div className="input-box">
+                <label htmlFor="">Mobile Number</label>
+                <input type="tel" />
+              </div>
+              <button className="btn-primary">Save</button>
+            </form>
+          </div>
+        )}
+        {page === "shipping" && <Shipping />}
+        {page === "settings" && (
+          <div className="settings">
+            {/* <div className="routes">
+              <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
+                Dashboard
+              </Link>
+              <PiCaretRight className="icon" />
+              <Link to={`/dashboard/${"settings"}`} className="underline-none">
+                Settings
+              </Link>
+            </div> */}
             <div className="settings-content">
               <h1>Settings</h1>
               <div>
@@ -137,7 +207,7 @@ export const Dashboard = () => {
         )}
         {page === "support-ticket" && (
           <div className="support-ticket">
-            <div className="routes">
+            {/* <div className="routes">
               <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
                 Dashboard
               </Link>
@@ -148,7 +218,7 @@ export const Dashboard = () => {
               >
                 Support Ticket
               </Link>
-            </div>
+            </div> */}
             <div className="ticket-form">
               <h3>Support Ticket</h3>
               <form className="form">

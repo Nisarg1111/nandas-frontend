@@ -3,11 +3,13 @@
 .details-div {
   border-radius: 0.2rem;
   border: 1px solid #f7f7f7;
+  background-color: #fff;
   .summary-details {
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-    background-color: #f7f7f7;
+    // background-color: #f7f7f7;
+    background-color: #fff;
     padding: 1rem;
     @media (max-width: 861px) {
       gap: 0.5rem;
@@ -35,7 +37,8 @@
       border-radius: 0.2rem;
       border: 1px solid #f7f7f7;
       padding: 1rem;
-      @media (max-width: 790px) {
+      // @media (max-width: 790px) {
+      @media (max-width: 960px) {
         flex-direction: column;
       }
       img {

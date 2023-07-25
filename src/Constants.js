@@ -4,4 +4,5 @@ export const domainName = "http://127.0.0.1:8000";
 export const api = {
   signup: "/api/signup",
   login: "/api/login",
+  emailAvailability:'/api/isEmailPhoneNumberAvailable',
 };
