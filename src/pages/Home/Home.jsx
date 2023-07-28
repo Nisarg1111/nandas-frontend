@@ -60,10 +60,10 @@ export const Home = () => {
   ];
   return (
     <div className="home-container">
-      <div className="banner">
+      <div className="banner" data-aos="fade-up">
         <img src={BannerText} alt="" />
       </div>
-      <div className="slider">
+      <div className="slider" data-aos="fade-left">
         <Slide
           slidesToScroll={2}
           slidesToShow={5}
@@ -80,11 +80,11 @@ export const Home = () => {
         </Slide>
       </div>
       <section className="about">
-        <div className="about-the-company">
+        <div className="about-the-company" data-aos="fade-up">
           <h2>About the company</h2>
           <h1>We can produce stunning art for you.</h1>
         </div>
-        <div className="right-side">
+        <div className="right-side" data-aos="fade-up">
           <p>
             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam
             luctus neque quis nisi pharetra, eu vestibulum felis lacinia. Cras
@@ -109,7 +109,7 @@ export const Home = () => {
 
       <PopularArtworks />
 
-      <section className="grid-2-sections">
+      <section className="grid-2-sections" data-aos="fade-down">
         <div className="grid-box">
           <div className="image">
             <img src={GridImg1} alt="become-a-seller" className="main-img" />
@@ -167,14 +167,14 @@ export const Home = () => {
       </section>
 
       <section className="questions-section">
-        <div className="left-side">
+        <div className="left-side" data-aos="fade-down">
           <h1>Frequently Asked Questions</h1>
           <h2>
             Check out the FAQ sections if you have a specific query regarding a
             particular form of art.
           </h2>
         </div>
-        <div className="questions">
+        <div className="questions" data-aos="fade-up">
           {qaContent.map((question) => {
             return <Accordion content={question} />;
           })}

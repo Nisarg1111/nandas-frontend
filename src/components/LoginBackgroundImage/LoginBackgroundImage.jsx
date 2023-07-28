@@ -4,7 +4,7 @@ import "./LoginBackgroundImage.scss";
 
 export const LoginBackgroundImage = () => {
   return (
-    <div className="image" style={{ backgroundImage: `url(${ImageBg})` }}>
+    <div data-aos="fade-left" className="image" style={{ backgroundImage: `url(${ImageBg})` }}>
       <div className="review-box">
         <p>
           "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Maxime

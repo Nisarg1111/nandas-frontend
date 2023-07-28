@@ -20,6 +20,8 @@ import { ContactUs } from "./pages/ContactUs/ContactUs";
 import { AboutUs } from "./pages/AboutUs/AboutUs";
 import { Toaster } from "react-hot-toast";
 import { ProtectRoute, PublicRoute } from "./ProtectRoutes";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -31,6 +33,12 @@ export const ScrollToTop = () => {
 
 function App() {
   const [{ showProfileOptions }, dispatch] = useStateValue();
+  AOS.init({
+    once: true,
+    delay: 400,
+    duration: 1000,
+    // offset:220
+  });
   return (
     <div
       onClick={() =>

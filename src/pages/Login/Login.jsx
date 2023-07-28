@@ -45,7 +45,7 @@ export const Login = () => {
   };
   return (
     <div className="login-container">
-      <div className="login-section">
+      <div className="login-section" data-aos="fade-right">
         <div className="form-container">
           <h1>Welcome back!</h1>
           <p>Lorem, ipsum dolor sit amet consectetur adipisicing</p>

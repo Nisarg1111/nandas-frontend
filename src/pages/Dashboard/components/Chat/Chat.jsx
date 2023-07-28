@@ -39,7 +39,7 @@ export const Chat = () => {
           Message
         </Link>
       </div>
-      <div className="message">
+      <div className="message" data-aos="fade-up">
         {!isSmallScreen && (
           <div className="head">
             <span>Message</span>

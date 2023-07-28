@@ -38,7 +38,7 @@ export const Checkout = () => {
         <Link className="underline-none">Checkout</Link>
       </div>
       <div className="checkout-grid">
-        <div className="form-side">
+        <div className="form-side" data-aos="fade-right">
           <h1>Delivery Information</h1>
           {editOpen ? (
             <form>
@@ -89,7 +89,7 @@ export const Checkout = () => {
             </div>
           )}
         </div>
-        <div className="summary">
+        <div className="summary" data-aos="fade-left">
           <h1>Order Summary</h1>
           <div className="order-details">
             {arts.map((product) => {

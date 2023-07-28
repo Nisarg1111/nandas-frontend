@@ -57,7 +57,7 @@ export const Dashboard = () => {
   const pageTitle = options.find((option) => option.url === page);
   return (
     <div className="dashboard-container">
-      <div className="options">
+      <div className="options" data-aos="fade-right">
         {options.map((option, i) => (
           <div
             onClick={() => {
@@ -72,7 +72,7 @@ export const Dashboard = () => {
       </div>
       <div className="right-side">
         {page !== "message" && (
-          <div className="routes">
+          <div className="routes" data-aos="fade-up">
             <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
               Dashboard
             </Link>
@@ -83,7 +83,7 @@ export const Dashboard = () => {
           </div>
         )}
         {page === "dashboard" && (
-          <div className="dashboard">
+          <div className="dashboard" data-aos="fade-up">
             <h1>Welcome!</h1>
             <div className="dashboard-content">
               <h3>Progress</h3>
@@ -125,29 +125,20 @@ export const Dashboard = () => {
           </div>
         )}
         {page === "favorites" && (
-          <div className="favorites">
+          <div className="favorites" data-aos="fade-up">
             {imagesArr.map((art, i) => {
               return <ProductItem item={art} key={i} />;
             })}
           </div>
         )}
         {page === "my-orders" && (
-          <div className="my-orders">
+          <div className="my-orders" data-aos="fade-up">
             <OrderDetails />
             <OrderDetails />
           </div>
         )}
         {page === "edit-profile" && (
-          <div className="edit-profile">
-            {/* <div className="routes">
-              <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
-                Dashboard
-              </Link>
-              <PiCaretRight className="icon" />
-              <Link to={`/dashboard/${"settings"}`} className="underline-none">
-                Settings
-              </Link>
-            </div> */}
+          <div className="edit-profile" data-aos="fade-up">
             <form action="">
               <div className="input-box">
                 <label htmlFor="">Name</label>
@@ -173,16 +164,7 @@ export const Dashboard = () => {
         {page === "shipping" && <Shipping />}
         {page === "settings" && (
           <div className="settings">
-            {/* <div className="routes">
-              <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
-                Dashboard
-              </Link>
-              <PiCaretRight className="icon" />
-              <Link to={`/dashboard/${"settings"}`} className="underline-none">
-                Settings
-              </Link>
-            </div> */}
-            <div className="settings-content">
+            <div data-aos="fade-up" className="settings-content">
               <h1>Settings</h1>
               <div>
                 Email notifications
@@ -206,19 +188,7 @@ export const Dashboard = () => {
           </div>
         )}
         {page === "support-ticket" && (
-          <div className="support-ticket">
-            {/* <div className="routes">
-              <Link to={`/dashboard/${"dashboard"}`} className="underline-none">
-                Dashboard
-              </Link>
-              <PiCaretRight className="icon" />
-              <Link
-                to={`/dashboard/${"support-ticket"}`}
-                className="underline-none"
-              >
-                Support Ticket
-              </Link>
-            </div> */}
+          <div className="support-ticket" data-aos="fade-up">
             <div className="ticket-form">
               <h3>Support Ticket</h3>
               <form className="form">

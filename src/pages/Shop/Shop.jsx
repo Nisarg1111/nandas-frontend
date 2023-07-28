@@ -26,7 +26,7 @@ export const Shop = () => {
   ];
   return (
     <div className="shop-main">
-      <div className="head">
+      <div className="head" data-aos="fade-right">
         <h1>Shop</h1>
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -37,7 +37,7 @@ export const Shop = () => {
         </button>
       </div>
       <div className="products-container">
-        <div className="filters-lg filters">
+        <div className="filters-lg filters" data-aos="fade-right">
           <h2>Filter By</h2>
           <div className="filter-box">
             <h4>Sort By</h4>
@@ -327,7 +327,7 @@ export const Shop = () => {
             </div>
           </div>
         </Offcanvas>
-        <div className="list-of-products">
+        <div className="list-of-products" data-aos="fade-up">
           {artsImages.map((art, index) => {
             return <ProductItem item={art} key={index} />;
           })}

@@ -5,7 +5,7 @@ export const Shipping = () => {
   const [editOpen, setEditOpen] = useState(false);
 
   return (
-    <div className="main-div">
+    <div className="main-div" data-aos="fade-up">
       <div className="form-side">
         {editOpen ? (
           <form>

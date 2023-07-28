@@ -55,8 +55,8 @@ export const PopularArtworks = () => {
   ];
   return (
     <section className="popular-artwork">
-      <h2>Popular Artwork</h2>
-      <div className="slider">
+      <h2 data-aos="fade-down">Popular Artwork</h2>
+      <div className="slider" data-aos="fade-up">
         <Slide
           slidesToScroll={2}
           slidesToShow={5}

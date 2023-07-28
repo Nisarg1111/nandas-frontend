@@ -4,7 +4,7 @@ import Img from "../../assets/images/contact-us-img.png";
 export const ContactUs = () => {
   return (
     <div className="main-div">
-      <div className="left-side">
+      <div className="left-side" data-aos="fade-right">
         <h1>Contact Us</h1>
         <hr />
         <form action="">
@@ -30,7 +30,7 @@ export const ContactUs = () => {
         <span>(603) 555-0123</span>
         <span>8502 Preston Rd. Inglewood, Maine 98380</span>
       </div>
-      <div className="right-side">
+      <div className="right-side" data-aos="fade-left">
         <img src={Img} alt="contact-us" />
       </div>
     </div>

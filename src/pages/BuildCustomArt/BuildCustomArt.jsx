@@ -17,7 +17,7 @@ export const BuildCustomArt = () => {
   }, []);
   return (
     <div className="page-container">
-      <div className="left-section">
+      <div className="left-section" data-aos="fade-right">
         <div className="form-container">
           <h1>Build Custom Art</h1>
           <form>

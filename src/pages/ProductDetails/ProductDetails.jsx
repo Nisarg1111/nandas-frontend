@@ -62,7 +62,7 @@ export const ProductDetails = () => {
         <Link className="underline-none">Structural Landscape</Link>
       </div>
       <div className="product-container">
-        <div className="images-container">
+        <div className="images-container" data-aos="fade-right">
           <div className="image-main">
             <div className="icon-bg">
               <PiCaretLeft className="icon" onClick={changeCurrentSlide} />
@@ -116,7 +116,7 @@ export const ProductDetails = () => {
             </div>
           </div>
         </div>
-        <div className="product-details">
+        <div className="product-details" data-aos="fade-left">
           <h1>Structural Landscape</h1>
           <p>
             Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatem

@@ -55,7 +55,7 @@ export const Signup = () => {
   };
   return (
     <div className="signup-container">
-      <div className="signup-section">
+      <div className="signup-section" data-aos="fade-right">
         <div className="form-container">
           <h1>Welcome!</h1>
           <p>Lorem, ipsum dolor sit amet consectetur adipisicing</p>
