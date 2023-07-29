@@ -1,21 +1,20 @@
 import "./Home.scss";
 import BannerText from "../../assets/images/home-banner.png";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
-import art1 from "../../assets/arts/art (1).png";
 import art2 from "../../assets/arts/art (2).png";
 import art3 from "../../assets/arts/art (3).png";
 import art4 from "../../assets/arts/art (4).png";
 import art5 from "../../assets/arts/art (5).png";
-import art6 from "../../assets/arts/art (6).png";
 import art7 from "../../assets/arts/art (7).png";
 import { Slide } from "react-slideshow-image";
 import { ProductCard } from "./components/ProductCard/ProductCard";
-import { ProductItem } from "../../components/ProductItem/ProductItem";
 import GridImg1 from "../../assets/images/become-a-seller-bg.png";
 import GridImg2 from "../../assets/images/become-a-freelancer-bg.png";
 import PlayIcon from "../../assets/images/play-icon.png";
 import { Accordion } from "./components/Accordion/Accordion";
 import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
+import { useQuery } from "@tanstack/react-query";
+import { fetchRecentProducts } from "../../apiCall";
 
 const artsImages = [art2, art3, art4, art5, art7, art2, art3, art4, art5, art7];
 
@@ -58,26 +57,52 @@ export const Home = () => {
       },
     },
   ];
+
+  // get list of recent products
+  const { isLoading: recentProductsLoading, data: recentProducts } = useQuery(
+    ["recent-products"],
+    fetchRecentProducts
+  );
+
   return (
     <div className="home-container">
       <div className="banner" data-aos="fade-up">
         <img src={BannerText} alt="" />
       </div>
       <div className="slider" data-aos="fade-left">
-        <Slide
-          slidesToScroll={2}
-          slidesToShow={5}
-          indicators={false}
-          transitionDuration={700}
-          responsive={responsiveSettings}
-          prevArrow={<IoIosArrowBack className="slick-prev" />}
-          nextArrow={<IoIosArrowForward className="slick-next" />}
-          autoplay={true}
-        >
-          {artsImages.map((item) => {
-            return <ProductCard item={item} />;
-          })}
-        </Slide>
+        {!recentProductsLoading ? (
+          <Slide
+            slidesToScroll={2}
+            slidesToShow={5}
+            indicators={false}
+            transitionDuration={700}
+            responsive={responsiveSettings}
+            prevArrow={<IoIosArrowBack className="slick-prev" />}
+            nextArrow={<IoIosArrowForward className="slick-next" />}
+            autoplay={true}
+          >
+            {recentProducts?.data?.value.map((item) => {
+              return <ProductCard item={item} />;
+            })}
+          </Slide>
+        ) : (
+          <Slide
+            slidesToScroll={2}
+            slidesToShow={5}
+            indicators={false}
+            transitionDuration={700}
+            responsive={responsiveSettings}
+            prevArrow={<IoIosArrowBack className="slick-prev" />}
+            nextArrow={<IoIosArrowForward className="slick-next" />}
+            autoplay={true}
+          >
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+          </Slide>
+        )}
       </div>
       <section className="about">
         <div className="about-the-company" data-aos="fade-up">

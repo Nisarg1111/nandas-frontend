@@ -9,6 +9,8 @@ import { ReactComponent as FilterIcon } from "../../assets/svgs/filter-icon.svg"
 import { useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 import { GrFormClose } from "react-icons/gr";
+import { useQuery } from "@tanstack/react-query";
+import { fetchAllProducts } from "../../apiCall";
 
 export const Shop = () => {
   const [showFilters, setShowFilters] = useState(false);
@@ -24,6 +26,12 @@ export const Shop = () => {
     art5,
     art7,
   ];
+
+  // get all products
+  const { isLoading: allProductsIsLoading, data: allProducts } = useQuery(
+    ["all-products"],
+    fetchAllProducts
+  );
   return (
     <div className="shop-main">
       <div className="head" data-aos="fade-right">
@@ -328,9 +336,19 @@ export const Shop = () => {
           </div>
         </Offcanvas>
         <div className="list-of-products" data-aos="fade-up">
-          {artsImages.map((art, index) => {
-            return <ProductItem item={art} key={index} />;
-          })}
+          {!allProductsIsLoading ? (
+            allProducts?.data?.value.map((art, index) => {
+              return <ProductItem item={art} key={index}/>;
+            })
+          ) : (
+            <div className="loading-cards">
+              <div className="loading-card-item"></div>
+              <div className="loading-card-item"></div>
+              <div className="loading-card-item"></div>
+              <div className="loading-card-item"></div>
+              <div className="loading-card-item"></div>
+            </div>
+          )}
         </div>
       </div>
     </div>

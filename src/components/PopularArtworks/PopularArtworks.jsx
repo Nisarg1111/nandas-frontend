@@ -7,6 +7,8 @@ import art4 from "../../assets/arts/art (4).png";
 import art5 from "../../assets/arts/art (5).png";
 import art7 from "../../assets/arts/art (7).png";
 import "./PopularArtworks.scss";
+import { fetchPopularProducts } from "../../apiCall";
+import { useQuery } from "@tanstack/react-query";
 
 export const PopularArtworks = () => {
   const artsImages = [
@@ -53,24 +55,49 @@ export const PopularArtworks = () => {
       },
     },
   ];
+
+  // get list of popular products
+  const { isLoading: popularProductsLoading, data: popularProducts } = useQuery(
+    ["popular-products"],
+    fetchPopularProducts
+  );
   return (
     <section className="popular-artwork">
       <h2 data-aos="fade-down">Popular Artwork</h2>
       <div className="slider" data-aos="fade-up">
-        <Slide
-          slidesToScroll={2}
-          slidesToShow={5}
-          indicators={false}
-          transitionDuration={700}
-          responsive={responsiveSettings}
-          prevArrow={<IoIosArrowBack className="slick-prev" />}
-          nextArrow={<IoIosArrowForward className="slick-next" />}
-          autoplay={true}
-        >
-          {artsImages.map((item) => {
-            return <ProductItem item={item} />;
-          })}
-        </Slide>
+        {!popularProductsLoading ? (
+          <Slide
+            slidesToScroll={2}
+            slidesToShow={5}
+            indicators={false}
+            transitionDuration={700}
+            responsive={responsiveSettings}
+            prevArrow={<IoIosArrowBack className="slick-prev" />}
+            nextArrow={<IoIosArrowForward className="slick-next" />}
+            autoplay={true}
+          >
+            {popularProducts?.data?.value.map((item) => {
+              return <ProductItem item={item} />;
+            })}
+          </Slide>
+        ) : (
+          <Slide
+            slidesToScroll={2}
+            slidesToShow={5}
+            indicators={false}
+            transitionDuration={700}
+            responsive={responsiveSettings}
+            prevArrow={<IoIosArrowBack className="slick-prev" />}
+            nextArrow={<IoIosArrowForward className="slick-next" />}
+            autoplay={true}
+          >
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+            <div class="loading-card"></div>
+          </Slide>
+        )}
       </div>
     </section>
   );

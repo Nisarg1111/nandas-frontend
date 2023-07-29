@@ -4,5 +4,12 @@ export const domainName = "http://127.0.0.1:8000";
 export const api = {
   signup: "/api/signup",
   login: "/api/login",
-  emailAvailability:'/api/isEmailPhoneNumberAvailable',
+  emailAvailability: "/api/isEmailPhoneNumberAvailable",
+  profile: "/api/profile",
+  categories: "/api/get-categories-list",
+  allProducts: "/api/get-all-products-list",
+  recentProducts: "/api/get-recent-products",
+  popularProducts: "/api/get-popular-products",
+  categoryProducts: "/api/get-category-products/:categoryId",
+  productInfo: "/api/get-product-info/:id",
 };

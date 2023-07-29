@@ -4,6 +4,7 @@ import { HiOutlineSearch } from "react-icons/hi";
 import { AiOutlineMenu, AiOutlineMessage } from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { GrFormClose } from "react-icons/gr";
 import OffcanvasBgImg from "../../assets/images/become-a-seller-bg.png";
@@ -14,6 +15,7 @@ import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
 import { MdOutlineLocalShipping } from "react-icons/md";
+import { fetchUser } from "../../apiCall";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -62,6 +64,13 @@ export const Navbar = () => {
     backgroundColor: pathname === "/" && "#fffbf6",
     gridTemplateColumns: pathname === "/" ? "1fr 1fr" : undefined,
   };
+
+  // Get user data
+  const { isLoading, data: user } = useQuery({
+    queryKey: ["user-data"],
+    queryFn: fetchUser,
+  });
+  console.log(user, "user data");
 
   return (
     <div className="navbar-main" style={customStyles}>
@@ -169,7 +178,7 @@ export const Navbar = () => {
                     alt="profile"
                     className="profile-img"
                   />
-                  <span>{userDetails.name || userEmail}</span>
+                  <span>{userDetails?.name || userEmail}</span>
                   <PiCaretDownBold className="icon" />
                 </div>
               </li>
