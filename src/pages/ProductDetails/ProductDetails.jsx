@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import "./ProductDetails.scss";
 import { PiCaretRight, PiCaretLeft } from "react-icons/pi";
 import artImage from "../../assets/arts/art (3).png";
@@ -14,35 +14,48 @@ import {
 import { useState } from "react";
 import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
 import { Accordion } from "../Home/components/Accordion/Accordion";
+import { useQuery } from "@tanstack/react-query";
+import { fetchProductInfo } from "../../apiCall";
+import { toast } from "react-hot-toast";
+import { domainName } from "../../Constants";
 
 export const ProductDetails = () => {
   const [liked, setLiked] = useState(false);
+  const [product, setProduct] = useState({});
+  const { productId } = useParams();
   const navigate = useNavigate();
-  const imagesArr = [
-    artImage2,
-    artImage,
-    artImage1,
-    artImage2,
-    artImage,
-    artImage1,
-    artImage2,
-    artImage,
-    artImage1,
-    artImage2,
-    artImage,
-    artImage1,
-  ];
-  const [currentSlide, setCurrentSlide] = useState(0);
+  const [currentSlide, setCurrentSlide] = useState(null);
+
+  // fetch product info
+  const { data, isLoading } = useQuery(
+    ["product-info", productId],
+    fetchProductInfo,
+    {
+      onSuccess: (data) => {
+        setProduct(data.data?.value);
+        console.log(data.data?.value);
+      },
+      onError: (err) => {
+        console.log(err, "ERROR");
+        if (err.message) {
+          toast.error(err.message);
+        } else {
+          toast.error("Something went wrong");
+        }
+      },
+    }
+  );
+
   const changeCurrentSlide = (type) => {
     if (type === "+") {
-      if (currentSlide === imagesArr.length - 1) {
+      if (currentSlide === product?.sub_images?.length - 1) {
         setCurrentSlide(0);
       } else {
         setCurrentSlide((prev) => prev + 1);
       }
     } else {
-      if (currentSlide === 0) {
-        setCurrentSlide(imagesArr.length - 1);
+      if (currentSlide === 0 || !currentSlide) {
+        setCurrentSlide(product.sub_images?.length - 1);
       } else {
         setCurrentSlide((prev) => prev - 1);
       }
@@ -59,7 +72,7 @@ export const ProductDetails = () => {
           Shop
         </Link>
         <PiCaretRight className="icon" />
-        <Link className="underline-none">Structural Landscape</Link>
+        <Link className="underline-none">{product?.title}</Link>
       </div>
       <div className="product-container">
         <div className="images-container" data-aos="fade-right">
@@ -73,17 +86,25 @@ export const ProductDetails = () => {
                 onClick={() => changeCurrentSlide("+")}
               />
             </div>
-            <img src={imagesArr[currentSlide]} alt="" />
+            <img
+              src={
+                !currentSlide
+                  ? `${domainName}${product.main_image}`
+                  : `${domainName}${product?.sub_images[currentSlide]}`
+              }
+              alt={product.main_image}
+            />
           </div>
           <div className="thumbnails">
-            {imagesArr.map((item, index) => (
-              <img
-                onClick={() => setCurrentSlide(index)}
-                src={item}
-                alt="thumbnail-image"
-                className={`${currentSlide === index && "active"}`}
-              />
-            ))}
+            {product?.sub_images &&
+              product.sub_images.map((item, index) => (
+                <img
+                  onClick={() => setCurrentSlide(index)}
+                  src={`${domainName}${item}`}
+                  alt="thumbnail"
+                  className={`${currentSlide === index && "active"}`}
+                />
+              ))}
           </div>
           <div className="options">
             <div>
@@ -106,10 +127,10 @@ export const ProductDetails = () => {
                 </>
               )}
             </div>
-            <div>
+            {/* <div>
               <AiOutlineEye className="icon" />
               <span>See in Your Room</span>
-            </div>
+            </div> */}
             <div>
               <AiOutlineShareAlt className="icon" />
               <span>Share</span>
@@ -117,15 +138,10 @@ export const ProductDetails = () => {
           </div>
         </div>
         <div className="product-details" data-aos="fade-left">
-          <h1>Structural Landscape</h1>
-          <p>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Voluptatem
-            ad fuga tempore nihil sed quibusdam voluptas nostrum. Debitis labore
-            aut, consequuntur fugit sit ut adipisci reiciendis, repellat, fuga
-            repellendus dolor.
-          </p>
-          <h2>₹1,85,323</h2>
-          <p>EMI starts at ₹6045/month.</p>
+          <h1>{product?.title}</h1>
+          <p>{product?.description}</p>
+          <h2>₹{product?.price}</h2>
+          {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
           <div className="buttons">
             <button
               className="btn-secondary"
@@ -140,9 +156,14 @@ export const ProductDetails = () => {
               buy now
             </button>
           </div>
-          <button onClick={() => navigate("/rental")} className="btn-secondary">
-            Rent from ₹6045/Month
-          </button>
+          {product.rent && (
+            <button
+              onClick={() => navigate("/rental")}
+              className="btn-secondary"
+            >
+              Rent from ₹{product.rent}/Month
+            </button>
+          )}
           <div className="delivery-input">
             <label htmlFor="">Check Delivery Dates</label>
             <div className="input-box">
@@ -155,15 +176,19 @@ export const ProductDetails = () => {
             </div>
           </div>
           <span>Categories : Art</span>
-          <h4>Description</h4>
-          <p>
-            Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel ad
-            molestias totam, deleniti quisquam corporis nobis incidunt nostrum,
-            provident nam, repudiandae reiciendis beatae et autem id cupiditate
-            quidem quae? Consequuntur?
-          </p>
+          {product.description && (
+            <>
+              <h4>Description</h4>
+              <p>
+                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Vel ad
+                molestias totam, deleniti quisquam corporis nobis incidunt
+                nostrum, provident nam, repudiandae reiciendis beatae et autem
+                id cupiditate quidem quae? Consequuntur?
+              </p>
+            </>
+          )}
           <h4>Additional Information</h4>
-          <span>Weight : 10kg</span>
+          {product.weight&&<span>Weight : {product.weight}kg</span>}
           <span>Dimensions : 40 X 50 X 70 cm</span>
           <Accordion content={"Shipping and Taxes"} />
         </div>

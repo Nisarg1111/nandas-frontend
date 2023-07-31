@@ -70,7 +70,6 @@ export const Navbar = () => {
     queryKey: ["user-data"],
     queryFn: fetchUser,
   });
-  console.log(user, "user data");
 
   return (
     <div className="navbar-main" style={customStyles}>

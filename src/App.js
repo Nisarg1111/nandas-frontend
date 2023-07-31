@@ -90,7 +90,7 @@ function App() {
             }
           />
           <Route
-            path="/product-details"
+            path="/product-info/:productId"
             element={
               <>
                 <Navbar />

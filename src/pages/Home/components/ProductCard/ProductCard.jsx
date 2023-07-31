@@ -17,7 +17,7 @@ export const ProductCard = ({ item }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <img
-        onClick={() => navigate("/product-details")}
+        onClick={() => navigate("/product-info/:productId")}
         src={`${domainName}/uploads/${item.main_image}`}
         alt=""
         className="slider-img"

@@ -14,7 +14,7 @@ export const ProductItem = ({ item}) => {
       className="art slider-item"
     >
       <img
-        onClick={() => navigate("/product-details")}
+        onClick={() => navigate(`/product-info/${item.id}`)}
         src={`${domainName}/uploads/${item.main_image}`}
         alt="product"
         className="slider-img"

@@ -43,3 +43,8 @@ export const fetchRecentProducts = ()=>{
 export const fetchPopularProducts = ()=>{
   return axios.get(`${domainName}${api.popularProducts}`)
 }
+
+// get product info
+export const fetchProductInfo = ({queryKey})=>{
+  return axios.get(`${domainName}${api.productInfo}${queryKey[1]}`)
+}

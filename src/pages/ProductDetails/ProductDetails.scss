@@ -24,18 +24,21 @@
     .images-container {
       display: flex;
       flex-direction: column;
-      width: 55%;
+      width: 53vw;
+      // width: 100%;
       @media (max-width: 1024px) {
         grid-column: 0;
         width: 100%;
       }
       .image-main {
         position: relative;
+        background-color: #f5f5f5;
         img {
           width: 100%;
           height: 80vh;
           object-fit: cover;
           @media (max-width: 1024px) {
+            width: 100%;
             height: 60vh;
             object-fit: contain;
           }
@@ -71,12 +74,15 @@
       .thumbnails {
         display: flex;
         overflow: scroll;
-        justify-content: space-between;
+        justify-content: flex-start;
         gap: 1rem;
         padding: 1rem 0;
         width: 100%;
+        @media (max-width: 1024px) {
+          justify-content: center;
+        }
         &::-webkit-scrollbar {
-          height: 2px;
+          height: 5px;
           scroll-behavior: smooth;
           @media (max-width: 600px) {
             display: none;
@@ -130,6 +136,7 @@
       flex-direction: column;
       gap: 0.5rem;
       font-size: 1.1rem;
+      width: 45%;
       @media (max-width: 1024px) {
         width: 100%;
         grid-column: 1 / span 2;

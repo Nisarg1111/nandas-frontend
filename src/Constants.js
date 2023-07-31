@@ -11,5 +11,5 @@ export const api = {
   recentProducts: "/api/get-recent-products",
   popularProducts: "/api/get-popular-products",
   categoryProducts: "/api/get-category-products/:categoryId",
-  productInfo: "/api/get-product-info/:id",
+  productInfo: "/api/get-product-info/",
 };

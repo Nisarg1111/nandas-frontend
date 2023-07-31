@@ -31,7 +31,7 @@ export const Checkout = () => {
           Shop
         </Link>
         <PiCaretRight className="icon" />
-        <Link to={"/product-details"} className="underline-none">
+        <Link to={"/product-info/:productId"} className="underline-none">
           Structural Landscape
         </Link>
         <PiCaretRight className="icon" />

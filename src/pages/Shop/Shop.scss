@@ -52,7 +52,8 @@
       .slider-item {
         height: fit-content !important;
         .slider-img {
-          height: 15rem !important;
+          height: 16rem !important;
+          // height: 25rem !important;
           @media (max-width: 497px) {
             height: 22rem !important;
           }
