@@ -1,7 +1,7 @@
 import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import "./Dashboard.scss";
 import { AiOutlineMessage } from "react-icons/ai";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ProgressBar from "react-bootstrap/ProgressBar";
 import { useNavigate, useParams } from "react-router";
 import { Chat } from "./components/Chat/Chat";
@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { PiCaretRight } from "react-icons/pi";
 import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
+import { HiMiniPencilSquare } from "react-icons/hi2";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import OrderDetails from "./components/OrderDetails/OrderDetails";
 import artImg1 from "../../assets/arts/art (2).png";
@@ -18,6 +19,11 @@ import artImg4 from "../../assets/arts/art (5).png";
 import artImg5 from "../../assets/arts/art (7).png";
 import { ProductItem } from "../../components/ProductItem/ProductItem";
 import { Shipping } from "./components/Shipping/Shipping";
+import { useForm } from "react-hook-form";
+import { updateProfileImg, updateUser } from "../../apiCall";
+import { toast } from "react-hot-toast";
+import { domainName } from "../../Constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 const options = [
   { url: "dashboard", icon: LuLayoutDashboard, title: "Dashboard" },
@@ -48,13 +54,78 @@ export const Dashboard = () => {
   const params = useParams();
   const [page, setPage] = useState("support-ticket");
   const [chatMessages, setChatMessages] = useState(true);
-  // const [page, setPage] = useState(params.page.toString() || "dashboard");
+  const user = JSON.parse(sessionStorage.getItem("user_details"));
+  const imgRef = useRef();
+  const [profilePic, setProfilePic] = useState();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setPage(params.page);
   }, [params.page]);
 
   const pageTitle = options.find((option) => option.url === page);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: user?.name || "",
+      email: user.email || "",
+      phoneNumber: user?.phone_number || "",
+    },
+  });
+
+  // update user details
+  const handleFormUpdate = async (values) => {
+    try {
+      const response = await updateUser(values);
+      console.log(response, "success");
+      if (response.data?.status[0].Message === "success") {
+        queryClient.invalidateQueries("user-data");
+      }
+      toast.success(response.data.status[0].ResponseMessage);
+    } catch (err) {
+      console.log(err, "error");
+    }
+  };
+
+  // Selecting profile image
+  const onImageSelect = async (e) => {
+    const fData = new FormData();
+    fData.append("profile_img", e.target.files[0]);
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (
+        file.type === "image/x-png" ||
+        file.type === "image/png" ||
+        file.type === "image/jpeg" ||
+        file.type === "image/jpg"
+      ) {
+        try {
+          console.log(fData, "formData");
+          const response = await updateProfileImg(fData);
+          console.log(response, "data");
+          if (response.data?.status[0].Error === "False") {
+            setProfilePic({ url: URL.createObjectURL(file) });
+            queryClient.invalidateQueries("user-data");
+          }
+          toast.success(response.data?.status[0].Message);
+        } catch (err) {
+          console.log(err, "ERROR");
+        }
+      } else {
+        return toast("Select an image file", {
+          icon: "❌",
+          position: "top-center",
+          style: {
+            borderRadius: "10px",
+          },
+        });
+      }
+    }
+  };
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -139,25 +210,77 @@ export const Dashboard = () => {
         )}
         {page === "edit-profile" && (
           <div className="edit-profile" data-aos="fade-up">
-            <form action="">
+            <div className="image-div">
+              <img
+                src={
+                  profilePic?.url ||
+                  `${domainName}${user?.profile_image}` ||
+                  "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                }
+                alt="profile"
+                className="profile-img"
+                onClick={() => imgRef.current.click()}
+              />
+              <input
+                type="file"
+                ref={imgRef}
+                accept="image/x-png,image/jpeg,image/jpg,image/png"
+                onChange={(e) => onImageSelect(e)}
+                hidden
+              />
+              {/* <HiMiniPencilSquare className="icon" onClick={()=>imgRef.current.click()}/> */}
+            </div>
+            <form onSubmit={handleSubmit(handleFormUpdate)}>
               <div className="input-box">
                 <label htmlFor="">Name</label>
-                <input type="text" />
+                <input
+                  type="text"
+                  {...register("name", {
+                    required: "Name is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9_\s-]+$/,
+                      message: "Special characters are not allowed",
+                    },
+                  })}
+                />
+                <small className="error">{errors?.name?.message}</small>
               </div>
               <div className="input-box">
                 <label htmlFor="">Email</label>
-                <input type="email" />
+                <input
+                  type="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
+                      message: "Enter a valid email",
+                    },
+                  })}
+                />
+                <small className="error">{errors?.email?.message}</small>
               </div>
-              <div className="input-box">
+              {/* <div className="input-box">
                 <label htmlFor="">Password</label>
                 <input type="password" />
                 <span>Forgot Password ?</span>
-              </div>
+              </div> */}
               <div className="input-box">
                 <label htmlFor="">Mobile Number</label>
-                <input type="tel" />
+                <input
+                  type="tel"
+                  {...register("phoneNumber", {
+                    required: "Phone number is required",
+                    pattern: {
+                      value: /^[6-9]\d{9}$/i,
+                      message: "Enter a valid phone number",
+                    },
+                  })}
+                />
+                <small className="error">{errors?.phoneNumber?.message}</small>
               </div>
-              <button className="btn-primary">Save</button>
+              <button type="submit" className="btn-primary">
+                Save
+              </button>
             </form>
           </div>
         )}

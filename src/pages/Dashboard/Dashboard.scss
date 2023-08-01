@@ -255,6 +255,26 @@
       @media (max-width: 520px) {
         width: 100%;
       }
+      .image-div {
+        margin: 1rem 0;
+        position: relative;
+        width: fit-content;
+        .profile-img {
+          width: 7rem;
+          height: 7rem;
+          border-radius: 50%;
+          object-fit: cover;
+          cursor: pointer;
+        }
+        .icon {
+          position: absolute;
+          bottom: -0.5rem;
+          left: 50%;
+          transform: translateX(-50%);
+          cursor: pointer;
+          font-size: 1.3rem;
+        }
+      }
       form {
         display: grid;
         grid-template-columns: repeat(1, 1fr);

@@ -11,11 +11,11 @@ import {
   AiOutlineHeart,
   AiOutlineShareAlt,
 } from "react-icons/ai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
 import { Accordion } from "../Home/components/Accordion/Accordion";
-import { useQuery } from "@tanstack/react-query";
-import { fetchProductInfo } from "../../apiCall";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { addToCart, fetchProductInfo } from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
 
@@ -25,6 +25,16 @@ export const ProductDetails = () => {
   const { productId } = useParams();
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(null);
+  // const queryClient = useQueryClient();
+  // const cartItems = queryClient.getQueriesData(["cart"])[0]?.[1]?.data?.value
+  //   ?.products;
+  // const [alreadyInCart, setAlreadyInCart] = useState(
+  //   cartItems?.find((cartItem) => cartItem.id === productId)
+  // );
+
+  // useEffect(() => {
+  //   setAlreadyInCart(cartItems?.find((cartItem) => cartItem.id === product.id));
+  // }, [product.id,cartItems]);
 
   // fetch product info
   const { data, isLoading } = useQuery(
@@ -61,6 +71,26 @@ export const ProductDetails = () => {
       }
     }
   };
+
+  // cart mutation function
+  const addToCartMutation = useMutation({
+    mutationFn: addToCart,
+    onSuccess: (data) => {
+      if (data.data?.status[0]?.Error === "False") {
+        toast.success(data.data?.status[0]?.ResponseMessage);
+        // queryClient.invalidateQueries("cart");
+      }
+    },
+    onError: (err) => {
+      console.log(err, "error");
+    },
+  });
+
+  // add item to cart
+  const addProductToCart = (pdtId) => {
+    addToCartMutation.mutate({ productId: pdtId, quantity: 1 });
+  };
+
   return (
     <div className="main">
       <div className="routes">
@@ -143,12 +173,22 @@ export const ProductDetails = () => {
           <h2>₹{product?.price}</h2>
           {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
           <div className="buttons">
-            <button
-              className="btn-secondary"
-              onClick={() => navigate("/checkout")}
-            >
-              add to bag
-            </button>
+            {/* {!alreadyInCart ? ( */}
+              <button
+                className="btn-secondary"
+                // onClick={() => navigate("/checkout")}
+                onClick={() => addProductToCart(product.id)}
+              >
+                add to bag
+              </button>
+            {/* // ) : (
+            //   <button
+            //     className="btn-secondary"
+            //     onClick={() => navigate("/checkout")}
+            //   >
+            //     go to cart
+            //   </button>
+            // )} */}
             <button
               className="btn-primary"
               onClick={() => navigate("/checkout")}
@@ -188,7 +228,7 @@ export const ProductDetails = () => {
             </>
           )}
           <h4>Additional Information</h4>
-          {product.weight&&<span>Weight : {product.weight}kg</span>}
+          {product.weight && <span>Weight : {product.weight}kg</span>}
           <span>Dimensions : 40 X 50 X 70 cm</span>
           <Accordion content={"Shipping and Taxes"} />
         </div>

@@ -38,6 +38,7 @@ export const ProductItem = ({ item}) => {
 
         <div className="flex-column">
           <span>{item.category__title}</span>
+          {item?.owner && <span>Owner : {item.owner}</span>}
           <span className="price">₹{item.price}</span>
           {item?.emi && <span>EMI starts at ₹6045/month.</span>}
           {item?.available_for_rent && (

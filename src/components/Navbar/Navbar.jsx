@@ -1,7 +1,11 @@
 import "./Navbar.scss";
 import Logo from "../../assets/images/logo.png";
 import { HiOutlineSearch } from "react-icons/hi";
-import { AiOutlineMenu, AiOutlineMessage } from "react-icons/ai";
+import {
+  AiOutlineMenu,
+  AiOutlineMessage,
+  AiOutlineShoppingCart,
+} from "react-icons/ai";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
@@ -16,6 +20,7 @@ import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import { fetchUser } from "../../apiCall";
+import { domainName } from "../../Constants";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -66,9 +71,18 @@ export const Navbar = () => {
   };
 
   // Get user data
-  const { isLoading, data: user } = useQuery({
+  useQuery({
     queryKey: ["user-data"],
     queryFn: fetchUser,
+    onSuccess: (data) => {
+      // console.log(data.data);
+      if (data.data?.user) {
+        sessionStorage.setItem("user_details", JSON.stringify(data.data.user));
+      }
+    },
+    onError: (err) => {
+      // handle error
+    },
   });
 
   return (
@@ -133,11 +147,13 @@ export const Navbar = () => {
             }
           >
             <img
-              src="https://img.freepik.com/free-icon/user_318-159711.jpg"
+              src={
+                `${domainName}${userDetails?.profile_image}` ||
+                "https://img.freepik.com/free-icon/user_318-159711.jpg"
+              }
               alt="profile"
               className="profile-img"
             />
-            {/* <span>User</span> */}
             {/* <span>{userDetails?.name || userEmail}</span> */}
             <PiCaretDownBold className="icon" />
           </div>
@@ -162,25 +178,35 @@ export const Navbar = () => {
               <li>contact us</li>
             </Link>
             {userLoggedIn ? (
-              <li>
-                <div
-                  className="profile"
-                  onClick={() =>
-                    dispatch({
-                      type: "PROFILE_OPTIONS_VIEW",
-                      status: !showProfileOptions,
-                    })
-                  }
-                >
-                  <img
-                    src="https://img.freepik.com/free-icon/user_318-159711.jpg"
-                    alt="profile"
-                    className="profile-img"
-                  />
-                  <span>{userDetails?.name || userEmail}</span>
-                  <PiCaretDownBold className="icon" />
-                </div>
-              </li>
+              <>
+                <Link to={"/checkout"} className="underline-none">
+                  <li>
+                    <AiOutlineShoppingCart className="cart-icon"/>
+                  </li>
+                </Link>
+                <li>
+                  <div
+                    className="profile"
+                    onClick={() =>
+                      dispatch({
+                        type: "PROFILE_OPTIONS_VIEW",
+                        status: !showProfileOptions,
+                      })
+                    }
+                  >
+                    <img
+                      src={
+                        `${domainName}${userDetails?.profile_image}` ||
+                        "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                      }
+                      alt="profile"
+                      className="profile-img"
+                    />
+                    <span>{userDetails?.name || userEmail}</span>
+                    <PiCaretDownBold className="icon" />
+                  </div>
+                </li>
+              </>
             ) : (
               <>
                 <Link to={"/login"}>

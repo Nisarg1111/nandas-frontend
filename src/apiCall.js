@@ -24,27 +24,51 @@ export const fetchUser = () => {
   return request({ url: `${domainName}${api.profile}`, method: "get" });
 };
 
+// update user details
+export const updateUser = (data) => {
+  return request({ url: `${domainName}${api.profile}`, method: "put", data });
+};
+
+// update user details
+export const updateProfileImg = (data) => {
+  return request({
+    url: `${domainName}${api.updateProfileImg}`,
+    method: "post",
+    data,
+  });
+};
+
 // get all products
-export const fetchAllProducts = ()=>{
-  return axios.get(`${domainName}${api.allProducts}`)
-}
+export const fetchAllProducts = () => {
+  return axios.get(`${domainName}${api.allProducts}`);
+};
 
 // get categories
-export const categoriesList = ()=>{
-  return axios.get(`${domainName}${api.categories}`)
-}
+export const categoriesList = () => {
+  return axios.get(`${domainName}${api.categories}`);
+};
 
 // get recent products
-export const fetchRecentProducts = ()=>{
-  return axios.get(`${domainName}${api.recentProducts}`)
-}
+export const fetchRecentProducts = () => {
+  return axios.get(`${domainName}${api.recentProducts}`);
+};
 
 // get popular products
-export const fetchPopularProducts = ()=>{
-  return axios.get(`${domainName}${api.popularProducts}`)
-}
+export const fetchPopularProducts = () => {
+  return axios.get(`${domainName}${api.popularProducts}`);
+};
 
 // get product info
-export const fetchProductInfo = ({queryKey})=>{
-  return axios.get(`${domainName}${api.productInfo}${queryKey[1]}`)
-}
+export const fetchProductInfo = ({ queryKey }) => {
+  return axios.get(`${domainName}${api.productInfo}${queryKey[1]}`);
+};
+
+// get cart items
+export const getCart = () => {
+  return request({ url: `${domainName}${api.cart}`, method: "get" });
+};
+
+// add item to cart
+export const addToCart = (data) => {
+  return request({ url: `${domainName}${api.addToCart}`, method: "post", data });
+};

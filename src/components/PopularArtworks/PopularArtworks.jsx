@@ -59,7 +59,12 @@ export const PopularArtworks = () => {
   // get list of popular products
   const { isLoading: popularProductsLoading, data: popularProducts } = useQuery(
     ["popular-products"],
-    fetchPopularProducts
+    fetchPopularProducts,
+    {
+      onError: (err) => {
+        // handle err
+      },
+    }
   );
   return (
     <section className="popular-artwork">

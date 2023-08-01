@@ -1,5 +1,8 @@
 export const initialState = {
-  userLoggedIn: sessionStorage.getItem("token") ? true : false,
+  userLoggedIn:
+    sessionStorage.getItem("token") || localStorage.getItem("token")
+      ? true
+      : false,
   showProfileOptions: false,
 };
 

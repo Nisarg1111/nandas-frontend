@@ -17,7 +17,7 @@ export const ProductCard = ({ item }) => {
       onMouseLeave={() => setHovered(false)}
     >
       <img
-        onClick={() => navigate("/product-info/:productId")}
+        onClick={() => navigate(`/product-info/${item.id}`)}
         src={`${domainName}/uploads/${item.main_image}`}
         alt=""
         className="slider-img"
@@ -42,6 +42,7 @@ export const ProductCard = ({ item }) => {
 
           <div className="flex-column">
             <span>{item.category__title}</span>
+            {item?.owner && <span>Owner : {item.owner}</span>}
             <span className="price">₹{item.price}</span>
             {item?.emi && <span>EMI starts at ₹6045/month.</span>}
             {item?.available_for_rent && (

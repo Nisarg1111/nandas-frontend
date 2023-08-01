@@ -16,8 +16,6 @@ import { PopularArtworks } from "../../components/PopularArtworks/PopularArtwork
 import { useQuery } from "@tanstack/react-query";
 import { fetchRecentProducts } from "../../apiCall";
 
-const artsImages = [art2, art3, art4, art5, art7, art2, art3, art4, art5, art7];
-
 const qaContent = [
   "What can I sell?",
   "How much money can I make?",
@@ -61,9 +59,13 @@ export const Home = () => {
   // get list of recent products
   const { isLoading: recentProductsLoading, data: recentProducts } = useQuery(
     ["recent-products"],
-    fetchRecentProducts
+    fetchRecentProducts,
+    {
+      onError: (err) => {
+        // handle err
+      },
+    }
   );
-
   return (
     <div className="home-container">
       <div className="banner" data-aos="fade-up">

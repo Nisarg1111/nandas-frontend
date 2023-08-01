@@ -5,14 +5,19 @@ import { BiShield } from "react-icons/bi";
 import ArtImg1 from "../../assets/arts/art (4).png";
 import ArtImg2 from "../../assets/arts/art (7).png";
 import OrderSuccessImg from "../../assets/images/green-bg-success.png";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { domainName } from "../../Constants";
+import { getCart } from "../../apiCall";
 
 export const Checkout = () => {
   const arts = [ArtImg1, ArtImg2];
   const [editOpen, setEditOpen] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
   const [showProtectArtModal, setShowProtectArtModel] = useState(false);
   const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
+  const queryClient = useQueryClient();
 
   const placeOrder = () => {
     setShowOrderSuccessModal(true);
@@ -20,6 +25,19 @@ export const Checkout = () => {
       setShowOrderSuccessModal(false);
     }, 2000);
   };
+
+  // let cartItems = queryClient.getQueriesData(["cart"])[0]?.[1]?.data?.value
+  //   ?.products;
+  // console.log(cartItems, "cartItems");
+
+  useQuery(["cart"], getCart, {
+    onSuccess: (data) => {
+      setCartItems(data.data?.value?.products);
+    },
+    onError: (err) => {
+      // handle error
+    },
+  });
   return (
     <div className="main-container">
       <div className="routes">
@@ -92,54 +110,61 @@ export const Checkout = () => {
         <div className="summary" data-aos="fade-left">
           <h1>Order Summary</h1>
           <div className="order-details">
-            {arts.map((product) => {
-              return (
-                <div className="item">
-                  <div className="details">
-                    <img src={product} alt="product-img" />
-                    <div className="info">
-                      <div className="grid">
-                        <div className="">
-                          <span>Structural Landscape</span>
-                          <p>Gregg Rosen</p>
+            {cartItems.length !== 0 &&
+              cartItems.map((product) => {
+                return (
+                  <div className="item">
+                    <div className="details">
+                      <img
+                        src={`${domainName}${product.product_details.image}`}
+                        alt="product"
+                      />
+                      <div className="info">
+                        <div className="grid">
+                          <div className="">
+                            <span>{product.product_details.title}</span>
+                            <p>{product.product_details.category}</p>
+                          </div>
+                          <div>
+                            <select name="quantity" id="">
+                              <option value="1">1</option>
+                              <option value="2">2</option>
+                              <option value="3">3</option>
+                            </select>
+                          </div>
+                          <div>
+                            <span>₹{product.product_details.price}</span>
+                            {product.product_details.emi && (
+                              <p>₹6045/month with EMI</p>
+                            )}
+                          </div>
                         </div>
-                        <div>
-                          <select name="quantity" id="">
-                            <option value="1">1</option>
-                            <option value="2">2</option>
-                            <option value="3">3</option>
-                          </select>
-                        </div>
-                        <div>
-                          <span>₹1,85,323</span>
-                          <p>₹6045/month with EMI</p>
-                        </div>
+                        <div className="remove">Remove</div>
                       </div>
-                      <div className="remove">Remove</div>
+                    </div>
+                    <hr />
+                    <div className="art-protection">
+                      <h3>Protect your Art</h3>
+                      <h4>₹6900.00</h4>
+                      <hr />
+                      <p>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        Tempore vel similique quasi illo nulla mollitia, eos
+                        odio.
+                        <span
+                          className="link"
+                          onClick={() =>
+                            setShowProtectArtModel(!showProtectArtModal)
+                          }
+                        >
+                          Learn More
+                        </span>
+                      </p>
+                      <span className="remove">Remove</span>
                     </div>
                   </div>
-                  <hr />
-                  <div className="art-protection">
-                    <h3>Protect your Art</h3>
-                    <h4>₹6900.00</h4>
-                    <hr />
-                    <p>
-                      Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                      Tempore vel similique quasi illo nulla mollitia, eos odio.
-                      <span
-                        className="link"
-                        onClick={() =>
-                          setShowProtectArtModel(!showProtectArtModal)
-                        }
-                      >
-                        Learn More
-                      </span>
-                    </p>
-                    <span className="remove">Remove</span>
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })}
             <hr />
             <div className="flex-between">
               <span>Sub Total</span>
