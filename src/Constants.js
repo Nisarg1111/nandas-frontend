@@ -11,8 +11,10 @@ export const api = {
   allProducts: "/api/get-all-products-list",
   recentProducts: "/api/get-recent-products",
   popularProducts: "/api/get-popular-products",
-  categoryProducts: "/api/get-category-products/:categoryId",
+  categoryProducts: "/api/get-category-products/",
   productInfo: "/api/get-product-info/",
-  cart:'/api/get-cart',
-  addToCart:'/api/add-to-cart'
+  cart: "/api/get-cart",
+  addToCart: "/api/add-to-cart",
+  updateQuantity: "/api/update-quantity",
+  deleteFromCart:'/api/delete-from-cart/'
 };

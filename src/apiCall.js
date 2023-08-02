@@ -70,5 +70,26 @@ export const getCart = () => {
 
 // add item to cart
 export const addToCart = (data) => {
-  return request({ url: `${domainName}${api.addToCart}`, method: "post", data });
+  return request({
+    url: `${domainName}${api.addToCart}`,
+    method: "post",
+    data,
+  });
+};
+
+// add item to cart
+export const updateQuantity = (data) => {
+  return request({
+    url: `${domainName}${api.updateQuantity}`,
+    method: "put",
+    data,
+  });
+};
+
+// delete from cart
+export const deleteFromCart = (productId) => {
+  return request({
+    url: `${domainName}${api.deleteFromCart}${productId}`,
+    method: "delete",
+  });
 };

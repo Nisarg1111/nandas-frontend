@@ -2,22 +2,20 @@ import { Link } from "react-router-dom";
 import "./Checkout.scss";
 import { PiCaretRight } from "react-icons/pi";
 import { BiShield } from "react-icons/bi";
-import ArtImg1 from "../../assets/arts/art (4).png";
-import ArtImg2 from "../../assets/arts/art (7).png";
 import OrderSuccessImg from "../../assets/images/green-bg-success.png";
 import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { domainName } from "../../Constants";
 import { getCart } from "../../apiCall";
+import { CartItem } from "./components/CartItem/CartItem";
+import { useStateValue } from "../../StateProvider";
 
 export const Checkout = () => {
-  const arts = [ArtImg1, ArtImg2];
   const [editOpen, setEditOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([]);
   const [showProtectArtModal, setShowProtectArtModel] = useState(false);
   const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
-  const queryClient = useQueryClient();
+  const [{ userCart, cartTotal }, dispatch] = useStateValue();
 
   const placeOrder = () => {
     setShowOrderSuccessModal(true);
@@ -26,18 +24,18 @@ export const Checkout = () => {
     }, 2000);
   };
 
-  // let cartItems = queryClient.getQueriesData(["cart"])[0]?.[1]?.data?.value
-  //   ?.products;
-  // console.log(cartItems, "cartItems");
-
   useQuery(["cart"], getCart, {
     onSuccess: (data) => {
-      setCartItems(data.data?.value?.products);
+      // console.log(data.data?.value, "list");
+      dispatch({ type: "SET_CART_ITEMS", data: data.data?.value?.products });
+      dispatch({ type: "SET_CART_TOTAL", data: data.data?.value?.total });
     },
     onError: (err) => {
       // handle error
     },
   });
+
+  console.log(userCart);
   return (
     <div className="main-container">
       <div className="routes">
@@ -48,10 +46,10 @@ export const Checkout = () => {
         <Link to={"/shop"} className="underline-none">
           Shop
         </Link>
-        <PiCaretRight className="icon" />
+        {/* <PiCaretRight className="icon" />
         <Link to={"/product-info/:productId"} className="underline-none">
           Structural Landscape
-        </Link>
+        </Link> */}
         <PiCaretRight className="icon" />
         <Link className="underline-none">Checkout</Link>
       </div>
@@ -110,88 +108,44 @@ export const Checkout = () => {
         <div className="summary" data-aos="fade-left">
           <h1>Order Summary</h1>
           <div className="order-details">
-            {cartItems.length !== 0 &&
-              cartItems.map((product) => {
+            {userCart?.length > 0 &&
+              userCart.map((product) => {
                 return (
-                  <div className="item">
-                    <div className="details">
-                      <img
-                        src={`${domainName}${product.product_details.image}`}
-                        alt="product"
-                      />
-                      <div className="info">
-                        <div className="grid">
-                          <div className="">
-                            <span>{product.product_details.title}</span>
-                            <p>{product.product_details.category}</p>
-                          </div>
-                          <div>
-                            <select name="quantity" id="">
-                              <option value="1">1</option>
-                              <option value="2">2</option>
-                              <option value="3">3</option>
-                            </select>
-                          </div>
-                          <div>
-                            <span>₹{product.product_details.price}</span>
-                            {product.product_details.emi && (
-                              <p>₹6045/month with EMI</p>
-                            )}
-                          </div>
-                        </div>
-                        <div className="remove">Remove</div>
-                      </div>
-                    </div>
-                    <hr />
-                    <div className="art-protection">
-                      <h3>Protect your Art</h3>
-                      <h4>₹6900.00</h4>
-                      <hr />
-                      <p>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Tempore vel similique quasi illo nulla mollitia, eos
-                        odio.
-                        <span
-                          className="link"
-                          onClick={() =>
-                            setShowProtectArtModel(!showProtectArtModal)
-                          }
-                        >
-                          Learn More
-                        </span>
-                      </p>
-                      <span className="remove">Remove</span>
-                    </div>
-                  </div>
+                  <CartItem
+                    product={product}
+                    setShowProtectArtModel={setShowProtectArtModel}
+                    key={product.product_details.product_id}
+                    showProtectArtModal={showProtectArtModal}
+                  />
                 );
               })}
             <hr />
             <div className="flex-between">
               <span>Sub Total</span>
-              <span>₹1,85,323</span>
+              <span>₹{cartTotal}</span>
             </div>
             <div className="flex-between">
               <span>Shipping</span>
               <span>-----</span>
             </div>
-            <div className="flex-between">
+            {/* <div className="flex-between">
               <span>Insurance Policy</span>
               <span>₹6045</span>
-            </div>
+            </div> */}
             <hr />
             <div className="flex-between">
               <div>
                 <h4>Total</h4>
-                <span>Monthly Payment</span>
+                {/* <span>Monthly Payment</span> */}
               </div>
               <div>
-                <h4>₹3,76,691</h4>
-                <span>₹6045/month with EMI</span>
+                <h4>₹{userCart.length !== 0 ? cartTotal : 0}</h4>
+                {/* <span>₹6045/month with EMI</span> */}
               </div>
             </div>
             <span className="link">Explore EMI Option</span>
             <button onClick={placeOrder} className="btn-primary">
-              Pay ₹1,85,323
+              Pay ₹{userCart.length !== 0 ? cartTotal : 0}
             </button>
           </div>
         </div>

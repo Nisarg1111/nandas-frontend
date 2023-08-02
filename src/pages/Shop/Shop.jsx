@@ -24,6 +24,8 @@ export const Shop = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedPriceRanges, setSelectedPriceRanges] = useState([]);
   const [selectedSizes, setSelectedSizes] = useState([]);
+  const [colors, setColors] = useState([]);
+  const [selectedColors, setSelectedColors] = useState([]);
   const artsImages = [
     art2,
     art3,
@@ -44,7 +46,12 @@ export const Shop = () => {
     {
       onSuccess: (data) => {
         setProducts(data.data?.value);
+        console.log(data.data?.value);
         setAllProducts(data.data?.value);
+        const clrs = data.data.value.map((product) => product.color);
+        const uniqueClrsList = new Set(clrs);
+        const uniqueClrsArray = Array.from(uniqueClrsList);
+        setColors(uniqueClrsArray);
       },
       onError: (e) => {
         if (e.message) {
@@ -104,6 +111,23 @@ export const Shop = () => {
     }
   };
 
+  // set price ranges
+  const handleSizeChange = (from, to) => {
+    if (selectedSizes.some((price) => price.from === from)) {
+      setSelectedSizes(selectedSizes.filter((price) => price.from !== from));
+    } else {
+      setSelectedSizes([...selectedSizes, { from: from, to: to }]);
+    }
+  };
+
+  // set color filter
+  const handleColorChange = (color) => {
+    if (selectedColors.includes(color)) {
+      return setSelectedColors(selectedColors.filter((clr) => clr !== color));
+    }
+    setSelectedColors([...selectedColors, color]);
+  };
+
   // filtering products
   useEffect(() => {
     setProducts(
@@ -111,21 +135,53 @@ export const Shop = () => {
         .filter((item) => {
           if (
             selectedCategories.length === 0 &&
-            selectedPriceRanges.length === 0
+            selectedPriceRanges.length === 0 &&
+            selectedColors.length === 0
           ) {
             return true;
-          } else if (selectedPriceRanges.length === 0) {
-            return selectedCategories.includes(item.category__title);
-          } else if (selectedCategories.length === 0) {
+          } else if (
+            selectedCategories.length === 0 &&
+            selectedPriceRanges.length === 0
+          ) {
+            return selectedColors.includes(item.color);
+          } else if (
+            selectedCategories.length === 0 &&
+            selectedColors.length === 0
+          ) {
             return selectedPriceRanges.some(
               (range) => range.from <= item.price && range.to > item.price
+            );
+          } else if (
+            selectedColors.length === 0 &&
+            selectedPriceRanges.length === 0
+          ) {
+            return selectedCategories.includes(item.category__title);
+          } else if (selectedColors.length === 0) {
+            return (
+              selectedCategories.includes(item.category__title) &&
+              selectedPriceRanges.some(
+                (range) => range.from <= item.price && range.to > item.price
+              )
+            );
+          } else if (selectedCategories.length === 0) {
+            return (
+              selectedColors.includes(item.color) &&
+              selectedPriceRanges.some(
+                (range) => range.from <= item.price && range.to > item.price
+              )
+            );
+          } else if (selectedPriceRanges.length === 0) {
+            return (
+              selectedColors.includes(item.color) &&
+              selectedCategories.includes(item.category__title)
             );
           } else {
             return (
               selectedCategories.includes(item.category__title) &&
               selectedPriceRanges.some(
                 (range) => range.from <= item.price && range.to > item.price
-              )
+              ) &&
+              selectedColors.includes(item.color)
             );
           }
         })
@@ -147,6 +203,7 @@ export const Shop = () => {
     sortType,
     filterRentItems,
     selectedPriceRanges,
+    selectedColors,
   ]);
   return (
     <div className="shop-main">
@@ -222,7 +279,7 @@ export const Shop = () => {
               </div>
             ))}
           </div>
-          <div className="filter-box">
+          {/* <div className="filter-box">
             <h4>Size</h4>
             <div className="underline"></div>
             <div className="radios">
@@ -250,14 +307,22 @@ export const Shop = () => {
               </div>
             </div>
             <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
+              <input
+                type="checkbox"
+                className="checkbox"
+                onChange={() => handleSizeChange(0, 40)}
+              />
               <span>
                 Small (0-
                 {!showInInches ? "40 cm" : `${(40 * 0.393701).toFixed(1)} in`})
               </span>
             </div>
             <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
+              <input
+                type="checkbox"
+                className="checkbox"
+                onChange={() => handleSizeChange(40, 100)}
+              />
               <span>
                 Medium (
                 {!showInInches
@@ -269,7 +334,11 @@ export const Shop = () => {
               </span>
             </div>
             <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
+              <input
+                type="checkbox"
+                className="checkbox"
+                onChange={() => handleSizeChange(100)}
+              />
               <span>
                 Large (
                 {!showInInches
@@ -278,7 +347,7 @@ export const Shop = () => {
                 )
               </span>
             </div>
-          </div>
+          </div> */}
           <div className="filter-box">
             <h4>Price</h4>
             <div className="underline"></div>
@@ -323,14 +392,21 @@ export const Shop = () => {
               <span>₹36000 - ₹48000</span>
             </div>
           </div>
-          {/* <div className="filter-box">
+          <div className="filter-box">
             <h4>Color</h4>
             <div className="underline"></div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>White</span>
-            </div>
-            <div className="filter-item">
+            {colors.map((clr) => (
+              <div className="filter-item">
+                <input
+                  type="checkbox"
+                  className="checkbox"
+                  onChange={() => handleColorChange(clr)}
+                  checked={selectedColors.includes(clr)}
+                />
+                <span>{clr}</span>
+              </div>
+            ))}
+            {/* <div className="filter-item">
               <input type="checkbox" className="checkbox" />
               <span>Black</span>
             </div>
@@ -357,8 +433,8 @@ export const Shop = () => {
             <div className="filter-item">
               <input type="checkbox" className="checkbox" />
               <span>Yellow</span>
-            </div>
-          </div> */}
+            </div> */}
+          </div>
         </div>
         <Offcanvas
           show={showFilters}
@@ -454,7 +530,7 @@ export const Shop = () => {
                   <span>New this week</span>
                 </div> */}
               </div>
-              <div className="filter-box">
+              {/* <div className="filter-box">
                 <h4>Size</h4>
                 <div className="underline"></div>
                 <div className="radios">
@@ -513,7 +589,7 @@ export const Shop = () => {
                     )
                   </span>
                 </div>
-              </div>
+              </div> */}
               <div className="filter-box">
                 <h4>Price</h4>
                 <div className="underline"></div>
@@ -558,9 +634,21 @@ export const Shop = () => {
                   <span>₹36000 - ₹48000</span>
                 </div>
               </div>
-              {/* <div className="filter-box">
+              <div className="filter-box">
                 <h4>Color</h4>
                 <div className="underline"></div>
+                {colors.map((clr) => (
+                  <div className="filter-item">
+                    <input
+                      type="checkbox"
+                      className="checkbox"
+                      onChange={() => handleColorChange(clr)}
+                      checked={selectedColors.includes(clr)}
+                    />
+                    <span>{clr}</span>
+                  </div>
+                ))}
+                {/* 
                 <div className="filter-item">
                   <input type="checkbox" className="checkbox" />
                   <span>White</span>
@@ -593,7 +681,8 @@ export const Shop = () => {
                   <input type="checkbox" className="checkbox" />
                   <span>Yellow</span>
                 </div>
-              </div> */}
+              */}
+              </div>
             </div>
           </div>
         </Offcanvas>
