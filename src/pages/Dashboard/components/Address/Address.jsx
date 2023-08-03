@@ -1,66 +1,105 @@
 import { useState } from "react";
-import "./Shipping.scss";
-import EmptyImg from "../../../../assets/images/empty-cart.png";
-import { Address } from "../Address/Address";
+import "./Address.scss";
 import { useForm } from "react-hook-form";
-import axios from "axios";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { addAddress } from "../../../../apiCall";
+import { deleteAddress, updateAddress } from "../../../../apiCall";
 import { toast } from "react-hot-toast";
+import { useStateValue } from "../../../../StateProvider";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
-export const Shipping = ({ addresses, isLoading }) => {
-  const queryClient = useQueryClient();
-  const [openAdd, setOpenAdd] = useState(false);
-  const [editStatus, setEditStatus] = useState(false);
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [pincode, setPincode] = useState("");
+export const Address = ({ address, setAddAddressStatus, setEditStatus }) => {
+  const [editOpen, setEditOpen] = useState(false);
+  const [, dispatch] = useStateValue();
+  const [city, setCity] = useState(address.city);
+  const [state, setState] = useState(address.state);
+  const [pincode, setPincode] = useState(address.pin_code);
   const [pincodeErr, setPincodeErr] = useState("");
+  const queryClient = useQueryClient();
+
+  const handleEditOpen = () => {
+    setEditOpen(true);
+    setEditStatus(true);
+    setAddAddressStatus(false);
+  };
 
   const {
     register,
     handleSubmit,
+    getValues,
     reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      name: "",
-      email: "",
-      phone_number: "",
-      address: "",
+      name: address.name,
+      phone_number: address.phone_number,
+      email: address.email,
+      address: address.address,
     },
   });
 
-  const addAddressMutation = useMutation(addAddress, {
-    onSuccess: (data) => {
-      if (data.data?.status[0]?.Error === "False") {
-        toast.success("Added address");
-        console.log("add address response", data.data);
+  // update address
+  const doUpdate = async (values) => {
+    values = {
+      ...values,
+      state: state,
+      city: city,
+      pin_code: pincode.toString(),
+      phone_number: values.phone_number.toString(),
+      address_id: address.id,
+    };
+    console.log(values, "VALUES");
+    try {
+      const response = await updateAddress(values);
+      console.log(response, "response");
+      if (response.data?.status[0].Error === "False") {
+        toast.success("Address updated successfully");
         queryClient.invalidateQueries(["addresses"]);
-        setOpenAdd(false);
-        reset();
-        setCity("");
-        setState("");
-        setPincode("");
+        setEditOpen(false);
+        setEditStatus(false);
+      } else {
+        toast.error(response.data?.status[0].ResponseMessage);
       }
-    },
-    onError: (err) => {
-      console.log(err, "error");
+    } catch (err) {
+      console.log(err);
       if (err.message) {
         toast.error(err.message);
       } else {
         toast.error("Something went wrong");
       }
-    },
-  });
-
-  // add address
-  const handleFormSubmit = (values) => {
-    values = { ...values, city: city, state: state, pin_code: pincode };
-    console.log(values);
-    addAddressMutation.mutate(values);
+    }
   };
 
+  // cancel update address
+  const cancelAddAddress = () => {
+    reset();
+    setCity(address.city);
+    setState(address.state);
+    setPincode(address.pin_code);
+    setPincodeErr("");
+    setEditStatus(false);
+    setEditOpen(false);
+  };
+
+  // delete address
+  const doDelete = async () => {
+    try {
+      const response = await deleteAddress(address.id);
+      if (response.data?.status[0]?.Error === "False") {
+        toast.success(response.data?.status[0]?.ResponseMessage);
+        dispatch({ type: "DELETE_USER_ADDRESS", id: address.id });
+      } else {
+        toast.error(response.data?.status[0].ResponseMessage);
+      }
+    } catch (err) {
+      if (err.message) {
+        toast.error(err.message);
+      } else {
+        toast.error("Something went wrong");
+      }
+    }
+  };
+
+  // pincode handler
   const checkPincode = async (e) => {
     if (e.target.value.length === 0) {
       return setPincodeErr("Pincode is required");
@@ -96,34 +135,19 @@ export const Shipping = ({ addresses, isLoading }) => {
       setPincodeErr("Pincode is required");
     }
   };
-
-  const cancelAddAddress = () => {
-    reset();
-    setPincodeErr("");
-    setPincode("");
-    setState("");
-    setCity("");
-    setOpenAdd(false);
-  };
   return (
-    <div data-aos="fade-up">
-      {!openAdd && !editStatus ? (
-        <div className="add-button">
-          <button className="btn-primary" onClick={() => setOpenAdd(!openAdd)}>
-            add address
-          </button>
-        </div>
-      ) : null}
-      {openAdd ? (
-        <div className="main-div">
-          <div className="form-side">
-            <form onSubmit={handleSubmit(handleFormSubmit)}>
-              <h4>Add Address</h4>
+    <div className="address-div">
+      <div className="address-side">
+        <>
+          {editOpen ? (
+            <form onSubmit={handleSubmit(doUpdate)}>
+              <h4>Edit Address</h4>
               <div className="inputs">
                 <div className="input-box">
                   <label htmlFor="">Name</label>
                   <input
                     type="text"
+                    defaultValue={getValues("name")}
                     {...register("name", {
                       required: "Name is required",
                       pattern: {
@@ -138,6 +162,7 @@ export const Shipping = ({ addresses, isLoading }) => {
                   <label htmlFor="">Mobile Number</label>
                   <input
                     type="tel"
+                    defaultValue={getValues("phone_number")}
                     {...register("phone_number", {
                       required: "Phone number is required",
                       pattern: {
@@ -154,6 +179,7 @@ export const Shipping = ({ addresses, isLoading }) => {
                   <label htmlFor="">Email</label>
                   <input
                     type="email"
+                    defaultValue={getValues("email")}
                     {...register("email", {
                       required: "Email is required",
                       pattern: {
@@ -166,21 +192,27 @@ export const Shipping = ({ addresses, isLoading }) => {
                 </div>
                 <div className="input-box">
                   <label htmlFor="">Pincode</label>
-                  <input type="tel" onChange={checkPincode} />
+                  <input
+                    type="tel"
+                    defaultValue={pincode}
+                    onChange={checkPincode}
+                  />
                   <small className="error">{pincodeErr}</small>
                 </div>
                 <div className="input-box">
                   <label htmlFor="">City</label>
-                  <input type="text" disabled defaultValue={city} />
+                  <input type="text" disabled value={city} />
                 </div>
                 <div className="input-box">
                   <label htmlFor="">State</label>
-                  <input type="text" disabled defaultValue={state} />
+                  <input type="text" disabled value={state} />
                 </div>
+
                 <div className="input-box">
                   <label htmlFor="">Address</label>
                   <input
                     type="text"
+                    defaultValue={getValues("address")}
                     {...register("address", {
                       required: "Address is required",
                       minLength: {
@@ -205,24 +237,22 @@ export const Shipping = ({ addresses, isLoading }) => {
                 </button>
               </div>
             </form>
-          </div>
-        </div>
-      ) : null}
-      {addresses.length !== 0 &&
-        addresses.map((address) => (
-          <Address
-            address={address}
-            key={address.id}
-            addAddressStatus={openAdd}
-            setEditStatus={setEditStatus}
-            setAddAddressStatus={setOpenAdd}
-          />
-        ))}
-      {!addresses.length && !openAdd && !isLoading ? (
-        <div className="empty-addresses">
-          <img src={EmptyImg} alt="empty-addresses" className="empty-img" />
-        </div>
-      ) : null}
+          ) : (
+            <div className="delivery-info">
+              <h1>{address.name}</h1>
+              <p className="uppercase">
+                {address.city}, {address.pin_code} {address.state}
+              </p>
+              <p>{address.email}</p>
+              <p>{address.phone_number}</p>
+              <div className="address-options">
+                <span onClick={handleEditOpen}>Edit</span>
+                <span onClick={doDelete}>Delete</span>
+              </div>
+            </div>
+          )}
+        </>
+      </div>
     </div>
   );
 };

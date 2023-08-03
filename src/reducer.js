@@ -6,6 +6,7 @@ export const initialState = {
   showProfileOptions: false,
   userCart: [],
   cartTotal: "",
+  userAddresses: [],
 };
 
 function reducer(state, action) {
@@ -38,21 +39,22 @@ function reducer(state, action) {
           return item;
         }),
       };
-    // case "DELETE_FROM_CART":
-    //   const deletedItem = state.userCart.find(
-    //     (item) => item.product_details.product_id === action.data
-    //   );
-    //   return {
-    //     ...state,
-    //     userCart: state.userCart.filter(
-    //       (item) => item?.product_details?.product_id !== action.data
-    //     ),
-    //     cartTotal: state.cartTotal - deletedItem.sub_total,
-    //   };
     case "SET_CART_TOTAL":
       return {
         ...state,
         cartTotal: action.data,
+      };
+    case "SET_USER_ADDRESSES":
+      return {
+        ...state,
+        userAddresses: action.addresses,
+      };
+    case "DELETE_USER_ADDRESS":
+      return {
+        ...state,
+        userAddresses: state.userAddresses.filter(
+          (address) => address.id !== action.id
+        ),
       };
     default:
       return state;

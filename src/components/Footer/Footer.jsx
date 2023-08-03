@@ -5,24 +5,24 @@ export const Footer = () => {
     <div className="footer-container">
       <div className="above-footer">
         <div>
-          <th>About</th>
-          <td>About Us</td>
-          <td>Contact</td>
-          <td>Privacy Policy</td>
-          <td>Terms of Use</td>
+          <span>About</span>
+          <span>About Us</span>
+          <span>Contact</span>
+          <span>Privacy Policy</span>
+          <span>Terms of Use</span>
         </div>
         <div>
-          <th>Contact</th>
-          <td>Nanda Art@example.com</td>
-          <td>(603) 555-0123</td>
-          <td>
+          <span>Contact</span>
+          <span>Nanda Art@example.com</span>
+          <span>(603) 555-0123</span>
+          <span>
             8502 Preston Rd. <br /> Inglewood, Maine <br /> 98380
-          </td>
+          </span>
         </div>
         <div>
-          <th>Social Media</th>
-          <td>INSTAGRAM</td>
-          <td>FACEBOOK</td>
+          <span>Social Media</span>
+          <span>INSTAGRAM</span>
+          <span>FACEBOOK</span>
         </div>
       </div>
       <span>© 2023 Nanda Art</span>

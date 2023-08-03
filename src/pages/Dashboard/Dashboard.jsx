@@ -9,7 +9,6 @@ import { Link } from "react-router-dom";
 import { PiCaretRight } from "react-icons/pi";
 import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
-import { HiMiniPencilSquare } from "react-icons/hi2";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import OrderDetails from "./components/OrderDetails/OrderDetails";
 import artImg1 from "../../assets/arts/art (2).png";
@@ -20,10 +19,11 @@ import artImg5 from "../../assets/arts/art (7).png";
 import { ProductItem } from "../../components/ProductItem/ProductItem";
 import { Shipping } from "./components/Shipping/Shipping";
 import { useForm } from "react-hook-form";
-import { updateProfileImg, updateUser } from "../../apiCall";
+import { getAddresses, updateProfileImg, updateUser } from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
-import { useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useStateValue } from "../../StateProvider";
 
 const options = [
   { url: "dashboard", icon: LuLayoutDashboard, title: "Dashboard" },
@@ -58,6 +58,8 @@ export const Dashboard = () => {
   const imgRef = useRef();
   const [profilePic, setProfilePic] = useState();
   const queryClient = useQueryClient();
+  const [addresses, setAddresses] = useState([]);
+  const [{ userAddresses }, dispatch] = useStateValue();
 
   useEffect(() => {
     setPage(params.page);
@@ -106,7 +108,6 @@ export const Dashboard = () => {
         try {
           console.log(fData, "formData");
           const response = await updateProfileImg(fData);
-          console.log(response, "data");
           if (response.data?.status[0].Error === "False") {
             setProfilePic({ url: URL.createObjectURL(file) });
             queryClient.invalidateQueries("user-data");
@@ -126,6 +127,17 @@ export const Dashboard = () => {
       }
     }
   };
+
+  // get user addresses
+  const { isLoading } = useQuery(["addresses"], getAddresses, {
+    onSuccess: (data) => {
+      if (data.data?.value) {
+        setAddresses(data.data.value);
+        dispatch({ type: "SET_USER_ADDRESSES", addresses: data.data.value });
+      }
+    },
+    onError: (err) => console.log(err),
+  });
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -135,6 +147,7 @@ export const Dashboard = () => {
               navigate(`/dashboard/${option.url}`);
             }}
             className={`option ${page === option.url && "active"}`}
+            key={i}
           >
             {option.icon && <option.icon className="icon" />}
             {option.title}
@@ -284,7 +297,9 @@ export const Dashboard = () => {
             </form>
           </div>
         )}
-        {page === "shipping" && <Shipping />}
+        {page === "shipping" && (
+          <Shipping addresses={userAddresses} isLoading={isLoading} />
+        )}
         {page === "settings" && (
           <div className="settings">
             <div data-aos="fade-up" className="settings-content">

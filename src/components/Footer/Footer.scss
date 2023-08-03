@@ -23,13 +23,13 @@
       display: flex;
       flex-direction: column;
       gap: 0.4rem;
-      th {
+      span:first-of-type {
         font-size: 1.2rem;
         text-decoration: underline;
         text-underline-offset: 0.5rem;
         font-weight: 500;
       }
-      td {
+      span {
         font-size: 1.1rem;
       }
     }

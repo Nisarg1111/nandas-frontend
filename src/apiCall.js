@@ -93,3 +93,34 @@ export const deleteFromCart = (productId) => {
     method: "delete",
   });
 };
+
+// get user addresses
+export const getAddresses = () => {
+  return request({ url: `${domainName}${api.getAddresses}`, method: "get" });
+};
+
+// add address
+export const addAddress = (data) => {
+  return request({
+    url: `${domainName}${api.addAddress}`,
+    method: "post",
+    data,
+  });
+};
+
+// delete address
+export const deleteAddress = (addressId) => {
+  return request({
+    url: `${domainName}${api.deleteAddress}${addressId}`,
+    method: "delete",
+  });
+};
+
+// update address
+export const updateAddress = (data) => {
+  return request({
+    url: `${domainName}${api.updateAddress}`,
+    method: "put",
+    data,
+  });
+};

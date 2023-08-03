@@ -16,5 +16,9 @@ export const api = {
   cart: "/api/get-cart",
   addToCart: "/api/add-to-cart",
   updateQuantity: "/api/update-quantity",
-  deleteFromCart:'/api/delete-from-cart/'
+  deleteFromCart: "/api/delete-from-cart/",
+  getAddresses: "/api/get-addresses",
+  addAddress: "/api/add-address",
+  deleteAddress:'/api/delete-address/',
+  updateAddress:'/api/update-address'
 };

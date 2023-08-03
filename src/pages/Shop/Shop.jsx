@@ -1,12 +1,7 @@
 import "./Shop.scss";
-import art2 from "../../assets/arts/art (2).png";
-import art3 from "../../assets/arts/art (3).png";
-import art4 from "../../assets/arts/art (4).png";
-import art5 from "../../assets/arts/art (5).png";
-import art7 from "../../assets/arts/art (7).png";
 import { ProductItem } from "../../components/ProductItem/ProductItem";
 import { ReactComponent as FilterIcon } from "../../assets/svgs/filter-icon.svg";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Offcanvas } from "react-bootstrap";
 import { GrFormClose } from "react-icons/gr";
 import { useQuery } from "@tanstack/react-query";
@@ -17,7 +12,6 @@ export const Shop = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [filterRentItems, setFilterRentItems] = useState(false);
   const [showInInches, setShowInInches] = useState(false);
-  const [sortedProducts, setSortedProducts] = useState([]);
   const [products, setProducts] = useState([]);
   const [allProducts, setAllProducts] = useState([]);
   const [sortType, setSortType] = useState("");
@@ -26,18 +20,6 @@ export const Shop = () => {
   const [selectedSizes, setSelectedSizes] = useState([]);
   const [colors, setColors] = useState([]);
   const [selectedColors, setSelectedColors] = useState([]);
-  const artsImages = [
-    art2,
-    art3,
-    art4,
-    art5,
-    art7,
-    art2,
-    art3,
-    art4,
-    art5,
-    art7,
-  ];
 
   // get all products
   const { isLoading: allProductsIsLoading } = useQuery(
@@ -46,7 +28,6 @@ export const Shop = () => {
     {
       onSuccess: (data) => {
         setProducts(data.data?.value);
-        console.log(data.data?.value);
         setAllProducts(data.data?.value);
         const clrs = data.data.value.map((product) => product.color);
         const uniqueClrsList = new Set(clrs);
@@ -396,7 +377,7 @@ export const Shop = () => {
             <h4>Color</h4>
             <div className="underline"></div>
             {colors.map((clr) => (
-              <div className="filter-item">
+              <div className="filter-item" key={clr}>
                 <input
                   type="checkbox"
                   className="checkbox"
@@ -406,34 +387,6 @@ export const Shop = () => {
                 <span>{clr}</span>
               </div>
             ))}
-            {/* <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Black</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Gray</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Brown</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Red</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Green</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Blue</span>
-            </div>
-            <div className="filter-item">
-              <input type="checkbox" className="checkbox" />
-              <span>Yellow</span>
-            </div> */}
           </div>
         </div>
         <Offcanvas
@@ -638,7 +591,7 @@ export const Shop = () => {
                 <h4>Color</h4>
                 <div className="underline"></div>
                 {colors.map((clr) => (
-                  <div className="filter-item">
+                  <div className="filter-item" key={clr}>
                     <input
                       type="checkbox"
                       className="checkbox"
@@ -648,40 +601,6 @@ export const Shop = () => {
                     <span>{clr}</span>
                   </div>
                 ))}
-                {/* 
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>White</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Black</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Gray</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Brown</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Red</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Green</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Blue</span>
-                </div>
-                <div className="filter-item">
-                  <input type="checkbox" className="checkbox" />
-                  <span>Yellow</span>
-                </div>
-              */}
               </div>
             </div>
           </div>

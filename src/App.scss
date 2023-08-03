@@ -121,6 +121,14 @@ html {
     background-color: #3f3f3f;
   }
 }
+.btn-delete {
+  background-color: #830000b2;
+  color: $color-secondary;
+  @include buttonStyles();
+  &:hover {
+    background-color: #830000d2;
+  }
+}
 
 .profile-options-bg {
   width: 100%;
@@ -164,22 +172,7 @@ html {
   text-align: start;
 }
 
-// .loading-cards {
-//   display: grid;
-//   gap: 1rem;
-//   grid-template-columns: repeat(5, 1fr);
-//   @media(max-width:1200px){
-//     grid-template-columns: repeat(4, 1fr);
-//   }
-//   @media(max-width:990px){
-//     grid-template-columns: repeat(3, 1fr);
-//   }
-//   @media(max-width:520px){
-//     grid-template-columns: repeat(2, 1fr);
-//   }
-
   .loading-card {
-    // width: 215px;
     width: 100%;
     height: 220px;
     background: linear-gradient(0.25turn, transparent, #fff, transparent),
@@ -191,7 +184,6 @@ html {
     background-position: -215px 0, 0 0, 15px 150px, 15px 180px;
     animation: loading 1.5s infinite;
   }
-// }
 
 .loading-cards {
   display: grid;
@@ -225,5 +217,37 @@ html {
 @keyframes loading {
   to {
     background-position: 215px 0, 0 0, 15px 150px, 15px 180px;
+  }
+}
+
+.component-loader {
+  width: 64px;
+  height: 64px;
+  position: relative;
+  background-image:
+    linear-gradient(#FFF 16px, transparent 0) ,
+    linear-gradient(#FF3D00 16px, transparent 0) ,
+    linear-gradient(#FF3D00 16px, transparent 0) ,
+    linear-gradient(#FFF 16px, transparent 0);
+  background-repeat: no-repeat;
+  background-size: 16px 16px;
+  background-position: left top , left bottom , right top , right bottom;
+  animation: rotate 1s linear infinite;
+}
+@keyframes rotate {
+  0% {
+    width: 64px;
+    height: 64px;
+    transform: rotate(0deg)
+  }
+  50% {
+    width: 30px;
+    height: 30px;
+    transform: rotate(180deg)
+  }
+  100% {
+    width: 64px;
+    height: 64px;
+    transform: rotate(360deg)
   }
 }
