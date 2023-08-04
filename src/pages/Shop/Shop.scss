@@ -24,7 +24,7 @@
       color: $color-secondary;
       display: flex;
       gap: 0.8rem;
-      @media (min-width: 975px) {
+      @media (min-width: 976px) {
         display: none;
       }
     }
@@ -163,7 +163,7 @@
     }
   }
 }
-@media (min-width: 975px) {
+@media (min-width: 976px) {
   .filters-lg {
     display: flex;
   }

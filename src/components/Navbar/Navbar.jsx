@@ -139,7 +139,7 @@ export const Navbar = () => {
         {userLoggedIn && pathname !== "/" ? (
           <>
             <Link to={"/checkout"} className="underline-none">
-              <AiOutlineShoppingCart className="cart-icon" />
+              <AiOutlineShoppingCart className="sm-cart-icon" />
             </Link>
             <div
               className="profile sm-view-profile"
