@@ -141,3 +141,17 @@ export const createOrder = (data) => {
     data,
   });
 };
+
+// get all orders
+export const getOrders = () => {
+  return request({ url: `${domainName}${api.getOrders}` });
+};
+
+// cancel order
+export const cancelOrder = (data) => {
+  return request({
+    url: `${domainName}${api.cancelOrder}`,
+    method: "post",
+    data,
+  });
+};

@@ -19,11 +19,18 @@ import artImg5 from "../../assets/arts/art (7).png";
 import { ProductItem } from "../../components/ProductItem/ProductItem";
 import { Shipping } from "./components/Shipping/Shipping";
 import { useForm } from "react-hook-form";
-import { getAddresses, updateProfileImg, updateUser } from "../../apiCall";
+import {
+  cancelOrder,
+  getAddresses,
+  getOrders,
+  updateProfileImg,
+  updateUser,
+} from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useStateValue } from "../../StateProvider";
+import { Modal } from "react-bootstrap";
 
 const options = [
   { url: "dashboard", icon: LuLayoutDashboard, title: "Dashboard" },
@@ -58,8 +65,11 @@ export const Dashboard = () => {
   const imgRef = useRef();
   const [profilePic, setProfilePic] = useState();
   const queryClient = useQueryClient();
-  const [addresses, setAddresses] = useState([]);
   const [{ userAddresses }, dispatch] = useStateValue();
+  const [orders, setOrders] = useState([]);
+  const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+  const [cancellingOrderId, setCancellingOrderId] = useState("");
+  const [cancellingReason, setCancellingReason] = useState("");
 
   useEffect(() => {
     setPage(params.page);
@@ -129,16 +139,55 @@ export const Dashboard = () => {
   };
 
   // get user addresses
-  const { isLoading } = useQuery(["addresses"], getAddresses, {
+  const { isLoading: addressesIsLoading } = useQuery(
+    ["addresses"],
+    getAddresses,
+    {
+      onSuccess: (data) => {
+        if (data.data?.value) {
+          dispatch({ type: "SET_USER_ADDRESSES", addresses: data.data.value });
+          sessionStorage.setItem("addresses", JSON.stringify(data.data.value));
+        }
+      },
+      onError: (err) => console.log(err),
+    }
+  );
+
+  // get all orders
+  const { isLoading } = useQuery(["all-orders"], getOrders, {
     onSuccess: (data) => {
-      if (data.data?.value) {
-        setAddresses(data.data.value);
-        dispatch({ type: "SET_USER_ADDRESSES", addresses: data.data.value });
-        sessionStorage.setItem("addresses", JSON.stringify(data.data.value));
+      if (data.data.status[0].Error === "False") {
+        console.log(data.data);
+        setOrders(data.data.value);
       }
     },
-    onError: (err) => console.log(err),
+    onError: (err) => console.log(err, "orders error response"),
   });
+
+  const cancelMutation = useMutation(cancelOrder, {
+    onSuccess: (data) => {
+      console.log(data);
+      if (data.data.status[0].Error === "False") {
+        setShowCancelConfirm(false);
+        queryClient.invalidateQueries(["all-orders"]);
+        toast.success("Order cancelled successfully");
+        setCancellingReason("");
+        setCancellingOrderId("");
+      }
+    },
+    onError: (err) => console.log(err, "error"),
+  });
+
+  // cancel order
+  const doCancelOrderConfirm = () => {
+    if (!cancellingReason) {
+      return toast("Select reason to cancel order", { icon: "⚠️" });
+    }
+    cancelMutation.mutate({
+      reason: cancellingReason,
+      orderId: cancellingOrderId.toString(),
+    });
+  };
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -218,8 +267,15 @@ export const Dashboard = () => {
         )}
         {page === "my-orders" && (
           <div className="my-orders" data-aos="fade-up">
-            <OrderDetails />
-            <OrderDetails />
+            {orders.length > 0 &&
+              orders.map((order) => (
+                <OrderDetails
+                  order={order}
+                  setShowCancelConfirm={setShowCancelConfirm}
+                  setCancellingOrderId={setCancellingOrderId}
+                  key={order.id}
+                />
+              ))}
           </div>
         )}
         {page === "edit-profile" && (
@@ -299,7 +355,7 @@ export const Dashboard = () => {
           </div>
         )}
         {page === "shipping" && (
-          <Shipping addresses={userAddresses} isLoading={isLoading} />
+          <Shipping addresses={userAddresses} isLoading={addressesIsLoading} />
         )}
         {page === "settings" && (
           <div className="settings">
@@ -356,6 +412,66 @@ export const Dashboard = () => {
           </div>
         )}
       </div>
+      <ConfirmCancelOrderModal
+        show={showCancelConfirm}
+        onHide={() => setShowCancelConfirm(false)}
+        setcancellingreason={setCancellingReason}
+        docancelorderconfirm={doCancelOrderConfirm}
+        setcancellingorderId={setCancellingOrderId}
+      />
     </div>
   );
 };
+
+function ConfirmCancelOrderModal(props) {
+  const reasons = [
+    "I have changed my mind",
+    "I have found a better deal",
+    "Ordered by mistake",
+    "It is too expensive",
+    "Delay of delivery",
+  ];
+
+  return (
+    <Modal
+      {...props}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Body className="cancel-modal">
+        <h3>Do you really wanna cancel this order?</h3>
+        <hr />
+        <div className="form">
+          <h4>Select a reason for cancelling the order</h4>
+          <div className="radio-options">
+            {reasons.map((reason) => (
+              <div
+                className="radio"
+                key={reason}
+                onClick={() => props.setcancellingreason(reason)}
+              >
+                <input type="radio" name="reason" id="" value={reason} />
+                <label htmlFor="">{reason}</label>
+              </div>
+            ))}
+          </div>
+          <div className="buttons">
+            <button onClick={props.docancelorderconfirm} className="btn-cancel">
+              Confirm
+            </button>
+            <button
+              onClick={() => {
+                props.setcancellingorderId("");
+                props.onHide();
+              }}
+              className="btn-secondary"
+            >
+              Exit
+            </button>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+}

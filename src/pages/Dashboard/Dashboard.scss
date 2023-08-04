@@ -315,3 +315,39 @@
     }
   }
 }
+
+.cancel-modal {
+  h3 {
+    text-align: center;
+  }
+  .form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    .radio-options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      .radio {
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        input,
+        input:checked,
+        input:active {
+          cursor: pointer;
+          accent-color: $color-primary !important;
+        }
+      }
+    }
+    .buttons {
+      margin-top: 1rem;
+      display: flex;
+      gap: 1rem;
+      button{
+        padding-inline: 3rem !important;
+      }
+    }
+  }
+}

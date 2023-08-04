@@ -129,6 +129,15 @@ html {
     background-color: #830000d2;
   }
 }
+.btn-cancel {
+  @include buttonStyles();
+  background-color: #8a0009fb;
+  border: 1px solid #8a0009fb;
+  color: #fff;
+  &:hover{
+    background-color: #b3000cfb;
+  }
+}
 
 .profile-options-bg {
   width: 100%;
@@ -165,6 +174,7 @@ html {
 
 .icon-heart {
   font-size: 1.6rem;
+  cursor: pointer;
 }
 
 .error {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./StepProgressbar.scss";
 
 function StepProgressbar({ orderStatus }) {
-  const [progressStep, setProgressStep] = useState(3);
+  const [progressStep, setProgressStep] = useState(4);
 
   useEffect(() => {
     if (orderStatus === "Received") {
@@ -11,7 +11,7 @@ function StepProgressbar({ orderStatus }) {
       setProgressStep(2);
     } else if (orderStatus === "Out For Delivery") {
       setProgressStep(3);
-    } else if (orderStatus === "Completed" || orderStatus === "Return") {
+    } else if (orderStatus === "Completed" || orderStatus === "Returned") {
       setProgressStep(4);
     }
   }, [orderStatus]);

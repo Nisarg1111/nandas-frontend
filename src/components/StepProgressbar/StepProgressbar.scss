@@ -46,7 +46,7 @@
   #progressbar .step0:before {
     font-family: FontAwesome;
     content: "\2713";
-    color: #fff;
+    color: #d0d5dd;
   }
 
   #progressbar li:before {
@@ -109,6 +109,7 @@
   #progressbar li.active:before {
     font-family: FontAwesome;
     content: "\2713";
+    color: #fff;
   }
 
   .icon {
