@@ -134,6 +134,7 @@ export const Dashboard = () => {
       if (data.data?.value) {
         setAddresses(data.data.value);
         dispatch({ type: "SET_USER_ADDRESSES", addresses: data.data.value });
+        sessionStorage.setItem("addresses", JSON.stringify(data.data.value));
       }
     },
     onError: (err) => console.log(err),

@@ -124,3 +124,20 @@ export const updateAddress = (data) => {
     data,
   });
 };
+
+// payment
+export const doPayment = (data) => {
+  return request({
+    url: `${domainName}${api.payment}?ammount=${data}`,
+    method: "post",
+  });
+};
+
+// create order
+export const createOrder = (data) => {
+  return request({
+    url: `${domainName}${api.createOrder}`,
+    method: "post",
+    data,
+  });
+};

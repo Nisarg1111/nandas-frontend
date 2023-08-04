@@ -12,7 +12,7 @@ export const Rental = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [showRentalInfo, setShowRentalInfo] = useState(false);
   return (
-    <div className="main-container">
+    <div className="rental-container">
       <div className="routes">
         <Link to={"/"} className="underline-none">
           Home
@@ -28,8 +28,8 @@ export const Rental = () => {
         <PiCaretRight className="icon" />
         <Link className="underline-none">Your Rental</Link>
       </div>
-      <div className="checkout-grid">
-        <div className="form-side">
+      <div className="rental-grid">
+        <div className="rental-form-side">
           <h1>Delivery Information</h1>
           {editOpen ? (
             <form>
@@ -71,7 +71,7 @@ export const Rental = () => {
               </button>
             </form>
           ) : (
-            <div className="delivery-info">
+            <div className="rental-delivery-info">
               <h1>Pranav</h1>
               <p className="uppercase">Tirur, 676107 Kerala</p>
               <p>pranav@gmail.com</p>
@@ -80,7 +80,7 @@ export const Rental = () => {
             </div>
           )}
         </div>
-        <div className="summary">
+        <div className="rental-summary">
           <h1>
             Your Rental{" "}
             <AiOutlineInfoCircle

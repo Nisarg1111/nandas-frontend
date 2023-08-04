@@ -7,7 +7,13 @@ import { useStateValue } from "../../../../StateProvider";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
 
-export const Address = ({ address, setAddAddressStatus, setEditStatus }) => {
+export const Address = ({
+  address,
+  setAddAddressStatus,
+  setEditStatus,
+  selectedAddress,
+  selectAddress,
+}) => {
   const [editOpen, setEditOpen] = useState(false);
   const [, dispatch] = useStateValue();
   const [city, setCity] = useState(address.city);
@@ -238,13 +244,22 @@ export const Address = ({ address, setAddAddressStatus, setEditStatus }) => {
               </div>
             </form>
           ) : (
-            <div className="delivery-info">
-              <h1>{address.name}</h1>
-              <p className="uppercase">
-                {address.city}, {address.pin_code} {address.state}
-              </p>
-              <p>{address.email}</p>
-              <p>{address.phone_number}</p>
+            <div
+              className={`delivery-info ${
+                selectedAddress === address.id && "selected"
+              }`}
+            >
+              <div
+                className="details"
+                onClick={() => selectAddress(address.id)}
+              >
+                <h1>{address.name}</h1>
+                <p className="uppercase">
+                  {address.city}, {address.pin_code} {address.state}
+                </p>
+                <p>{address.email}</p>
+                <p>{address.phone_number}</p>
+              </div>
               <div className="address-options">
                 <span onClick={handleEditOpen}>Edit</span>
                 <span onClick={doDelete}>Delete</span>

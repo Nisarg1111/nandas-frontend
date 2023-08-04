@@ -137,26 +137,31 @@ export const Navbar = () => {
           </>
         )}
         {userLoggedIn && pathname !== "/" ? (
-          <div
-            className="profile sm-view-profile"
-            onClick={() =>
-              dispatch({
-                type: "PROFILE_OPTIONS_VIEW",
-                status: !showProfileOptions,
-              })
-            }
-          >
-            <img
-              src={
-                `${domainName}${userDetails?.profile_image}` ||
-                "https://img.freepik.com/free-icon/user_318-159711.jpg"
+          <>
+            <Link to={"/checkout"} className="underline-none">
+              <AiOutlineShoppingCart className="cart-icon" />
+            </Link>
+            <div
+              className="profile sm-view-profile"
+              onClick={() =>
+                dispatch({
+                  type: "PROFILE_OPTIONS_VIEW",
+                  status: !showProfileOptions,
+                })
               }
-              alt="profile"
-              className="profile-img"
-            />
-            {/* <span>{userDetails?.name || userEmail}</span> */}
-            <PiCaretDownBold className="icon" />
-          </div>
+            >
+              <img
+                src={
+                  `${domainName}${userDetails?.profile_image}` ||
+                  "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                }
+                alt="profile"
+                className="profile-img"
+              />
+              {/* <span>{userDetails?.name || userEmail}</span> */}
+              <PiCaretDownBold className="icon" />
+            </div>
+          </>
         ) : null}
       </div>
       {pathname !== "/" ? (
@@ -181,7 +186,7 @@ export const Navbar = () => {
               <>
                 <Link to={"/checkout"} className="underline-none">
                   <li>
-                    <AiOutlineShoppingCart className="cart-icon"/>
+                    <AiOutlineShoppingCart className="cart-icon" />
                   </li>
                 </Link>
                 <li>

@@ -1,5 +1,6 @@
 .address-div {
   margin: 1rem 0;
+  cursor: pointer;
   .address-side {
     background-color: #fff;
     display: flex;
@@ -55,6 +56,10 @@
       flex-direction: column;
       padding: 1rem;
       font-size: 1.2rem;
+      .details {
+        display: flex;
+        flex-direction: column;
+      }
       h1 {
         font-size: 1.6rem;
         font-weight: 500;
@@ -62,6 +67,7 @@
       .address-options {
         display: flex;
         gap: 1rem;
+        width: fit-content;
         span:first-of-type {
           color: #467fe4;
           cursor: pointer;
@@ -71,6 +77,9 @@
           cursor: pointer;
         }
       }
+    }
+    .selected {
+      background-color: #f5bf7db0;
     }
   }
 }

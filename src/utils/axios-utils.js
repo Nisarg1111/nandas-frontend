@@ -6,7 +6,7 @@ const client = axios.create({ baseURL: domainName });
 export const request = ({ ...options }) => {
   const token =
     sessionStorage.getItem("token") || localStorage.getItem("token");
-    client.defaults.headers.common.Authorization = `Bearer ${token}`;
+  client.defaults.headers.common.Authorization = `Bearer ${token}`;
 
   const onSuccess = (response) => response;
   const onError = (error) => {

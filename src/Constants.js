@@ -20,5 +20,7 @@ export const api = {
   getAddresses: "/api/get-addresses",
   addAddress: "/api/add-address",
   deleteAddress:'/api/delete-address/',
-  updateAddress:'/api/update-address'
+  updateAddress:'/api/update-address',
+  payment:'/api/payment',
+  createOrder:'/api/create-order'
 };

@@ -1,6 +1,6 @@
 @import "../../App.scss";
 
-.main-container {
+.rental-container {
   padding: 1.5rem;
   font-size: 1.1rem;
   .routes {
@@ -12,19 +12,19 @@
       color: #626262;
     }
   }
-  .checkout-grid {
+  .rental-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr 1fr !important;
     gap: 3rem;
     padding: 3rem 0;
     @media (max-width: 835px) {
-      grid-template-columns: repeat(1, 1fr);
+      grid-template-columns: repeat(1, 1fr) !important;
     }
     h1 {
       font-size: 2rem;
       font-weight: 500;
     }
-    .form-side {
+    .rental-form-side {
       display: flex;
       flex-direction: column;
       gap: 1rem;
@@ -67,7 +67,7 @@
         }
       }
     }
-    .delivery-info {
+    .rental-delivery-info {
       display: flex;
       flex-direction: column;
       padding: 1rem;
@@ -83,7 +83,7 @@
         cursor: pointer;
       }
     }
-    .summary {
+    .rental-summary {
       display: flex;
       flex-direction: column;
       gap: 1rem;

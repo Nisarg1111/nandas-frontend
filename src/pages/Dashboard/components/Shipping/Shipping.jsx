@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addAddress } from "../../../../apiCall";
 import { toast } from "react-hot-toast";
 
-export const Shipping = ({ addresses, isLoading }) => {
+export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress }) => {
   const queryClient = useQueryClient();
   const [openAdd, setOpenAdd] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
@@ -106,7 +106,7 @@ export const Shipping = ({ addresses, isLoading }) => {
     setOpenAdd(false);
   };
   return (
-    <div data-aos="fade-up">
+    <div data-aos="fade-up" className="shipping">
       {!openAdd && !editStatus ? (
         <div className="add-button">
           <button className="btn-primary" onClick={() => setOpenAdd(!openAdd)}>
@@ -216,6 +216,8 @@ export const Shipping = ({ addresses, isLoading }) => {
             addAddressStatus={openAdd}
             setEditStatus={setEditStatus}
             setAddAddressStatus={setOpenAdd}
+            selectAddress={selectAddress}
+            selectedAddress={selectedAddress}
           />
         ))}
       {!addresses.length && !openAdd && !isLoading ? (

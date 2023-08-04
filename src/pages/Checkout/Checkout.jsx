@@ -5,28 +5,57 @@ import { BiShield } from "react-icons/bi";
 import OrderSuccessImg from "../../assets/images/green-bg-success.png";
 import { useState, useEffect } from "react";
 import { Modal } from "react-bootstrap";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { domainName } from "../../Constants";
-import { getCart } from "../../apiCall";
+import { doPayment, getAddresses, getCart } from "../../apiCall";
 import { CartItem } from "./components/CartItem/CartItem";
 import { useStateValue } from "../../StateProvider";
+import { Shipping } from "../Dashboard/components/Shipping/Shipping";
+import { displayRazorpay } from "./components/Razorpay";
+import { toast } from "react-hot-toast";
+import EmptyCart from "../../assets/images/empty-cart.png";
 
 export const Checkout = () => {
   const [editOpen, setEditOpen] = useState(false);
   const [showProtectArtModal, setShowProtectArtModel] = useState(false);
   const [showOrderSuccessModal, setShowOrderSuccessModal] = useState(false);
-  const [{ userCart, cartTotal }, dispatch] = useStateValue();
+  const [{ userCart, cartTotal, userAddresses }, dispatch] = useStateValue();
+  const [addresses, setAddresses] = useState([]);
+  const [selectedAddress, setSelectedAddress] = useState("");
 
-  const placeOrder = () => {
+  const handleOrderSuccessPopup = () => {
     setShowOrderSuccessModal(true);
     setTimeout(() => {
       setShowOrderSuccessModal(false);
-    }, 2000);
+    }, 3000);
+    dispatch({ type: "SET_CART_ITEMS", data: [] });
+    dispatch({ type: "SET_CART_TOTAL", data: 0 });
   };
 
-  useQuery(["cart"], getCart, {
+  const placeOrder = async () => {
+    if (!selectedAddress) {
+      return toast("Select an address", { icon: "⚠️" });
+    }
+    const deliveryAddress = userAddresses.find(
+      (address) => address.id === selectedAddress
+    );
+    deliveryAddress["address_id"] = selectedAddress.toString();
+    delete deliveryAddress.id;
+
+    const orderDetails = {
+      ...deliveryAddress,
+      coupon_code: "",
+      cod_fee: 0,
+      shipping_fee: 0,
+      shipping_weight: 0,
+      total_amount: cartTotal,
+      total_discount: 0,
+    };
+    displayRazorpay(orderDetails, cartTotal, handleOrderSuccessPopup);
+  };
+
+  const { isLoading: cartIsLoading } = useQuery(["cart"], getCart, {
     onSuccess: (data) => {
-      // console.log(data.data?.value, "list");
       dispatch({ type: "SET_CART_ITEMS", data: data.data?.value?.products });
       dispatch({ type: "SET_CART_TOTAL", data: data.data?.value?.total });
     },
@@ -35,7 +64,22 @@ export const Checkout = () => {
     },
   });
 
-  console.log(userCart);
+  // get user addresses
+  const { isLoading: addressesIsLoading } = useQuery(
+    ["addresses"],
+    getAddresses,
+    {
+      onSuccess: (data) => {
+        if (data.data?.value) {
+          setAddresses(data.data.value);
+          dispatch({ type: "SET_USER_ADDRESSES", addresses: data.data.value });
+          sessionStorage.setItem("addresses", JSON.stringify(data.data.value));
+        }
+      },
+      onError: (err) => console.log(err),
+    }
+  );
+
   return (
     <div className="main-container">
       <div className="routes">
@@ -53,103 +97,67 @@ export const Checkout = () => {
         <PiCaretRight className="icon" />
         <Link className="underline-none">Checkout</Link>
       </div>
-      <div className="checkout-grid">
-        <div className="form-side" data-aos="fade-right">
-          <h1>Delivery Information</h1>
-          {editOpen ? (
-            <form>
-              <div className="inputs">
-                <div className="input-box">
-                  <label htmlFor="">Name</label>
-                  <input type="text" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">Mobile Number</label>
-                  <input type="tel" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">Email</label>
-                  <input type="email" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">City</label>
-                  <input type="text" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">State</label>
-                  <input type="text" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">Zip</label>
-                  <input type="tel" />
-                </div>
-                <div className="input-box">
-                  <label htmlFor="">Address</label>
-                  <input type="text" />
-                </div>
+      {userCart.length !== 0 ? (
+        <div className="checkout-grid">
+          <div className="form-side" data-aos="fade-right">
+            <h1>Delivery Information</h1>
+            <Shipping
+              addresses={userAddresses}
+              isLoading={addressesIsLoading}
+              selectedAddress={selectedAddress}
+              selectAddress={setSelectedAddress}
+            />
+          </div>
+          <div className="summary" data-aos="fade-left">
+            <h1>Order Summary</h1>
+            <div className="order-details">
+              {userCart?.length > 0 &&
+                userCart.map((product) => {
+                  return (
+                    <CartItem
+                      product={product}
+                      setShowProtectArtModel={setShowProtectArtModel}
+                      key={product.product_details.product_id}
+                      showProtectArtModal={showProtectArtModal}
+                    />
+                  );
+                })}
+              <hr />
+              <div className="flex-between">
+                <span>Sub Total</span>
+                <span>₹{cartTotal}</span>
               </div>
-              <button
-                onClick={() => setEditOpen(false)}
-                className="btn-primary"
-              >
-                save
-              </button>
-            </form>
-          ) : (
-            <div className="delivery-info">
-              <h1>Pranav</h1>
-              <p className="uppercase">Tirur, 676107 Kerala</p>
-              <p>pranav@gmail.com</p>
-              <p>+91 6568878454</p>
-              <span onClick={() => setEditOpen(true)}>Edit</span>
-            </div>
-          )}
-        </div>
-        <div className="summary" data-aos="fade-left">
-          <h1>Order Summary</h1>
-          <div className="order-details">
-            {userCart?.length > 0 &&
-              userCart.map((product) => {
-                return (
-                  <CartItem
-                    product={product}
-                    setShowProtectArtModel={setShowProtectArtModel}
-                    key={product.product_details.product_id}
-                    showProtectArtModal={showProtectArtModal}
-                  />
-                );
-              })}
-            <hr />
-            <div className="flex-between">
-              <span>Sub Total</span>
-              <span>₹{cartTotal}</span>
-            </div>
-            <div className="flex-between">
-              <span>Shipping</span>
-              <span>-----</span>
-            </div>
-            {/* <div className="flex-between">
+              <div className="flex-between">
+                <span>Shipping</span>
+                <span>-----</span>
+              </div>
+              {/* <div className="flex-between">
               <span>Insurance Policy</span>
               <span>₹6045</span>
             </div> */}
-            <hr />
-            <div className="flex-between">
-              <div>
-                <h4>Total</h4>
-                {/* <span>Monthly Payment</span> */}
+              <hr />
+              <div className="flex-between">
+                <div>
+                  <h4>Total</h4>
+                  {/* <span>Monthly Payment</span> */}
+                </div>
+                <div>
+                  <h4>₹{userCart.length !== 0 ? cartTotal : 0}</h4>
+                  {/* <span>₹6045/month with EMI</span> */}
+                </div>
               </div>
-              <div>
-                <h4>₹{userCart.length !== 0 ? cartTotal : 0}</h4>
-                {/* <span>₹6045/month with EMI</span> */}
-              </div>
+              <span className="link">Explore EMI Option</span>
+              <button onClick={placeOrder} className="btn-primary">
+                Pay ₹{userCart.length !== 0 ? cartTotal : 0}
+              </button>
             </div>
-            <span className="link">Explore EMI Option</span>
-            <button onClick={placeOrder} className="btn-primary">
-              Pay ₹{userCart.length !== 0 ? cartTotal : 0}
-            </button>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="empty-img-div">
+          <img src={EmptyCart} alt="empty-cart" />
+        </div>
+      )}
       <ProtectYourArtModal
         show={showProtectArtModal}
         onHide={() => setShowProtectArtModel(false)}
