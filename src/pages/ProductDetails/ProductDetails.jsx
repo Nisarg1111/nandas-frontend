@@ -40,7 +40,7 @@ export const ProductDetails = () => {
     {
       onSuccess: (data) => {
         setProduct(data.data?.value);
-        console.log(data.data?.value);
+        console.log(data.data?.value,'data is here');
       },
       onError: (err) => {
         console.log(err, "ERROR");
@@ -74,7 +74,7 @@ export const ProductDetails = () => {
     mutationFn: addToCart,
     onSuccess: (data) => {
       if (data.data?.status[0]?.Error === "False") {
-        toast.success(data.data?.status[0]?.ResponseMessage);
+        toast.success(`${product.title} added to cart`);
         // queryClient.invalidateQueries("cart");
       }
     },

@@ -23,6 +23,10 @@ export const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
 
+  useEffect(()=>{
+    dispatch({type:'SET_CART_TOTAL'})
+  },[userCart,dispatch])
+
   const handleOrderSuccessPopup = () => {
     setShowOrderSuccessModal(true);
     setTimeout(() => {
@@ -117,7 +121,7 @@ export const Checkout = () => {
                     <CartItem
                       product={product}
                       setShowProtectArtModel={setShowProtectArtModel}
-                      key={product.product_details.product_id}
+                      key={product.product_details.image}
                       showProtectArtModal={showProtectArtModal}
                     />
                   );

@@ -13,51 +13,43 @@ export const CartItem = ({
   setShowProtectArtModel,
   showProtectArtModal,
 }) => {
+  console.log(product, "product");
   const [{ cartTotal, userCart }, dispatch] = useStateValue();
   const [quantity, setQuantity] = useState(product.quantity);
   const [subtotal, setSubtotal] = useState(product.sub_total);
+  const [currentChange, setCurrentChange] = useState("");
+  const [currProduct, setCurrProduct] = useState({});
+
+  useEffect(() => {
+    setCurrProduct(
+      userCart.find(
+        (item) =>
+          item.product_details.product_id === product.product_details.product_id
+      )
+    );
+  }, [userCart, currProduct, product.product_details.product_id]);
 
   // change quantity mutation
   const changeQuantityMutation = useMutation(updateQuantity, {
     onSuccess: (data) => {
       if (data.data?.status[0]?.Message === "success") {
-        console.log("cart updated", data.data);
-        dispatch({
-          type: "UPDATE_ITEM_QUANTITY",
-          id: product.product_details.product_id,
-          qty: quantity,
-        });
+        if (currentChange === "+") {
+          dispatch({
+            type: "INCREMENT_CART_QUANTITY",
+            data: product.product_details.product_id,
+          });
+          setCurrentChange("");
+        } else if (currentChange === "-") {
+          dispatch({
+            type: "DECREMENT_CART_QUANTITY",
+            data: product.product_details.product_id,
+          });
+          setCurrentChange("");
+        }
       }
     },
     onError: (err) => console.log(err, "error"),
   });
-
-  // change item quantity
-  const changeQuantity = (type) => {
-    let qty;
-    if (type === "+") {
-      qty = quantity + 1;
-    } else {
-      qty = quantity - 1;
-    }
-    const data = {
-      productId: product.product_details.product_id,
-      quantity: qty,
-    };
-    if (qty === 0) {
-      return;
-    }
-    setQuantity(qty);
-    setSubtotal(product.product_details.price * qty);
-    dispatch({
-      type: "SET_CART_TOTAL",
-      data:
-        type === "+"
-          ? cartTotal + product.product_details.price
-          : cartTotal - product.product_details.price,
-    });
-    changeQuantityMutation.mutate(data);
-  };
 
   // remove item from cart
   const removeFromCart = async () => {
@@ -65,7 +57,7 @@ export const CartItem = ({
       const response = await deleteFromCart(product.product_details.product_id);
       console.log(response);
       if (response.data?.status[0]?.Message === "success") {
-        toast.success("Removed item from cart");
+        toast.success(`Removed ${product.product_details.title} from cart`);
         const deletedItem = userCart.find(
           (item) =>
             item.product_details.product_id ===
@@ -76,7 +68,6 @@ export const CartItem = ({
             item?.product_details?.product_id !==
             product.product_details.product_id
         );
-
         dispatch({
           type: "SET_CART_ITEMS",
           data: updatedUserCart,
@@ -90,6 +81,27 @@ export const CartItem = ({
     } catch (err) {
       console.log(err, "error");
     }
+  };
+
+  // increase item quantity
+  const increment = () => {
+    const data = {
+      productId: product.product_details.product_id,
+      quantity: currProduct.quantity,
+    };
+    setCurrentChange("+");
+    changeQuantityMutation.mutate(data);
+  };
+
+  // decrease item quantity
+  const decrement = () => {
+    const data = {
+      productId: product.product_details.product_id,
+      quantity: currProduct.quantity,
+    };
+    setCurrentChange("-");
+
+    changeQuantityMutation.mutate(data);
   };
   return (
     <div className="item">
@@ -113,17 +125,17 @@ export const CartItem = ({
               <div className="quantity">
                 <AiFillMinusCircle
                   className="icon"
-                  onClick={() => changeQuantity("-")}
+                  onClick={() => decrement()}
                 />
-                <span>{quantity}</span>
+                <span>{currProduct.quantity}</span>
                 <AiFillPlusCircle
                   className="icon"
-                  onClick={() => changeQuantity("+")}
+                  onClick={() => increment()}
                 />
               </div>
             </div>
             <div>
-              <span>₹{subtotal}</span>
+              <span>₹{currProduct.sub_total}</span>
               {product.product_details.emi && (
                 <p>₹{product.product_details.emi}/month with EMI</p>
               )}
@@ -134,7 +146,7 @@ export const CartItem = ({
           </div>
         </div>
       </div>
-      {/* 
+
       <hr />
       <div className="art-protection">
         <h3>Protect your Art</h3>
@@ -151,7 +163,7 @@ export const CartItem = ({
           </span>
         </p>
         <span className="remove">Remove</span>
-      </div> */}
+      </div>
     </div>
   );
 };
