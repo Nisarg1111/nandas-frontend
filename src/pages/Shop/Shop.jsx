@@ -7,9 +7,11 @@ import { GrFormClose } from "react-icons/gr";
 import { useQuery } from "@tanstack/react-query";
 import { categoriesList, fetchAllProducts } from "../../apiCall";
 import { toast } from "react-hot-toast";
+import { useStateValue } from "../../StateProvider";
 
 export const Shop = () => {
   const [showFilters, setShowFilters] = useState(false);
+  const [{ favorites }] = useStateValue();
   const [filterRentItems, setFilterRentItems] = useState(false);
   const [showInInches, setShowInInches] = useState(false);
   const [products, setProducts] = useState([]);
@@ -186,6 +188,7 @@ export const Shop = () => {
     selectedPriceRanges,
     selectedColors,
   ]);
+
   return (
     <div className="shop-main">
       <div className="head" data-aos="fade-right">
@@ -610,11 +613,21 @@ export const Shop = () => {
             products.map((art) => {
               if (filterRentItems) {
                 if (art.available_for_rent) {
-                  return <ProductItem item={art} key={art.id} />;
+                  return (
+                    <ProductItem
+                      item={art}
+                      key={art.id}
+                    />
+                  );
                 }
                 return null;
               } else {
-                return <ProductItem item={art} key={art.id} />;
+                return (
+                  <ProductItem
+                    item={art}
+                    key={art.id}
+                  />
+                );
               }
             })
           ) : (

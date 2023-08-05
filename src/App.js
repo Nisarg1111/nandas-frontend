@@ -22,6 +22,8 @@ import { Toaster } from "react-hot-toast";
 import { ProtectRoute, PublicRoute } from "./ProtectRoutes";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useQuery } from "@tanstack/react-query";
+import { fetchUser, getFavorites } from "./apiCall";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -39,6 +41,31 @@ function App() {
     duration: 1000,
     // offset:220
   });
+
+    // Get user data
+    useQuery({
+      queryKey: ["user-data"],
+      queryFn: fetchUser,
+      onSuccess: (data) => {
+        // console.log(data.data);
+        if (data.data?.user) {
+          sessionStorage.setItem("user_details", JSON.stringify(data.data.user));
+        }
+      },
+      onError: (err) => {
+        // handle error
+      },
+    });
+  
+    // get list of favorites
+    useQuery(["favorites"], getFavorites, {
+      onSuccess: (data) => {
+        if (data.data?.status[0]?.Error === "False") {
+          dispatch({ type: "SET_FAVORITE_LIST", data: data.data.value });
+        }
+      },
+      onError: (err) => console.log(err),
+    });
   return (
     <div
       onClick={() =>

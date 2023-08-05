@@ -24,5 +24,8 @@ export const api = {
   payment:'/api/payment',
   createOrder:'/api/create-order',
   getOrders:'/api/get-orders',
-  cancelOrder:'/api/cancel-order'
+  cancelOrder:'/api/cancel-order',
+  getFavorites:'/api/get-favourite-list',
+  addFavorite:'/api/add-favourite-list/',
+  removeFavorite:'/api/remove-from-favourite-list/'
 };

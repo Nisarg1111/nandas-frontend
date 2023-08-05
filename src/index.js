@@ -16,7 +16,7 @@ root.render(
       <StateProvider initialState={initialState} reducer={reducer}>
         <App />
       </StateProvider>
-      <ReactQueryDevtools />
+      {/* <ReactQueryDevtools /> */}
     </QueryClientProvider>
   </React.StrictMode>
 );

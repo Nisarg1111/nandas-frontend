@@ -155,3 +155,24 @@ export const cancelOrder = (data) => {
     data,
   });
 };
+
+// get favorouites
+export const getFavorites = () => {
+  return request({ url: `${domainName}${api.getFavorites}` });
+};
+
+// add to favorites
+export const addToFavorites = (productId) => {
+  return request({
+    url: `${domainName}${api.addFavorite}${productId}`,
+    method: "post",
+  });
+};
+
+// remove from favorites
+export const removeFromFavorites = (productId) => {
+  return request({
+    url: `${domainName}${api.removeFavorite}${productId}`,
+    method: "delete",
+  });
+};

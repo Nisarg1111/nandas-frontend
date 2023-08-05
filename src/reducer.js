@@ -7,6 +7,7 @@ export const initialState = {
   userCart: [],
   cartTotal: "",
   userAddresses: [],
+  favorites: [],
 };
 
 function reducer(state, action) {
@@ -35,7 +36,6 @@ function reducer(state, action) {
             item.quantity = action.qty;
             item.sub_total = item?.product_details?.price * action.qty;
           }
-          console.log(item);
           return item;
         }),
       };
@@ -55,6 +55,15 @@ function reducer(state, action) {
         userAddresses: state.userAddresses.filter(
           (address) => address.id !== action.id
         ),
+      };
+    case "SET_FAVORITE_LIST":
+      return { ...state, favorites: action.data };
+    case "ADD_TO_FAVORITES_LIST":
+      return { ...state, favorites: [...state.favorites, action.item] };
+    case "REMOVE_FROM_FAVORITES_LIST":
+      return {
+        ...state,
+        favorites: state.favorites.filter((item) => item.id !== action.item.id),
       };
     default:
       return state;

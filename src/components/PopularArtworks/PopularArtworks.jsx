@@ -9,20 +9,10 @@ import art7 from "../../assets/arts/art (7).png";
 import "./PopularArtworks.scss";
 import { fetchPopularProducts } from "../../apiCall";
 import { useQuery } from "@tanstack/react-query";
+import { useStateValue } from "../../StateProvider";
 
 export const PopularArtworks = () => {
-  const artsImages = [
-    art2,
-    art3,
-    art4,
-    art5,
-    art7,
-    art2,
-    art3,
-    art4,
-    art5,
-    art7,
-  ];
+  const [{ favorites }] = useStateValue();
 
   // slider settings
   const responsiveSettings = [
@@ -66,6 +56,7 @@ export const PopularArtworks = () => {
       },
     }
   );
+  
   return (
     <section className="popular-artwork">
       <h2 data-aos="fade-down">Popular Artwork</h2>
@@ -82,7 +73,7 @@ export const PopularArtworks = () => {
             autoplay={true}
           >
             {popularProducts?.data?.value.map((item) => {
-              return <ProductItem item={item} />;
+              return <ProductItem item={item}/>;
             })}
           </Slide>
         ) : (

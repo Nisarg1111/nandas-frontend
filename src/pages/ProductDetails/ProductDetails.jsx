@@ -18,23 +18,20 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { addToCart, fetchProductInfo } from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
+import { useStateValue } from "../../StateProvider";
 
 export const ProductDetails = () => {
-  const [liked, setLiked] = useState(false);
-  const [product, setProduct] = useState({});
+  const [{ favorites }] = useStateValue();
   const { productId } = useParams();
+  const [liked, setLiked] = useState(false);
+
+  useEffect(() => {
+    setLiked(favorites.some((item) => item.id === parseInt(productId)));
+  }, [favorites, productId]);
+
+  const [product, setProduct] = useState({});
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(null);
-  // const queryClient = useQueryClient();
-  // const cartItems = queryClient.getQueriesData(["cart"])[0]?.[1]?.data?.value
-  //   ?.products;
-  // const [alreadyInCart, setAlreadyInCart] = useState(
-  //   cartItems?.find((cartItem) => cartItem.id === productId)
-  // );
-
-  // useEffect(() => {
-  //   setAlreadyInCart(cartItems?.find((cartItem) => cartItem.id === product.id));
-  // }, [product.id,cartItems]);
 
   // fetch product info
   const { data, isLoading } = useQuery(
@@ -174,13 +171,13 @@ export const ProductDetails = () => {
           {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
           <div className="buttons">
             {/* {!alreadyInCart ? ( */}
-              <button
-                className="btn-secondary"
-                // onClick={() => navigate("/checkout")}
-                onClick={() => addProductToCart(product.id)}
-              >
-                add to bag
-              </button>
+            <button
+              className="btn-secondary"
+              // onClick={() => navigate("/checkout")}
+              onClick={() => addProductToCart(product.id)}
+            >
+              add to bag
+            </button>
             {/* // ) : (
             //   <button
             //     className="btn-secondary"

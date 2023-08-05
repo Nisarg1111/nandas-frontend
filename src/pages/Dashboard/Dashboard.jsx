@@ -11,11 +11,7 @@ import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
 import { MdOutlineLocalShipping } from "react-icons/md";
 import OrderDetails from "./components/OrderDetails/OrderDetails";
-import artImg1 from "../../assets/arts/art (2).png";
-import artImg2 from "../../assets/arts/art (3).png";
-import artImg3 from "../../assets/arts/art (4).png";
-import artImg4 from "../../assets/arts/art (5).png";
-import artImg5 from "../../assets/arts/art (7).png";
+import EmptyWishlistImg from "../../assets/images/empty-favorites.png";
 import { ProductItem } from "../../components/ProductItem/ProductItem";
 import { Shipping } from "./components/Shipping/Shipping";
 import { useForm } from "react-hook-form";
@@ -43,19 +39,6 @@ const options = [
   { url: "support-ticket", title: "Support Ticket" },
 ];
 
-const imagesArr = [
-  artImg1,
-  artImg2,
-  artImg3,
-  artImg4,
-  artImg5,
-  artImg1,
-  artImg2,
-  artImg3,
-  artImg4,
-  artImg5,
-];
-
 export const Dashboard = () => {
   const navigate = useNavigate();
   const params = useParams();
@@ -65,7 +48,7 @@ export const Dashboard = () => {
   const imgRef = useRef();
   const [profilePic, setProfilePic] = useState();
   const queryClient = useQueryClient();
-  const [{ userAddresses }, dispatch] = useStateValue();
+  const [{ userAddresses, favorites }, dispatch] = useStateValue();
   const [orders, setOrders] = useState([]);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancellingOrderId, setCancellingOrderId] = useState("");
@@ -93,11 +76,10 @@ export const Dashboard = () => {
   const handleFormUpdate = async (values) => {
     try {
       const response = await updateUser(values);
-      console.log(response, "success");
       if (response.data?.status[0].Message === "success") {
         queryClient.invalidateQueries("user-data");
       }
-      toast.success(response.data.status[0].ResponseMessage);
+      toast.success(response.data?.status[0].ResponseMessage);
     } catch (err) {
       console.log(err, "error");
     }
@@ -116,7 +98,6 @@ export const Dashboard = () => {
         file.type === "image/jpg"
       ) {
         try {
-          console.log(fData, "formData");
           const response = await updateProfileImg(fData);
           if (response.data?.status[0].Error === "False") {
             setProfilePic({ url: URL.createObjectURL(file) });
@@ -156,8 +137,7 @@ export const Dashboard = () => {
   // get all orders
   const { isLoading } = useQuery(["all-orders"], getOrders, {
     onSuccess: (data) => {
-      if (data.data.status[0].Error === "False") {
-        console.log(data.data);
+      if (data.data?.status[0].Error === "False") {
         setOrders(data.data.value);
       }
     },
@@ -166,8 +146,7 @@ export const Dashboard = () => {
 
   const cancelMutation = useMutation(cancelOrder, {
     onSuccess: (data) => {
-      console.log(data);
-      if (data.data.status[0].Error === "False") {
+      if (data.data?.status[0].Error === "False") {
         setShowCancelConfirm(false);
         queryClient.invalidateQueries(["all-orders"]);
         toast.success("Order cancelled successfully");
@@ -260,9 +239,26 @@ export const Dashboard = () => {
         )}
         {page === "favorites" && (
           <div className="favorites" data-aos="fade-up">
-            {imagesArr.map((art, i) => {
-              return <ProductItem item={art} key={i} />;
-            })}
+            {favorites.length > 0 ? (
+              <div className="favorites-list">
+                {favorites.map((art) => {
+                  return (
+                    <ProductItem
+                      item={art}
+                      key={art.id}
+                    />
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="empty-wishlist">
+                <img
+                  src={EmptyWishlistImg}
+                  alt="empty-box"
+                  className="empty-box-img"
+                />
+              </div>
+            )}
           </div>
         )}
         {page === "my-orders" && (
@@ -443,7 +439,7 @@ function ConfirmCancelOrderModal(props) {
         <h3>Do you really wanna cancel this order?</h3>
         <hr />
         <div className="form">
-          <h4>Select a reason for cancelling the order</h4>
+          <h4>Select reason for cancelling the order</h4>
           <div className="radio-options">
             {reasons.map((reason) => (
               <div

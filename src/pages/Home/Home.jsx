@@ -14,7 +14,8 @@ import PlayIcon from "../../assets/images/play-icon.png";
 import { Accordion } from "./components/Accordion/Accordion";
 import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
 import { useQuery } from "@tanstack/react-query";
-import { fetchRecentProducts } from "../../apiCall";
+import { fetchRecentProducts, getFavorites } from "../../apiCall";
+import { useStateValue } from "../../StateProvider";
 
 const qaContent = [
   "What can I sell?",
@@ -24,6 +25,7 @@ const qaContent = [
 ];
 
 export const Home = () => {
+  const [{ favorites }] = useStateValue();
   // slider settings
   const responsiveSettings = [
     {
@@ -66,6 +68,9 @@ export const Home = () => {
       },
     }
   );
+
+  console.log(recentProducts,'recentProducts')
+
   return (
     <div className="home-container">
       <div className="banner" data-aos="fade-up">
@@ -84,7 +89,12 @@ export const Home = () => {
             autoplay={true}
           >
             {recentProducts?.data?.value.map((item) => {
-              return <ProductCard item={item} />;
+              return (
+                <ProductCard
+                  item={item}
+                  key={item.id}
+                />
+              );
             })}
           </Slide>
         ) : (

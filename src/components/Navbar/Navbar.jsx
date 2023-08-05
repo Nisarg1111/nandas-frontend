@@ -19,7 +19,7 @@ import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
 import { MdOutlineLocalShipping } from "react-icons/md";
-import { fetchUser } from "../../apiCall";
+import { fetchUser, getFavorites } from "../../apiCall";
 import { domainName } from "../../Constants";
 
 const menuOptions = [
@@ -69,21 +69,6 @@ export const Navbar = () => {
     backgroundColor: pathname === "/" && "#fffbf6",
     gridTemplateColumns: pathname === "/" ? "1fr 1fr" : undefined,
   };
-
-  // Get user data
-  useQuery({
-    queryKey: ["user-data"],
-    queryFn: fetchUser,
-    onSuccess: (data) => {
-      // console.log(data.data);
-      if (data.data?.user) {
-        sessionStorage.setItem("user_details", JSON.stringify(data.data.user));
-      }
-    },
-    onError: (err) => {
-      // handle error
-    },
-  });
 
   return (
     <div className="navbar-main" style={customStyles}>

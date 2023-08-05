@@ -5,6 +5,7 @@ import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import StepProgressbar from "../../../../components/StepProgressbar/StepProgressbar";
 import artImg from "../../../../assets/arts/art (5).png";
 import { domainName } from "../../../../Constants";
+import { useNavigate } from "react-router-dom";
 
 const OrderDetails = ({
   order,
@@ -12,6 +13,7 @@ const OrderDetails = ({
   setCancellingOrderId,
 }) => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate()
 
   function formatDate(inputDate) {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -70,6 +72,7 @@ const OrderDetails = ({
               <img
                 src={`${domainName}/uploads/${product.productDetail.main_image}`}
                 alt="art"
+                onClick={()=>navigate(`/product-info/${product.productDetail.id}`)}
               />
               <div className="details">
                 <div className="info">
@@ -94,18 +97,15 @@ const OrderDetails = ({
                   <button className="btn-secondary button">
                     Write product review
                   </button>
-                  {order.status === "Received" || order.status === "Packed" ? (
-                    <button
-                      className="btn-cancel button"
-                      onClick={handleCancelClick}
-                    >
-                      Cancel Order
-                    </button>
-                  ) : null}
                 </div>
               </div>
             </div>
           ))}
+          {order.status === "Received" || order.status === "Packed" ? (
+            <button className="btn-cancel button" onClick={handleCancelClick}>
+              Cancel Order
+            </button>
+          ) : null}
         </div>
       </Collapse>
     </div>
