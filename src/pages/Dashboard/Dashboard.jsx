@@ -149,7 +149,7 @@ export const Dashboard = () => {
       if (data.data?.status[0].Error === "False") {
         setShowCancelConfirm(false);
         queryClient.invalidateQueries(["all-orders"]);
-        toast.success("Order cancelled successfully");
+        toast.success("Order cancellation successfull");
         setCancellingReason("");
         setCancellingOrderId("");
       }
