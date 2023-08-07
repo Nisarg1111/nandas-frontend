@@ -242,12 +242,7 @@ export const Dashboard = () => {
             {favorites.length > 0 ? (
               <div className="favorites-list">
                 {favorites.map((art) => {
-                  return (
-                    <ProductItem
-                      item={art}
-                      key={art.id}
-                    />
-                  );
+                  return <ProductItem item={art} key={art.id} />;
                 })}
               </div>
             ) : (
@@ -279,9 +274,9 @@ export const Dashboard = () => {
             <div className="image-div">
               <img
                 src={
-                  profilePic?.url ||
-                  `${domainName}${user?.profile_image}` ||
-                  "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                  profilePic?.url || user.profile_image
+                    ? `${domainName}${user?.profile_image}`
+                    : "https://img.freepik.com/free-icon/user_318-159711.jpg"
                 }
                 alt="profile"
                 className="profile-img"

@@ -24,6 +24,8 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useQuery } from "@tanstack/react-query";
 import { fetchUser, getFavorites } from "./apiCall";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+import { googleClientId } from "./Constants";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -42,30 +44,30 @@ function App() {
     // offset:220
   });
 
-    // Get user data
-    useQuery({
-      queryKey: ["user-data"],
-      queryFn: fetchUser,
-      onSuccess: (data) => {
-        // console.log(data.data);
-        if (data.data?.user) {
-          sessionStorage.setItem("user_details", JSON.stringify(data.data.user));
-        }
-      },
-      onError: (err) => {
-        // handle error
-      },
-    });
-  
-    // get list of favorites
-    useQuery(["favorites"], getFavorites, {
-      onSuccess: (data) => {
-        if (data.data?.status[0]?.Error === "False") {
-          dispatch({ type: "SET_FAVORITE_LIST", data: data.data.value });
-        }
-      },
-      onError: (err) => console.log(err),
-    });
+  // Get user data
+  useQuery({
+    queryKey: ["user-data"],
+    queryFn: fetchUser,
+    onSuccess: (data) => {
+      // console.log(data.data);
+      if (data.data?.user) {
+        sessionStorage.setItem("user_details", JSON.stringify(data.data.user));
+      }
+    },
+    onError: (err) => {
+      // handle error
+    },
+  });
+
+  // get list of favorites
+  useQuery(["favorites"], getFavorites, {
+    onSuccess: (data) => {
+      if (data.data?.status[0]?.Error === "False") {
+        dispatch({ type: "SET_FAVORITE_LIST", data: data.data.value });
+      }
+    },
+    onError: (err) => console.log(err),
+  });
   return (
     <div
       onClick={() =>
@@ -73,80 +75,81 @@ function App() {
         dispatch({ type: "PROFILE_OPTIONS_VIEW", status: false })
       }
     >
-      <BrowserRouter>
-        <Toaster position="top-center" reverseOrder={false} />
-        {showProfileOptions && <ProfileOptions />}
-        <ScrollToTop />
-        <Routes>
-          <Route
-            path="/signup"
-            element={
-              <PublicRoute>
-                <Navbar />
-                <Signup />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              <PublicRoute>
-                <Navbar />
-                <Login />
-              </PublicRoute>
-            }
-          />
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar />
-                <Home />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/shop"
-            element={
-              <>
-                <Navbar />
-                <Shop />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/product-info/:productId"
-            element={
-              <>
-                <Navbar />
-                <ProductDetails />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/checkout"
-            element={
-              <>
-                <Navbar />
-                <Checkout />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/rental"
-            element={
-              <>
-                <Navbar />
-                <Rental />
-                <Footer />
-              </>
-            }
-          />
-          {/* <Route
+      <GoogleOAuthProvider clientId={googleClientId}>
+        <BrowserRouter>
+          <Toaster position="top-center" reverseOrder={false} />
+          {showProfileOptions && <ProfileOptions />}
+          <ScrollToTop />
+          <Routes>
+            <Route
+              path="/signup"
+              element={
+                <PublicRoute>
+                  <Navbar />
+                  <Signup />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <PublicRoute>
+                  <Navbar />
+                  <Login />
+                </PublicRoute>
+              }
+            />
+            <Route
+              path="/"
+              element={
+                <>
+                  <Navbar />
+                  <Home />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/shop"
+              element={
+                <>
+                  <Navbar />
+                  <Shop />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/product-info/:productId"
+              element={
+                <>
+                  <Navbar />
+                  <ProductDetails />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/checkout"
+              element={
+                <>
+                  <Navbar />
+                  <Checkout />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/rental"
+              element={
+                <>
+                  <Navbar />
+                  <Rental />
+                  <Footer />
+                </>
+              }
+            />
+            {/* <Route
             path="/settings/:page"
             element={
               <ProtectRoute>
@@ -156,55 +159,56 @@ function App() {
               </ProtectRoute>
             }
           /> */}
-          <Route
-            path="/dashboard/:page"
-            element={
-              <ProtectRoute>
-                <Navbar />
-                <Dashboard />
-              </ProtectRoute>
-            }
-          />
-          <Route
-            path="/build-custom-art"
-            element={
-              <ProtectRoute>
-                <Navbar />
-                <BuildCustomArt />
-              </ProtectRoute>
-            }
-          />
-          <Route
-            path="/forgot-password"
-            element={
-              <>
-                <Navbar />
-                <ForgotPassword />
-              </>
-            }
-          />
-          <Route
-            path="/contact-us"
-            element={
-              <>
-                <Navbar />
-                <ContactUs />
-                <Footer />
-              </>
-            }
-          />
-          <Route
-            path="/about-us"
-            element={
-              <>
-                <Navbar />
-                <AboutUs />
-                <Footer />
-              </>
-            }
-          />
-        </Routes>
-      </BrowserRouter>
+            <Route
+              path="/dashboard/:page"
+              element={
+                <ProtectRoute>
+                  <Navbar />
+                  <Dashboard />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="/build-custom-art"
+              element={
+                <ProtectRoute>
+                  <Navbar />
+                  <BuildCustomArt />
+                </ProtectRoute>
+              }
+            />
+            <Route
+              path="/forgot-password"
+              element={
+                <>
+                  <Navbar />
+                  <ForgotPassword />
+                </>
+              }
+            />
+            <Route
+              path="/contact-us"
+              element={
+                <>
+                  <Navbar />
+                  <ContactUs />
+                  <Footer />
+                </>
+              }
+            />
+            <Route
+              path="/about-us"
+              element={
+                <>
+                  <Navbar />
+                  <AboutUs />
+                  <Footer />
+                </>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </GoogleOAuthProvider>
     </div>
   );
 }

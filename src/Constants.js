@@ -1,4 +1,4 @@
-// export const googleClientId="166799978388-1uls89hu1uuv74sv96ce6q83juhmv5v3.apps.googleusercontent.com"
+export const googleClientId="166799978388-1uls89hu1uuv74sv96ce6q83juhmv5v3.apps.googleusercontent.com"
 export const domainName = "http://127.0.0.1:8000";
 
 export const api = {
@@ -27,5 +27,6 @@ export const api = {
   cancelOrder:'/api/cancel-order',
   getFavorites:'/api/get-favourite-list',
   addFavorite:'/api/add-favourite-list/',
-  removeFavorite:'/api/remove-from-favourite-list/'
+  removeFavorite:'/api/remove-from-favourite-list/',
+  verifyGoogleToken:'/api/verify/google_access_token'
 };

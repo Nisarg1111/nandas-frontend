@@ -3,15 +3,15 @@ import { ReactComponent as GoogleIcon } from "../../assets/svgs/google-icon.svg"
 import { Link, useNavigate } from "react-router-dom";
 import { LoginBackgroundImage } from "../../components/LoginBackgroundImage/LoginBackgroundImage";
 import { useForm } from "react-hook-form";
-import { login } from "../../apiCall";
+import { googleLogin, login } from "../../apiCall";
 import { useStateValue } from "../../StateProvider";
 import { toast } from "react-hot-toast";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export const Login = () => {
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -40,6 +40,36 @@ export const Login = () => {
         toast.error(response.data?.status[0]?.Message);
       }
     } catch (err) {
+      toast.error("Something went wrong");
+    }
+  };
+
+  // google login
+  const doGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse, "token response");
+      verifyUser(tokenResponse);
+    },
+    onError: (error) => console.log("error", error),
+  });
+
+  const verifyUser = async (data) => {
+    try {
+      const response = await googleLogin(data.access_token);
+      if (response.data?.access_token) {
+        dispatch({ type: "SET_LOGIN_STATUS", status: true });
+        sessionStorage.setItem("token", response.data.access_token);
+        sessionStorage.setItem("refresh_token", response.data.refresh_token);
+        sessionStorage.setItem(
+          "user_details",
+          JSON.stringify(response.data.value)
+        );
+        navigate("/");
+      } else {
+        toast.error(response.data?.status[0]?.Message);
+      }
+    } catch (err) {
+      console.log(err, "error response");
       toast.error("Something went wrong");
     }
   };
@@ -95,7 +125,7 @@ export const Login = () => {
               log in
             </button>
           </form>
-          <button className="google-login-btn button">
+          <button className="google-login-btn button" onClick={doGoogleLogin}>
             <GoogleIcon className="google-icon" />
             Log In with Google
           </button>

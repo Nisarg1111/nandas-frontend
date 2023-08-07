@@ -176,3 +176,10 @@ export const removeFromFavorites = (productId) => {
     method: "delete",
   });
 };
+
+// verify google token
+export const googleLogin = (googleToken) => {
+  return axios.post(`${domainName}${api.verifyGoogleToken}`, {
+    access_token: googleToken,
+  });
+};

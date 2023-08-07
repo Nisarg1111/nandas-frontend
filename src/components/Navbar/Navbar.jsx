@@ -137,8 +137,9 @@ export const Navbar = () => {
             >
               <img
                 src={
-                  `${domainName}${userDetails?.profile_image}` ||
-                  "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                  userDetails.profile_image
+                    ? `${domainName}${userDetails?.profile_image}`
+                    : "https://img.freepik.com/free-icon/user_318-159711.jpg"
                 }
                 alt="profile"
                 className="profile-img"
@@ -186,8 +187,9 @@ export const Navbar = () => {
                   >
                     <img
                       src={
-                        `${domainName}${userDetails?.profile_image}` ||
-                        "https://img.freepik.com/free-icon/user_318-159711.jpg"
+                        userDetails.profile_image
+                          ? `${domainName}${userDetails?.profile_image}`
+                          : "https://img.freepik.com/free-icon/user_318-159711.jpg"
                       }
                       alt="profile"
                       className="profile-img"

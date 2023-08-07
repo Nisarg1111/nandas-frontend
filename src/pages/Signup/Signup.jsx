@@ -4,9 +4,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { LoginBackgroundImage } from "../../components/LoginBackgroundImage/LoginBackgroundImage";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import { checkEmailAvailability, signup } from "../../apiCall";
+import { checkEmailAvailability, googleLogin, signup } from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { useStateValue } from "../../StateProvider";
+import { useGoogleLogin } from "@react-oauth/google";
 
 export const Signup = () => {
   const {
@@ -52,6 +53,36 @@ export const Signup = () => {
       phoneNumber: 0,
       type: "email",
     });
+  };
+
+  // google login
+  const doGoogleLogin = useGoogleLogin({
+    onSuccess: (tokenResponse) => {
+      console.log(tokenResponse, "token response");
+      verifyUser(tokenResponse);
+    },
+    onError: (error) => console.log("error", error),
+  });
+
+  const verifyUser = async (data) => {
+    try {
+      const response = await googleLogin(data.access_token);
+      if (response.data?.access_token) {
+        dispatch({ type: "SET_LOGIN_STATUS", status: true });
+        sessionStorage.setItem("token", response.data.access_token);
+        sessionStorage.setItem("refresh_token", response.data.refresh_token);
+        sessionStorage.setItem(
+          "user_details",
+          JSON.stringify(response.data.value)
+        );
+        navigate("/");
+      } else {
+        toast.error(response.data?.status[0]?.Message);
+      }
+    } catch (err) {
+      console.log(err, "error response");
+      toast.error("Something went wrong");
+    }
   };
   return (
     <div className="signup-container">
@@ -113,7 +144,7 @@ export const Signup = () => {
               sign up
             </button>
           </form>
-          <button className="google-signup-btn button">
+          <button className="google-signup-btn button" onClick={doGoogleLogin}>
             <GoogleIcon className="google-icon" />
             Sign Up with Google
           </button>
