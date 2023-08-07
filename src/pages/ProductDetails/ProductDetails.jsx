@@ -15,13 +15,19 @@ import { useEffect, useState } from "react";
 import { PopularArtworks } from "../../components/PopularArtworks/PopularArtworks";
 import { Accordion } from "../Home/components/Accordion/Accordion";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { addToCart, fetchProductInfo } from "../../apiCall";
+import {
+  addToCart,
+  addToFavorites,
+  fetchProductInfo,
+  removeFromFavorites,
+} from "../../apiCall";
 import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
 import { useStateValue } from "../../StateProvider";
+import { Slide } from "react-slideshow-image";
 
 export const ProductDetails = () => {
-  const [{ favorites }] = useStateValue();
+  const [{ favorites, userLoggedIn }, dispatch] = useStateValue();
   const { productId } = useParams();
   const [liked, setLiked] = useState(false);
 
@@ -40,7 +46,7 @@ export const ProductDetails = () => {
     {
       onSuccess: (data) => {
         setProduct(data.data?.value);
-        console.log(data.data?.value,'data is here');
+        console.log(data.data?.value, "data is here");
       },
       onError: (err) => {
         console.log(err, "ERROR");
@@ -85,9 +91,81 @@ export const ProductDetails = () => {
 
   // add item to cart
   const addProductToCart = (pdtId) => {
-    addToCartMutation.mutate({ productId: pdtId, quantity: 1 });
+    if (!userLoggedIn) {
+      navigate("/login");
+    } else {
+      addToCartMutation.mutate({ productId: pdtId, quantity: 1 });
+    }
   };
 
+  // add item to favorite list
+  const addToFavoritesList = async () => {
+    if (!userLoggedIn) {
+      navigate("/login");
+    } else {
+      setLiked(true);
+      try {
+        const response = await addToFavorites(product.id);
+        console.log(response.data, "addToFavorites");
+        if (response.data?.status[0].Error === "False") {
+          toast.success(`${product.title} added to favorites`);
+          dispatch({
+            type: "ADD_TO_FAVORITES_LIST",
+            item: { ...product, main_image: `/uploads/${product.main_image}` },
+          });
+        }
+      } catch (err) {
+        console.log(err, "addToFavorites error");
+      }
+    }
+  };
+
+  // remove item from favorite list
+  const removeFromFavoritesList = async () => {
+    setLiked(false);
+    try {
+      const response = await removeFromFavorites(product.id);
+      console.log(response.data, "removeFromFavorites");
+      if (response.data?.status[0].Error === "False") {
+        toast.success(`${product.title} removed from favorites`);
+        dispatch({ type: "REMOVE_FROM_FAVORITES_LIST", item: product });
+      }
+    } catch (err) {
+      console.log(err, "removeFromFavorites error");
+    }
+  };
+
+  // slider settings
+  const responsiveSettings = [
+    // {
+    //   breakpoint: 1190,
+    //   settings: {
+    //     slidesToShow: 5,
+    //     slidesToScroll: 2,
+    //   },
+    // },
+    // {
+    //   breakpoint: 990,
+    //   settings: {
+    //     slidesToShow: 4,
+    //     slidesToScroll: 2,
+    //   },
+    // },
+    // {
+    //   breakpoint: 520,
+    //   settings: {
+    //     slidesToShow: 3,
+    //     slidesToScroll: 1,
+    //   },
+    // },
+    // {
+    //   breakpoint: 250,
+    //   settings: {
+    //     slidesToShow: 2.25,
+    //     slidesToScroll: 1,
+    //   },
+    // },
+  ];
   return (
     <div className="main">
       <div className="routes">
@@ -140,7 +218,7 @@ export const ProductDetails = () => {
                   <FaHeart
                     color="red"
                     className="heart-icon icon heart-filled-icon icon-heart"
-                    onClick={() => setLiked(false)}
+                    onClick={removeFromFavoritesList}
                   />
                   <span>Added to Favorites</span>
                 </>
@@ -148,7 +226,7 @@ export const ProductDetails = () => {
                 <>
                   <AiOutlineHeart
                     className="heart-icon icon outline-heart-icon icon-heart"
-                    onClick={() => setLiked(true)}
+                    onClick={addToFavoritesList}
                   />
                   <span>Add to Favorites</span>
                 </>
@@ -166,7 +244,7 @@ export const ProductDetails = () => {
         </div>
         <div className="product-details" data-aos="fade-left">
           <h1>{product?.title}</h1>
-          <p>{product?.description}</p>
+          {product?.description && <p>{product?.description}</p>}
           <h2>₹{product?.price}</h2>
           {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
           <div className="buttons">

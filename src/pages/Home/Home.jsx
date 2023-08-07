@@ -87,6 +87,7 @@ export const Home = () => {
             prevArrow={<IoIosArrowBack className="slick-prev" />}
             nextArrow={<IoIosArrowForward className="slick-next" />}
             autoplay={true}
+            canSwipe={true}
           >
             {recentProducts?.data?.value.map((item) => {
               return (
@@ -107,6 +108,7 @@ export const Home = () => {
             prevArrow={<IoIosArrowBack className="slick-prev" />}
             nextArrow={<IoIosArrowForward className="slick-next" />}
             autoplay={true}
+            canSwipe={true}
           >
             <div class="loading-card"></div>
             <div class="loading-card"></div>

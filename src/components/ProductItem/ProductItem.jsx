@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
 export const ProductItem = ({ item }) => {
-  const [{ favorites }, dispatch] = useStateValue();
+  const [{ favorites, userLoggedIn }, dispatch] = useStateValue();
   const { pathname } = useLocation();
   const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
@@ -22,19 +22,23 @@ export const ProductItem = ({ item }) => {
 
   // add item to favorite list
   const addToFavoritesList = async () => {
-    setLiked(true);
-    try {
-      const response = await addToFavorites(item.id);
-      console.log(response.data, "addToFavorites");
-      if (response.data?.status[0].Error === "False") {
-        toast.success(`${item.title} added to favorites`);
-        dispatch({
-          type: "ADD_TO_FAVORITES_LIST",
-          item: { ...item, main_image: `/uploads/${item.main_image}` },
-        });
+    if (!userLoggedIn) {
+      navigate("/login");
+    } else {
+      setLiked(true);
+      try {
+        const response = await addToFavorites(item.id);
+        console.log(response.data, "addToFavorites");
+        if (response.data?.status[0].Error === "False") {
+          toast.success(`${item.title} added to favorites`);
+          dispatch({
+            type: "ADD_TO_FAVORITES_LIST",
+            item: { ...item, main_image: `/uploads/${item.main_image}` },
+          });
+        }
+      } catch (err) {
+        console.log(err, "addToFavorites error");
       }
-    } catch (err) {
-      console.log(err, "addToFavorites error");
     }
   };
 

@@ -13,7 +13,7 @@ export const ProductCard = ({ item }) => {
   const [liked, setLiked] = useState(false);
   const [hovered, setHovered] = useState(false);
   const navigate = useNavigate();
-  const [{ favorites }, dispatch] = useStateValue();
+  const [{ favorites, userLoggedIn }, dispatch] = useStateValue();
 
   useEffect(() => {
     setLiked(favorites.some((art) => art.id === parseInt(item.id)));
@@ -21,19 +21,23 @@ export const ProductCard = ({ item }) => {
 
   // add item to favorite list
   const addToFavoritesList = async () => {
-    setLiked(true);
-    try {
-      const response = await addToFavorites(item.id);
-      console.log(response.data, "addToFavorites");
-      if (response.data?.status[0].Error === "False") {
-        toast.success(`${item.title} added to favorites`);
-        dispatch({
-          type: "ADD_TO_FAVORITES_LIST",
-          item: { ...item, main_image: `/uploads/${item.main_image}` },
-        });
+    if (!userLoggedIn) {
+      navigate("/login");
+    } else {
+      setLiked(true);
+      try {
+        const response = await addToFavorites(item.id);
+        console.log(response.data, "addToFavorites");
+        if (response.data?.status[0].Error === "False") {
+          toast.success(`${item.title} added to favorites`);
+          dispatch({
+            type: "ADD_TO_FAVORITES_LIST",
+            item: { ...item, main_image: `/uploads/${item.main_image}` },
+          });
+        }
+      } catch (err) {
+        console.log(err, "addToFavorites error");
       }
-    } catch (err) {
-      console.log(err, "addToFavorites error");
     }
   };
 

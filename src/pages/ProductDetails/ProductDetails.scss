@@ -20,6 +20,7 @@
     height: fit-content;
     @media (max-width: 1024px) {
       flex-direction: column;
+      gap:1rem;
     }
     .images-container {
       display: flex;
@@ -81,6 +82,21 @@
         @media (max-width: 1024px) {
           justify-content: center;
         }
+        // .react-slideshow-container{
+        //   width: 53vw;
+        //   .react-slideshow-wrapper{
+        //     .images-wrap{
+        //       div{
+        //         // height:9.08rem !important;
+        //         width:7rem !important;
+        //         // width:127.2px !important;
+        //         img{
+        //           width:6.5rem !important;
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
         &::-webkit-scrollbar {
           height: 5px;
           scroll-behavior: smooth;

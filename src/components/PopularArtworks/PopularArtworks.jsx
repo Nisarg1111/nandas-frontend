@@ -71,6 +71,7 @@ export const PopularArtworks = () => {
             prevArrow={<IoIosArrowBack className="slick-prev" />}
             nextArrow={<IoIosArrowForward className="slick-next" />}
             autoplay={true}
+            canSwipe={true}
           >
             {popularProducts?.data?.value.map((item) => {
               return <ProductItem item={item}/>;
@@ -86,6 +87,7 @@ export const PopularArtworks = () => {
             prevArrow={<IoIosArrowBack className="slick-prev" />}
             nextArrow={<IoIosArrowForward className="slick-next" />}
             autoplay={true}
+            canSwipe={true}
           >
             <div class="loading-card"></div>
             <div class="loading-card"></div>
