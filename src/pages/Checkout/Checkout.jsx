@@ -43,8 +43,9 @@ export const Checkout = () => {
     const deliveryAddress = userAddresses.find(
       (address) => address.id === selectedAddress
     );
+    console.log(deliveryAddress,'Delivery address')
     deliveryAddress["address_id"] = selectedAddress.toString();
-    delete deliveryAddress.id;
+    // delete deliveryAddress.id;
 
     const orderDetails = {
       ...deliveryAddress,

@@ -16,6 +16,7 @@ import { PopularArtworks } from "../../components/PopularArtworks/PopularArtwork
 import { useQuery } from "@tanstack/react-query";
 import { fetchRecentProducts, getFavorites } from "../../apiCall";
 import { useStateValue } from "../../StateProvider";
+import { useState } from "react";
 
 const qaContent = [
   "What can I sell?",
@@ -26,6 +27,9 @@ const qaContent = [
 
 export const Home = () => {
   const [{ favorites }] = useStateValue();
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+
   // slider settings
   const responsiveSettings = [
     {
@@ -65,11 +69,10 @@ export const Home = () => {
     {
       onError: (err) => {
         // handle err
+        console.log(err)
       },
     }
   );
-
-  console.log(recentProducts,'recentProducts')
 
   return (
     <div className="home-container">

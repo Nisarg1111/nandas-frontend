@@ -104,14 +104,17 @@ export const Signup = () => {
                     message: "Enter a valid email",
                   },
                   validate: async () => {
-                    const response = await emailAvailability();
-                    if (
-                      response.data.status[0].Message ===
-                      "Email Is Already In Use."
-                    ) {
-                      return "Email is already in use";
-                    } else {
-                      return;
+                    try {
+                      const response = await emailAvailability();
+                      if (
+                        response.data.status[0].Message ===
+                        "Email Is Already In Use."
+                      ) {
+                        return "Email is already in use";
+                      } else {
+                        return;
+                      }
+                    } catch (err) {
                     }
                   },
                 })}

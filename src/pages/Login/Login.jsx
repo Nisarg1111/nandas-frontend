@@ -40,7 +40,9 @@ export const Login = () => {
         toast.error(response.data?.status[0]?.Message);
       }
     } catch (err) {
-      toast.error("Something went wrong");
+      console.log(err,'login error')
+      // toast.error("Something went wrong");
+      toast.error(err.message);
     }
   };
 

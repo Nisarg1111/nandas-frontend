@@ -266,14 +266,18 @@ export const ProductDetails = () => {
             // )} */}
             <button
               className="btn-primary"
-              onClick={() => navigate("/checkout")}
+              onClick={() => {
+                userLoggedIn ? navigate("/checkout") : navigate("/login");
+              }}
             >
               buy now
             </button>
           </div>
           {product.rent && (
             <button
-              onClick={() => navigate("/rental")}
+              onClick={() => {
+                userLoggedIn ? navigate("/rental") : navigate("/login");
+              }}
               className="btn-secondary"
             >
               Rent from ₹{product.rent}/Month

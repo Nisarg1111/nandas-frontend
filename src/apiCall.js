@@ -14,7 +14,7 @@ export const checkEmailAvailability = (data) => {
   return axios.post(`${domainName}${api.emailAvailability}`, data);
 };
 
-// sign up
+// login
 export const login = (data) => {
   return axios.post(`${domainName}${api.login}`, data);
 };

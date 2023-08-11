@@ -1,10 +1,13 @@
-export const googleClientId="166799978388-1uls89hu1uuv74sv96ce6q83juhmv5v3.apps.googleusercontent.com"
-export const domainName = "http://127.0.0.1:8000";
+export const googleClientId =
+  "563532083340-vq8mqk2q7vje68eiooqphep2v6uss6ch.apps.googleusercontent.com";
+// export const domainName = "http://127.0.0.1:8000";
+// export const domainName = "http://142.93.223.117:7700";
+export const domainName = "https://nandas.onrender.com";
 
 export const api = {
   signup: "/api/signup",
   login: "/api/login",
-  emailAvailability: "/api/isEmailPhoneNumberAvailable",
+  emailAvailability: "/api/isEmailAvailable",
   profile: "/api/profile",
   updateProfileImg: "/api/update-profile-img",
   categories: "/api/get-categories-list",
@@ -19,14 +22,14 @@ export const api = {
   deleteFromCart: "/api/delete-from-cart/",
   getAddresses: "/api/get-addresses",
   addAddress: "/api/add-address",
-  deleteAddress:'/api/delete-address/',
-  updateAddress:'/api/update-address',
-  payment:'/api/payment',
-  createOrder:'/api/create-order',
-  getOrders:'/api/get-orders',
-  cancelOrder:'/api/cancel-order',
-  getFavorites:'/api/get-favourite-list',
-  addFavorite:'/api/add-favourite-list/',
-  removeFavorite:'/api/remove-from-favourite-list/',
-  verifyGoogleToken:'/api/verify/google_access_token'
+  deleteAddress: "/api/delete-address/",
+  updateAddress: "/api/update-address",
+  payment: "/api/payment",
+  createOrder: "/api/create-order",
+  getOrders: "/api/get-orders",
+  cancelOrder: "/api/cancel-order",
+  getFavorites: "/api/get-favourite-list",
+  addFavorite: "/api/add-favourite-list/",
+  removeFavorite: "/api/remove-from-favourite-list/",
+  verifyGoogleToken: "/api/verify/google_access_token",
 };

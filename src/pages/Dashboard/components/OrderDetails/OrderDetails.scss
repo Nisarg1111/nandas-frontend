@@ -26,7 +26,7 @@
     display: flex;
     flex-direction: column;
     padding: 1rem;
-    .btn-cancel{
+    .btn-cancel {
       width: fit-content;
       align-self: center;
       margin-top: 1rem;
@@ -100,5 +100,112 @@
         }
       }
     }
+  }
+}
+
+// review modal
+.header-offcanvas {
+  display: flex;
+  align-items: center;
+  background-color: #111;
+  color: #fff;
+  justify-content: space-between;
+  padding: 1rem;
+  .icon {
+    cursor: pointer;
+    font-size: 1.6rem;
+    margin-bottom: 0.3rem;
+  }
+}
+.review-content {
+  .input-box {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+  & > div {
+    display: flex;
+    flex-direction: column;
+    gap: 1.3rem;
+    .profile {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      .icon {
+        font-size: 1.8rem;
+      }
+    }
+    .rating {
+      display: flex;
+      flex-direction: column;
+    }
+    .buttons {
+      display: flex;
+      flex-direction: row;
+      gap:1rem;
+    }
+  }
+}
+
+.modal-body {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+  .profile_img {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+//invoice modal
+.underline-invoice-header {
+  height: 1px;
+  width: 100%;
+  background-color: #111;
+}
+.invoice-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  color: #000;
+
+  .fw-500 {
+    font-weight: 500;
+    font-size: 1.1rem;
+  }
+  .address {
+    display: flex;
+    flex-direction: column;
+    &:nth-child(2) {
+      text-transform: uppercase;
+    }
+  }
+  .product-details {
+    display: flex;
+    gap: 0.8rem;
+    img {
+      height: 9rem;
+      width: 8rem;
+      object-fit: cover;
+    }
+    div {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      @media (max-width: 500px) {
+        flex-direction: column;
+        align-items: flex-end;
+      }
+    }
+  }
+  .order-summary {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
   }
 }
