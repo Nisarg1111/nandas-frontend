@@ -98,12 +98,7 @@ const OrderDetails = ({
                 </div>
                 <div className="buttons">
                   <button className="btn-primary button">Buy it again</button>
-                  <button
-                    className="btn-secondary button"
-                    onClick={() => setShowInvoiceModal(true)}
-                  >
-                    Product Invoice
-                  </button>
+
                   <button
                     className="btn-secondary button"
                     onClick={() => setShowReviewModal(true)}
@@ -114,11 +109,19 @@ const OrderDetails = ({
               </div>
             </div>
           ))}
-          {order.status === "Received" || order.status === "Packed" ? (
-            <button className="btn-cancel button" onClick={handleCancelClick}>
-              Cancel Order
+          <div className="bottom-buttons">
+            {order.status === "Received" || order.status === "Packed" ? (
+              <button className="btn-cancel button" onClick={handleCancelClick}>
+                Cancel Order
+              </button>
+            ) : null}
+            <button
+              className="btn-secondary button"
+              onClick={() => setShowInvoiceModal(true)}
+            >
+              Product Invoice
             </button>
-          ) : null}
+          </div>
         </div>
       </Collapse>
 
@@ -143,13 +146,14 @@ export const ProductReviewModal = ({ order, ...props }) => {
   const user =
     JSON.parse(localStorage.getItem("user_details")) ||
     JSON.parse(sessionStorage.getItem("user_details"));
-    
+
   const [rating, setRating] = useState(0);
   // Catch Rating value
   const handleRating = (rate) => {
     setRating(rate);
   };
 
+  console.log(order, "order details");
   return (
     <Modal
       {...props}
@@ -196,7 +200,6 @@ export const ProductReviewModal = ({ order, ...props }) => {
 
 export const InvoiceModal = ({ order, ...props }) => {
   const [rating, setRating] = useState(0);
-
   // Catch Rating value
   const handleRating = (rate) => {
     setRating(rate);
@@ -230,8 +233,10 @@ export const InvoiceModal = ({ order, ...props }) => {
             />
             <div>
               <span className="h5">{item.productDetail.title}</span>
-              <span>1</span>
-              <span className="h5">₹{item.productDetail.price}</span>
+              <span>{item.quantity}</span>
+              <span className="h5">
+                ₹{item.productDetail.price * item.quantity}
+              </span>
             </div>
           </div>
         ))}

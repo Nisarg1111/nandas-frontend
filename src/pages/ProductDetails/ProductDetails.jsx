@@ -135,37 +135,6 @@ export const ProductDetails = () => {
     }
   };
 
-  // slider settings
-  const responsiveSettings = [
-    // {
-    //   breakpoint: 1190,
-    //   settings: {
-    //     slidesToShow: 5,
-    //     slidesToScroll: 2,
-    //   },
-    // },
-    // {
-    //   breakpoint: 990,
-    //   settings: {
-    //     slidesToShow: 4,
-    //     slidesToScroll: 2,
-    //   },
-    // },
-    // {
-    //   breakpoint: 520,
-    //   settings: {
-    //     slidesToShow: 3,
-    //     slidesToScroll: 1,
-    //   },
-    // },
-    // {
-    //   breakpoint: 250,
-    //   settings: {
-    //     slidesToShow: 2.25,
-    //     slidesToScroll: 1,
-    //   },
-    // },
-  ];
   return (
     <div className="main">
       <div className="routes">

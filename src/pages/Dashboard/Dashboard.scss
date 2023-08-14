@@ -133,7 +133,9 @@
         gap: 1rem;
         .slider-item {
           height: auto !important;
+          background-color: #fff;
           .slider-img {
+            margin-top: 1rem;
             height: auto !important;
           }
         }

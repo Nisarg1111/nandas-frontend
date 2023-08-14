@@ -23,9 +23,9 @@ export const Checkout = () => {
   const [addresses, setAddresses] = useState([]);
   const [selectedAddress, setSelectedAddress] = useState("");
 
-  useEffect(()=>{
-    dispatch({type:'SET_CART_TOTAL'})
-  },[userCart,dispatch])
+  useEffect(() => {
+    dispatch({ type: "SET_CART_TOTAL" });
+  }, [userCart, dispatch]);
 
   const handleOrderSuccessPopup = () => {
     setShowOrderSuccessModal(true);
@@ -43,7 +43,7 @@ export const Checkout = () => {
     const deliveryAddress = userAddresses.find(
       (address) => address.id === selectedAddress
     );
-    console.log(deliveryAddress,'Delivery address')
+    console.log(deliveryAddress, "Delivery address");
     deliveryAddress["address_id"] = selectedAddress.toString();
     // delete deliveryAddress.id;
 
@@ -159,9 +159,11 @@ export const Checkout = () => {
           </div>
         </div>
       ) : (
-        <div className="empty-img-div">
-          <img src={EmptyCart} alt="empty-cart" />
-        </div>
+        !cartIsLoading && (
+          <div className="empty-img-div">
+            <img src={EmptyCart} alt="empty-cart" />
+          </div>
+        )
       )}
       <ProtectYourArtModal
         show={showProtectArtModal}
