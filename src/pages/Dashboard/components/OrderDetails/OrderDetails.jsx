@@ -14,6 +14,8 @@ const OrderDetails = ({
   order,
   setShowCancelConfirm,
   setCancellingOrderId,
+  setShowReturnConfirm,
+  setReturningOrderId,
 }) => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
@@ -44,6 +46,11 @@ const OrderDetails = ({
   const handleCancelClick = () => {
     setShowCancelConfirm(true);
     setCancellingOrderId(order.id);
+  };
+
+  const handleReturnClick = () => {
+    setShowReturnConfirm(true);
+    setReturningOrderId(order.id);
   };
 
   return (
@@ -115,6 +122,14 @@ const OrderDetails = ({
                 Cancel Order
               </button>
             ) : null}
+            {order.status === "Completed" && (
+              <button
+                className="btn-primary button"
+                onClick={handleReturnClick}
+              >
+                Return Order
+              </button>
+            )}
             <button
               className="btn-secondary button"
               onClick={() => setShowInvoiceModal(true)}

@@ -23,7 +23,7 @@ function StepProgressbar({ orderStatus }) {
     <div className="main-pb">
       <div className="row d-flex justify-content-center">
         <div className="col-12">
-          {orderStatus !== "Canceled" ? (
+          {orderStatus !== "Canceled" && orderStatus !== "Returned" ? (
             <ul id="progressbar" className="text-center">
               <li
                 className={
@@ -76,7 +76,9 @@ function StepProgressbar({ orderStatus }) {
               </li>
             </ul>
           ) : (
-            <h4 className="cancelled-text">Order cancelled!</h4>
+            <h4 className="cancelled-text">
+              Order {orderStatus === "Canceled" ? "cancelled" : "returned"}!
+            </h4>
           )}
         </div>
       </div>

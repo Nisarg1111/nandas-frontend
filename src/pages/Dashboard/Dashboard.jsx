@@ -19,6 +19,7 @@ import {
   cancelOrder,
   getAddresses,
   getOrders,
+  returnOrder,
   updateProfileImg,
   updateUser,
 } from "../../apiCall";
@@ -53,6 +54,9 @@ export const Dashboard = () => {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancellingOrderId, setCancellingOrderId] = useState("");
   const [cancellingReason, setCancellingReason] = useState("");
+  const [showReturnConfirm, setShowReturnConfirm] = useState(false);
+  const [returningOrderId, setReturningOrderId] = useState("");
+  const [returningReason, setReturningReason] = useState("");
 
   useEffect(() => {
     setPage(params.page);
@@ -149,7 +153,7 @@ export const Dashboard = () => {
       if (data.data?.status[0].Error === "False") {
         setShowCancelConfirm(false);
         queryClient.invalidateQueries(["all-orders"]);
-        toast.success("Order cancellation successfull");
+        toast.success("Order cancellation successful");
         setCancellingReason("");
         setCancellingOrderId("");
       }
@@ -157,6 +161,7 @@ export const Dashboard = () => {
     onError: (err) => console.log(err, "error"),
   });
 
+  
   // cancel order
   const doCancelOrderConfirm = () => {
     if (!cancellingReason) {
@@ -167,6 +172,31 @@ export const Dashboard = () => {
       orderId: cancellingOrderId.toString(),
     });
   };
+
+
+  const returnMutation = useMutation(returnOrder, {
+    onSuccess: (data) => {
+      if (data.data?.status[0].Error === "False") {
+        setShowReturnConfirm(false);
+        queryClient.invalidateQueries(["all-orders"]);
+        toast.success("Order returned successfully");
+        setReturningReason("");
+        setReturningOrderId("");
+      }
+    },
+    onError: (err) => console.log(err, "error"),
+  });
+
+  const doReturnOrderConfirm = ()=>{
+    console.log('im here')
+    if (!returningReason) {
+      return toast("Select reason to return products", { icon: "⚠️" });
+    }
+    returnMutation.mutate({
+      reason: returningReason,
+      orderId: returningOrderId.toString(),
+    });
+  }
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -264,6 +294,8 @@ export const Dashboard = () => {
                   order={order}
                   setShowCancelConfirm={setShowCancelConfirm}
                   setCancellingOrderId={setCancellingOrderId}
+                  setShowReturnConfirm={setShowReturnConfirm}
+                  setReturningOrderId={setReturningOrderId}
                   key={order.id}
                 />
               ))}
@@ -410,6 +442,13 @@ export const Dashboard = () => {
         docancelorderconfirm={doCancelOrderConfirm}
         setcancellingorderId={setCancellingOrderId}
       />
+      <ConfirmReturnOrderModal
+        show={showReturnConfirm}
+        onHide={() => setShowReturnConfirm(false)}
+        setreturningreason={setReturningReason}
+        doreturnorderconfirm={doReturnOrderConfirm}
+        setreturningorderId={setReturningOrderId}
+      />
     </div>
   );
 };
@@ -454,6 +493,60 @@ function ConfirmCancelOrderModal(props) {
             <button
               onClick={() => {
                 props.setcancellingorderId("");
+                props.onHide();
+              }}
+              className="btn-secondary"
+            >
+              Exit
+            </button>
+          </div>
+        </div>
+      </Modal.Body>
+    </Modal>
+  );
+}
+
+
+function ConfirmReturnOrderModal(props) {
+  const reasons = [
+    "I have changed my mind",
+    "Defective or damaged product",
+    "Ordered by mistake",
+    "Wrong item received",
+    "Delay of delivery",
+  ];
+
+  return (
+    <Modal
+      {...props}
+      size="md"
+      aria-labelledby="contained-modal-title-vcenter"
+      centered
+    >
+      <Modal.Body className="cancel-modal">
+        <h3>Do you really wanna return ordered products?</h3>
+        <hr />
+        <div className="form">
+          <h4>Select reason for returning ordered product</h4>
+          <div className="radio-options">
+            {reasons.map((reason) => (
+              <div
+                className="radio"
+                key={reason}
+                onClick={() => props.setreturningreason(reason)}
+              >
+                <input type="radio" name="reason" id="" value={reason} />
+                <label htmlFor="">{reason}</label>
+              </div>
+            ))}
+          </div>
+          <div className="buttons">
+            <button onClick={props.doreturnorderconfirm} className="btn-cancel">
+              Confirm
+            </button>
+            <button
+              onClick={() => {
+                props.setreturningorderId("");
                 props.onHide();
               }}
               className="btn-secondary"

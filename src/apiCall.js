@@ -156,6 +156,15 @@ export const cancelOrder = (data) => {
   });
 };
 
+// return order
+export const returnOrder = (data) => {
+  return request({
+    url: `${domainName}${api.returnOrder}`,
+    method: "post",
+    data,
+  });
+};
+
 // get favorouites
 export const getFavorites = () => {
   return request({ url: `${domainName}${api.getFavorites}` });
