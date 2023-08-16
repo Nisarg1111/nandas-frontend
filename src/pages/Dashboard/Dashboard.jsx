@@ -559,6 +559,7 @@ function ConfirmCancelOrderModal(props) {
               onClick={() => {
                 props.setcancellingorderId("");
                 props.onHide();
+                props.setcancellingreason("");
               }}
               className="btn-secondary"
             >
@@ -612,6 +613,7 @@ function ConfirmReturnOrderModal(props) {
               onClick={() => {
                 props.setreturningorderId("");
                 props.onHide();
+                props.setreturningreason("");
               }}
               className="btn-secondary"
             >
