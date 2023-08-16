@@ -33,4 +33,5 @@ export const api = {
   addFavorite: "/api/add-favourite-list/",
   removeFavorite: "/api/remove-from-favourite-list/",
   verifyGoogleToken: "/api/verify/google_access_token",
+  notifications: "/api/notification-details"
 };

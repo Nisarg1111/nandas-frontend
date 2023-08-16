@@ -45,7 +45,7 @@ export async function displayRazorpay(
   }
 
   const options = {
-    key: merchantKey, // Enter the Key ID generated from the Dashboard
+    key: merchantKey,
     amount: amount,
     currency: currency,
     name: "Nandas",
@@ -67,7 +67,6 @@ export async function displayRazorpay(
           toast.error(response.data.status[0].ResponseMessage);
         }
       } catch (err) {
-        console.log(err, "ERROR");
         toast.error("Something went wrong please refresh the page");
       }
     },

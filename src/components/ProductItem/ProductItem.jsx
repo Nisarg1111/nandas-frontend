@@ -15,7 +15,6 @@ export const ProductItem = ({ item }) => {
   const { pathname } = useLocation();
   const [liked, setLiked] = useState(false);
   const navigate = useNavigate();
-  console.log("PRODUCT", item);
   useEffect(() => {
     setLiked(favorites.some((art) => art.id === parseInt(item.id)));
   }, [favorites, item.id]);

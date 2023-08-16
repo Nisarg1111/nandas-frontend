@@ -17,7 +17,9 @@ import { Shipping } from "./components/Shipping/Shipping";
 import { useForm } from "react-hook-form";
 import {
   cancelOrder,
+  changeNotificationStatus,
   getAddresses,
+  getNotificationDetails,
   getOrders,
   returnOrder,
   updateProfileImg,
@@ -44,7 +46,6 @@ export const Dashboard = () => {
   const navigate = useNavigate();
   const params = useParams();
   const [page, setPage] = useState("support-ticket");
-  const [chatMessages, setChatMessages] = useState(true);
   const user = JSON.parse(sessionStorage.getItem("user_details"));
   const imgRef = useRef();
   const [profilePic, setProfilePic] = useState();
@@ -57,6 +58,9 @@ export const Dashboard = () => {
   const [showReturnConfirm, setShowReturnConfirm] = useState(false);
   const [returningOrderId, setReturningOrderId] = useState("");
   const [returningReason, setReturningReason] = useState("");
+  const [notificationStatuses, setNotificationStatuses] = useState(null);
+  const [emailNotificationStatus, setEmailNotificationStatus] = useState(false);
+  const [chatNotificationStatus, setChatNotificationStatus] = useState(false);
 
   useEffect(() => {
     setPage(params.page);
@@ -148,6 +152,7 @@ export const Dashboard = () => {
     onError: (err) => console.log(err, "orders error response"),
   });
 
+  // cancel order mutation function
   const cancelMutation = useMutation(cancelOrder, {
     onSuccess: (data) => {
       if (data.data?.status[0].Error === "False") {
@@ -161,7 +166,6 @@ export const Dashboard = () => {
     onError: (err) => console.log(err, "error"),
   });
 
-  
   // cancel order
   const doCancelOrderConfirm = () => {
     if (!cancellingReason) {
@@ -173,7 +177,7 @@ export const Dashboard = () => {
     });
   };
 
-
+  // return order mutation function
   const returnMutation = useMutation(returnOrder, {
     onSuccess: (data) => {
       if (data.data?.status[0].Error === "False") {
@@ -187,8 +191,8 @@ export const Dashboard = () => {
     onError: (err) => console.log(err, "error"),
   });
 
-  const doReturnOrderConfirm = ()=>{
-    console.log('im here')
+  // do return order
+  const doReturnOrderConfirm = () => {
     if (!returningReason) {
       return toast("Select reason to return products", { icon: "⚠️" });
     }
@@ -196,7 +200,64 @@ export const Dashboard = () => {
       reason: returningReason,
       orderId: returningOrderId.toString(),
     });
-  }
+  };
+
+  // get notification details
+  useQuery(["notification-details"], getNotificationDetails, {
+    onSuccess: (response) => {
+      if (response.data?.status[0].Message === "success") {
+        console.log("NOTIFICATIONS", response.data);
+        setNotificationStatuses(response.data.user);
+        setEmailNotificationStatus(response.data.user.email_notification);
+        setChatNotificationStatus(response.data.user.chat_notification);
+      }
+    },
+    onError: (err) => {
+      // handle error
+    },
+  });
+
+  // change email notification status
+  const changeEmailNotificationStatus = async () => {
+    try {
+      const data = {
+        email_notification: !emailNotificationStatus,
+        chat_notification: chatNotificationStatus,
+      };
+      setEmailNotificationStatus(!emailNotificationStatus);
+      const response = await changeNotificationStatus(data);
+      if (response.data?.status[0].Message === "success") {
+        if (emailNotificationStatus) {
+          toast.success("Email notifications turned off");
+        } else {
+          toast.success("Email notifications turned on");
+        }
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  // change chat notification status
+  const changeChatNotificationStatus = async () => {
+    try {
+      const data = {
+        email_notification: emailNotificationStatus,
+        chat_notification: !chatNotificationStatus,
+      };
+      setChatNotificationStatus(!chatNotificationStatus);
+      const response = await changeNotificationStatus(data);
+      if (response.data?.status[0].Message === "success") {
+        if (chatNotificationStatus) {
+          toast.success("Chat notifications turned off");
+        } else {
+          toast.success("Chat notifications turned on");
+        }
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -387,7 +448,11 @@ export const Dashboard = () => {
               <div>
                 Email notifications
                 <label class="switch">
-                  <input type="checkbox" />
+                  <input
+                    onChange={changeEmailNotificationStatus}
+                    type="checkbox"
+                    checked={emailNotificationStatus}
+                  />
                   <span class="slider"></span>
                 </label>
               </div>
@@ -395,9 +460,9 @@ export const Dashboard = () => {
                 Chat messages
                 <label class="switch">
                   <input
-                    onChange={() => setChatMessages(!chatMessages)}
+                    onChange={changeChatNotificationStatus}
                     type="checkbox"
-                    checked={chatMessages}
+                    checked={chatNotificationStatus}
                   />
                   <span class="slider"></span>
                 </label>
@@ -505,7 +570,6 @@ function ConfirmCancelOrderModal(props) {
     </Modal>
   );
 }
-
 
 function ConfirmReturnOrderModal(props) {
   const reasons = [

@@ -192,3 +192,17 @@ export const googleLogin = (googleToken) => {
     access_token: googleToken,
   });
 };
+
+// get notification details
+export const getNotificationDetails = () => {
+  return request({ url: `${domainName}${api.notifications}` });
+};
+
+// change notification status
+export const changeNotificationStatus = (data) => {
+  return request({
+    url: `${domainName}${api.notifications}`,
+    method: "post",
+    data,
+  });
+};
