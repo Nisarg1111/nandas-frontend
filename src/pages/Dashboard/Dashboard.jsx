@@ -146,7 +146,7 @@ export const Dashboard = () => {
   const { isLoading } = useQuery(["all-orders"], getOrders, {
     onSuccess: (data) => {
       if (data.data?.status[0].Error === "False") {
-        setOrders(data.data.value);
+        setOrders(data.data.value.sort((order1, order2) => order2.id - order1.id));
       }
     },
     onError: (err) => console.log(err, "orders error response"),
