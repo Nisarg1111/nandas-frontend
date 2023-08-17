@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { useStateValue } from "../../../../StateProvider";
 import axios from "axios";
 import { useQueryClient } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 export const Address = ({
   address,
@@ -21,6 +22,7 @@ export const Address = ({
   const [pincode, setPincode] = useState(address.pin_code);
   const [pincodeErr, setPincodeErr] = useState("");
   const queryClient = useQueryClient();
+  const { pathname } = useLocation();
 
   const handleEditOpen = () => {
     setEditOpen(true);
@@ -53,7 +55,6 @@ export const Address = ({
       phone_number: values.phone_number.toString(),
       address_id: address.id,
     };
-    console.log(values, "VALUES");
     try {
       const response = await updateAddress(values);
       console.log(response, "response");
@@ -251,7 +252,10 @@ export const Address = ({
             >
               <div
                 className="details"
-                onClick={() => selectAddress(address.id)}
+                onClick={() =>
+                  pathname !== "/dashboard/shipping" &&
+                  selectAddress(address.id)
+                }
               >
                 <h1>{address.name}</h1>
                 <p className="uppercase">
