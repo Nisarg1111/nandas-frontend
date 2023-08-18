@@ -25,6 +25,7 @@ import { toast } from "react-hot-toast";
 import { domainName } from "../../Constants";
 import { useStateValue } from "../../StateProvider";
 import { Slide } from "react-slideshow-image";
+import { Rating } from "react-simple-star-rating";
 
 export const ProductDetails = () => {
   const [{ favorites, userLoggedIn }, dispatch] = useStateValue();
@@ -214,6 +215,12 @@ export const ProductDetails = () => {
         <div className="product-details" data-aos="fade-left">
           <h1>{product?.title}</h1>
           {product?.description && <p>{product?.description}</p>}
+          <Rating
+            initialValue={product?.ratings}
+            size={28}
+            readonly
+            className="rating-icons"
+          />
           <h2>₹{product?.price}</h2>
           {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
           {product.current_stock > 0 ? (
