@@ -216,41 +216,38 @@ export const ProductDetails = () => {
           {product?.description && <p>{product?.description}</p>}
           <h2>₹{product?.price}</h2>
           {product?.emi && <p>EMI starts at ₹{product?.emi}/month.</p>}
-          <div className="buttons">
-            {/* {!alreadyInCart ? ( */}
-            <button
-              className="btn-secondary"
-              // onClick={() => navigate("/checkout")}
-              onClick={() => addProductToCart(product.id)}
-            >
-              add to bag
-            </button>
-            {/* // ) : (
-            //   <button
-            //     className="btn-secondary"
-            //     onClick={() => navigate("/checkout")}
-            //   >
-            //     go to cart
-            //   </button>
-            // )} */}
-            <button
-              className="btn-primary"
-              onClick={() => {
-                userLoggedIn ? navigate("/checkout") : navigate("/login");
-              }}
-            >
-              buy now
-            </button>
-          </div>
-          {product.rent && (
-            <button
-              onClick={() => {
-                userLoggedIn ? navigate("/rental") : navigate("/login");
-              }}
-              className="btn-secondary"
-            >
-              Rent from ₹{product.rent}/Month
-            </button>
+          {product.current_stock > 0 ? (
+            <>
+              <div className="buttons">
+                <button
+                  className="btn-secondary"
+                  onClick={() => addProductToCart(product.id)}
+                >
+                  add to bag
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    addProductToCart(product.id);
+                    navigate("/checkout");
+                  }}
+                >
+                  buy now
+                </button>
+              </div>
+              {product.rent && (
+                <button
+                  onClick={() => {
+                    userLoggedIn ? navigate("/rental") : navigate("/login");
+                  }}
+                  className="btn-secondary"
+                >
+                  Rent from ₹{product.rent}/Month
+                </button>
+              )}
+            </>
+          ) : (
+            <button className="btn-gray" disabled>out of stock</button>
           )}
           <div className="delivery-input">
             <label htmlFor="">Check Delivery Dates</label>

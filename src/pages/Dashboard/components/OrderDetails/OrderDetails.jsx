@@ -1,5 +1,5 @@
 import "./OrderDetails.scss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Collapse, Modal } from "react-bootstrap";
 import { AiFillCaretDown, AiFillCaretUp } from "react-icons/ai";
 import StepProgressbar from "../../../../components/StepProgressbar/StepProgressbar";
@@ -9,6 +9,9 @@ import { useNavigate } from "react-router-dom";
 import { Rating } from "react-simple-star-rating";
 import { IoCloseSharp } from "react-icons/io5";
 import { BsPersonCircle } from "react-icons/bs";
+import { addReview, editReview, getReviews } from "../../../../apiCall";
+import { useQuery } from "@tanstack/react-query";
+import { toast } from "react-hot-toast";
 
 const OrderDetails = ({
   order,
@@ -21,6 +24,8 @@ const OrderDetails = ({
   const navigate = useNavigate();
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showInvoiceModal, setShowInvoiceModal] = useState(false);
+  const [reviewData, setReviewData] = useState(null);
+  const [reviewingProductId, setReviewingProductId] = useState("");
 
   function formatDate(inputDate) {
     const options = { year: "numeric", month: "long", day: "numeric" };
@@ -80,41 +85,15 @@ const OrderDetails = ({
           )}
           <StepProgressbar orderStatus={order.status} />
           {order.product.map((product) => (
-            <div className="art-details" key={product.productDetail.id}>
-              <img
-                src={`${domainName}/uploads/${product.productDetail.main_image}`}
-                alt="art"
-                onClick={() =>
-                  navigate(`/product-info/${product.productDetail.id}`)
-                }
-              />
-              <div className="details">
-                <div className="info">
-                  <span>{product.productDetail.title}</span>
-                  <span>{product.productDetail.owner}</span>
-                  <span>
-                    Categories : {product.productDetail.category__title}
-                    {/* | Weight : 10 kg  */}
-                    {/* | Dimensions : 40 × 50 × 70
-                  cm */}
-                  </span>
-                  <span>Quantity : {product.quantity}</span>
-                  <span>
-                    ₹{product.productDetail.price.toLocaleString("en-IN")}
-                  </span>
-                </div>
-                <div className="buttons">
-                  <button className="btn-primary button">Buy it again</button>
-
-                  <button
-                    className="btn-secondary button"
-                    onClick={() => setShowReviewModal(true)}
-                  >
-                    Write product review
-                  </button>
-                </div>
-              </div>
-            </div>
+            <ProductDetails
+              key={product.productDetail.id}
+              order={order}
+              product={product}
+              setShowReviewModal={setShowReviewModal}
+              setReviewData={setReviewData}
+              reviewData={reviewData}
+              setReviewingProductId={setReviewingProductId}
+            />
           ))}
           <div className="bottom-buttons">
             {order.status === "Received" || order.status === "Packed" ? (
@@ -144,6 +123,10 @@ const OrderDetails = ({
         show={showReviewModal}
         onHide={() => setShowReviewModal(false)}
         order={order}
+        reviewData={reviewData}
+        setReviewData={setReviewData}
+        setReviewingProductId={setReviewingProductId}
+        reviewingProductId={reviewingProductId}
       />
 
       <InvoiceModal
@@ -157,18 +140,89 @@ const OrderDetails = ({
 
 export default OrderDetails;
 
-export const ProductReviewModal = ({ order, ...props }) => {
-  const user =
-    JSON.parse(localStorage.getItem("user_details")) ||
-    JSON.parse(sessionStorage.getItem("user_details"));
-
+export const ProductReviewModal = ({
+  order,
+  reviewData,
+  setReviewData,
+  setReviewingProductId,
+  reviewingProductId,
+  ...props
+}) => {
+  const user = JSON.parse(sessionStorage.getItem("user_details"));
   const [rating, setRating] = useState(0);
+  const [review, setReview] = useState("");
+
+  useEffect(() => setReviewData(null), []);
+
+  useQuery({
+    queryKey: ["review", reviewingProductId],
+    queryFn: () => getReviews(reviewingProductId),
+    onSuccess: (response) => {
+      setReviewData(
+        response.data?.value.reviews.find(
+          (review) => review.email === user?.email
+        )
+      );
+    },
+    onError: (err) => {
+      // handle error
+    },
+  });
+
+  useEffect(() => {
+    setRating(reviewData?.ratings);
+    setReview(reviewData?.review);
+  }, [reviewData]);
+
   // Catch Rating value
   const handleRating = (rate) => {
     setRating(rate);
   };
 
-  console.log(order, "order details");
+  // submit review
+  const submitReview = async () => {
+    const data = {
+      productId: reviewingProductId,
+      ratings: rating,
+      review,
+    };
+    try {
+      const response = await addReview(data);
+      if (response.data?.status[0].Error === "False") {
+        toast.success("Review submitted");
+        props.onHide();
+      } else {
+        toast.error(response.data?.status[0].ResponseMessage);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  // update review
+  const updateReview = async () => {
+    const data = {
+      productId: reviewingProductId,
+      ratings: rating,
+      review,
+    };
+    try {
+      const response = await editReview(data);
+      if (response.data?.status[0].Error === "False") {
+        toast.success("Review updated");
+        props.onHide();
+      } else {
+        toast.error(response.data?.status[0].ResponseMessage);
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
+
+  // cancel review
+  const cancelReview = () => {
+    props.onHide();
+  };
   return (
     <Modal
       {...props}
@@ -177,8 +231,10 @@ export const ProductReviewModal = ({ order, ...props }) => {
       centered
     >
       <div className="header-offcanvas">
-        <span className="h5">Write product review</span>
-        <IoCloseSharp className="icon" onClick={() => props.onHide(false)} />
+        <span className="h5">
+          {reviewData ? "Edit" : "Write"} product review
+        </span>
+        <IoCloseSharp className="icon" onClick={cancelReview} />
       </div>
       <Modal.Body className="review-content">
         <div className="">
@@ -192,20 +248,36 @@ export const ProductReviewModal = ({ order, ...props }) => {
                 className="profile_img"
               />
             )}
-            {order.name}
+            {user?.name}
           </span>
 
           <div className="rating">
-            <span>Add Rating</span>
+            <span>{reviewData ? "Edit" : "Write"} Rating</span>
             <Rating onClick={handleRating} initialValue={rating} size={25} />
           </div>
           <div className="input-box">
             <label htmlFor="">Write Review</label>
-            <textarea name="" id="" rows="5" />
+            <textarea
+              name=""
+              id=""
+              rows="5"
+              value={review}
+              onChange={(e) => setReview(e.target.value)}
+            />
           </div>
           <div className="buttons">
-            <button className="btn-secondary">Cancel</button>
-            <button className="btn-primary">Post review</button>
+            <button className="btn-secondary" onClick={cancelReview}>
+              Cancel
+            </button>
+            {!reviewData ? (
+              <button className="btn-primary" onClick={submitReview}>
+                Post review
+              </button>
+            ) : (
+              <button className="btn-primary" onClick={updateReview}>
+                Post review
+              </button>
+            )}
           </div>
         </div>
       </Modal.Body>
@@ -214,12 +286,6 @@ export const ProductReviewModal = ({ order, ...props }) => {
 };
 
 export const InvoiceModal = ({ order, ...props }) => {
-  const [rating, setRating] = useState(0);
-  // Catch Rating value
-  const handleRating = (rate) => {
-    setRating(rate);
-  };
-
   return (
     <Modal
       {...props}
@@ -274,5 +340,50 @@ export const InvoiceModal = ({ order, ...props }) => {
         </div>
       </Modal.Body>
     </Modal>
+  );
+};
+
+// product details card
+const ProductDetails = ({
+  product,
+  setShowReviewModal,
+  setReviewingProductId,
+  order,
+}) => {
+  console.log(order,'order')
+  const navigate = useNavigate();
+
+  return (
+    <div className="art-details" key={product.productDetail.id}>
+      <img
+        src={`${domainName}/uploads/${product.productDetail.main_image}`}
+        alt="art"
+        onClick={() => navigate(`/product-info/${product.productDetail.id}`)}
+      />
+      <div className="details">
+        <div className="info">
+          <span>{product.productDetail.title}</span>
+          <span>{product.productDetail.owner}</span>
+          <span>Categories : {product.productDetail.category__title}</span>
+          <span>Quantity : {product.quantity}</span>
+          <span>₹{product.productDetail.price.toLocaleString("en-IN")}</span>
+        </div>
+        <div className="buttons">
+          <button className="btn-primary button">Buy it again</button>
+
+          {order?.status === "Completed" && (
+            <button
+              className="btn-secondary button"
+              onClick={() => {
+                setReviewingProductId(product.productDetail.id);
+                setShowReviewModal(true);
+              }}
+            >
+              Write product review
+            </button>
+          )}
+        </div>
+      </div>
+    </div>
   );
 };

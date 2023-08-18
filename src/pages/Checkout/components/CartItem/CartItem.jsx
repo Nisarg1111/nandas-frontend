@@ -85,6 +85,9 @@ export const CartItem = ({
 
   // increase item quantity
   const increment = () => {
+    if (!product.product_details.current_stock > 0) {
+      return;
+    }
     const data = {
       productId: product.product_details.product_id,
       quantity: currProduct.quantity,

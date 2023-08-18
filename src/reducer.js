@@ -36,7 +36,15 @@ function reducer(state, action) {
         if (item.product_details.product_id === action.data) {
           let quantity = item.quantity + 1;
           let subtotal = item?.product_details?.price * quantity;
-          return { ...item, quantity: quantity, sub_total: subtotal };
+          return {
+            ...item,
+            quantity: quantity,
+            sub_total: subtotal,
+            product_details: {
+              ...item.product_details,
+              current_stock: item.product_details.current_stock - 1,
+            },
+          };
         } else {
           return item;
         }
@@ -51,7 +59,15 @@ function reducer(state, action) {
             quantity = 1;
           }
           let subtotal = item?.product_details?.price * quantity;
-          return { ...item, quantity: quantity, sub_total: subtotal };
+          return {
+            ...item,
+            quantity: quantity,
+            sub_total: subtotal,
+            product_details: {
+              ...item.product_details,
+              current_stock: item.product_details.current_stock + 1,
+            },
+          };
         } else {
           return item;
         }
@@ -61,7 +77,7 @@ function reducer(state, action) {
     case "SET_CART_TOTAL":
       let total = state.userCart.reduce((initialVal, currElem) => {
         let { sub_total } = currElem;
-        return initialVal = initialVal + sub_total;
+        return (initialVal = initialVal + sub_total);
       }, 0);
       return {
         ...state,

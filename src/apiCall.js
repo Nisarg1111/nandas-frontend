@@ -206,3 +206,27 @@ export const changeNotificationStatus = (data) => {
     data,
   });
 };
+
+// get all reviews
+export const getReviews = (productId) => {
+  console.log(productId, "productId");
+  return axios.get(`${domainName}${api.getReviews}${productId}`);
+};
+
+// add review
+export const addReview = (data) => {
+  return request({
+    url: `${domainName}${api.addReview}`,
+    method: "post",
+    data,
+  });
+};
+
+// edit review
+export const editReview = (data) => {
+  return request({
+    url: `${domainName}${api.editReview}`,
+    method: "put",
+    data,
+  });
+};
