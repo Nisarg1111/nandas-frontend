@@ -7,8 +7,10 @@ import { googleLogin, login } from "../../apiCall";
 import { useStateValue } from "../../StateProvider";
 import { toast } from "react-hot-toast";
 import { useGoogleLogin } from "@react-oauth/google";
+import { useState } from "react";
 
 export const Login = () => {
+  const [rememberMe, setRememberMe] = useState(false);
   const {
     register,
     handleSubmit,
@@ -26,11 +28,14 @@ export const Login = () => {
   const handleFormSubmit = async (values) => {
     try {
       const response = await login(values);
-      console.log(response, "login response");
       if (response.data?.access_token) {
         dispatch({ type: "SET_LOGIN_STATUS", status: true });
-        sessionStorage.setItem("token", response.data.access_token);
-        sessionStorage.setItem("refresh_token", response.data.refresh_token);
+        if (rememberMe) {
+          localStorage.setItem("token", response.data.access_token);
+        } else {
+          sessionStorage.setItem("token", response.data.access_token);
+        }
+        // sessionStorage.setItem("refresh_token", response.data.refresh_token);
         sessionStorage.setItem(
           "user_details",
           JSON.stringify(response.data.value)
@@ -75,6 +80,14 @@ export const Login = () => {
       toast.error("Something went wrong");
     }
   };
+
+    // set remember me option
+    const setRememberMeOption = (e) => {
+      if (e.target.checked) {
+        return setRememberMe(true);
+      }
+      setRememberMe(false);
+    };
   return (
     <div className="login-container">
       <div className="login-section" data-aos="fade-right">
@@ -118,7 +131,8 @@ export const Login = () => {
             </div>
             <div className="forgot-pw-box">
               <div className="remember-me">
-                <input type="checkbox" />
+                <input type="checkbox" onChange={setRememberMeOption}
+                    checked={rememberMe}/>
                 <p>Remember me</p>
               </div>
               <span>Forgot Password?</span>
