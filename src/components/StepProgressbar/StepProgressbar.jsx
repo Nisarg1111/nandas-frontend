@@ -23,7 +23,7 @@ function StepProgressbar({ orderStatus }) {
     <div className="main-pb">
       <div className="row d-flex justify-content-center">
         <div className="col-12">
-          {orderStatus !== "Canceled" && orderStatus !== "Returned" ? (
+          {orderStatus !== "Canceled" ? (
             <ul id="progressbar" className="text-center">
               <li
                 className={
@@ -53,32 +53,51 @@ function StepProgressbar({ orderStatus }) {
                 }
               >
                 <span className="below-txt">
-                  {orderStatus === "Out For Delivery" ||
-                  orderStatus === "Arriving Today"
+                  {orderStatus === "Returned"
+                    ? "Completed"
+                    : orderStatus === "Out For Delivery" ||
+                      orderStatus === "Arriving Today"
                     ? orderStatus
                     : "Out For Delivery"}
                 </span>
                 <div className="below-txt date">April 5th 2023, 5:00 PM</div>
               </li>
-              <li
-                className={
-                  progressStep > 4 || progressStep === 4
-                    ? "active step0"
-                    : " step0"
-                }
-              >
-                <span className="below-txt">
-                  {orderStatus === "Completed" || orderStatus === "Returned"
-                    ? orderStatus
-                    : "Completed"}
-                </span>
-                <div className="below-txt date">April 5th 2023, 5:00 PM</div>
-              </li>
+              {!orderStatus === "Returned" ? (
+                <li
+                  className={
+                    progressStep > 4 || progressStep === 4
+                      ? "active step0"
+                      : " step0"
+                  }
+                >
+                  <span className="below-txt">
+                    {/* {orderStatus === " */}
+                    Completed
+                    {/* // " || orderStatus === "Returned"
+                      // ? orderStatus
+                      // : "Completed"} */}
+                  </span>
+                  <div className="below-txt date">April 5th 2023, 5:00 PM</div>
+                </li>
+              ) : (
+                <li
+                  className={
+                    progressStep > 4 || progressStep === 4
+                      ? "active step0 return"
+                      : " step0"
+                  }
+                >
+                  <span className="below-txt">
+                    {orderStatus === "Completed" || orderStatus === "Returned"
+                      ? orderStatus
+                      : "Completed"}
+                  </span>
+                  <div className="below-txt date">April 5th 2023, 5:00 PM</div>
+                </li>
+              )}
             </ul>
           ) : (
-            <h4 className="cancelled-text">
-              Order {orderStatus === "Canceled" ? "cancelled" : "returned"}!
-            </h4>
+            <h4 className="cancelled-text">Order cancelled!</h4>
           )}
         </div>
       </div>

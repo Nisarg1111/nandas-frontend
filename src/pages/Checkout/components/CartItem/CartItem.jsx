@@ -32,6 +32,7 @@ export const CartItem = ({
   // change quantity mutation
   const changeQuantityMutation = useMutation(updateQuantity, {
     onSuccess: (data) => {
+      console.log(data.data,'response')
       if (data.data?.status[0]?.Message === "success") {
         if (currentChange === "+") {
           dispatch({
@@ -85,9 +86,6 @@ export const CartItem = ({
 
   // increase item quantity
   const increment = () => {
-    if (!product.product_details.current_stock > 0) {
-      return;
-    }
     const data = {
       productId: product.product_details.product_id,
       quantity: currProduct.quantity,
@@ -151,7 +149,7 @@ export const CartItem = ({
       </div>
 
       <hr />
-      <div className="art-protection">
+      {/* <div className="art-protection">
         <h3>Protect your Art</h3>
         <h4>₹6900.00</h4>
         <hr />
@@ -166,7 +164,7 @@ export const CartItem = ({
           </span>
         </p>
         <span className="remove">Remove</span>
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -8,7 +8,12 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { addAddress } from "../../../../apiCall";
 import { toast } from "react-hot-toast";
 
-export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress }) => {
+export const Shipping = ({
+  addresses,
+  isLoading,
+  selectAddress,
+  selectedAddress,
+}) => {
   const queryClient = useQueryClient();
   const [openAdd, setOpenAdd] = useState(false);
   const [editStatus, setEditStatus] = useState(false);
@@ -16,6 +21,8 @@ export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress })
   const [state, setState] = useState("");
   const [pincode, setPincode] = useState("");
   const [pincodeErr, setPincodeErr] = useState("");
+  const [cityErr, setCityErr] = useState("");
+  const [stateErr, setStateErr] = useState("");
 
   const {
     register,
@@ -56,9 +63,21 @@ export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress })
 
   // add address
   const handleFormSubmit = (values) => {
-    values = { ...values, city: city, state: state, pin_code: pincode };
-    console.log(values);
-    addAddressMutation.mutate(values);
+    if (!pincode || !city || !state) {
+      console.log("hello");
+      if (!pincode) {
+        setPincodeErr("Pincode is required");
+      }
+      if (!state) {
+        setStateErr("State is required");
+      }
+      if (!city) {
+        setCityErr("City is required");
+      }
+    } else {
+      values = { ...values, city: city, state: state, pin_code: pincode };
+      addAddressMutation.mutate(values);
+    }
   };
 
   const checkPincode = async (e) => {
@@ -82,6 +101,8 @@ export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress })
           setCity(response.data[0].PostOffice[0].Name);
           setState(response.data[0].PostOffice[0].State);
           setPincodeErr("");
+          setCityErr("");
+          setStateErr("");
         } else {
           setCity("");
           setState("");
@@ -91,19 +112,43 @@ export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress })
     }
   };
 
-  const checkRequiredFields = () => {
-    if (city === "") {
-      setPincodeErr("Pincode is required");
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+    if (!e.target.value.length) {
+      return setCityErr("City is required");
     }
+    setCityErr("");
+  };
+
+  const handleStateChange = (e) => {
+    setState(e.target.value);
+    if (!e.target.value.length) {
+      return setStateErr("State is required");
+    }
+    setStateErr("");
   };
 
   const cancelAddAddress = () => {
     reset();
     setPincodeErr("");
+    setStateErr("");
+    setCityErr("");
     setPincode("");
     setState("");
     setCity("");
     setOpenAdd(false);
+  };
+
+  const checkRequiredFields = () => {
+    if (!pincode) {
+      setPincodeErr("Pincode is required");
+    }
+    if (!state) {
+      setStateErr("State is required");
+    }
+    if (!city) {
+      setCityErr("City is required");
+    }
   };
   return (
     <div data-aos="fade-up" className="shipping">
@@ -171,11 +216,17 @@ export const Shipping = ({ addresses, isLoading,selectAddress,selectedAddress })
                 </div>
                 <div className="input-box">
                   <label htmlFor="">City</label>
-                  <input type="text" disabled defaultValue={city} />
+                  <input type="text" value={city} onChange={handleCityChange} />
+                  <small className="error">{cityErr}</small>
                 </div>
                 <div className="input-box">
                   <label htmlFor="">State</label>
-                  <input type="text" disabled defaultValue={state} />
+                  <input
+                    type="text"
+                    value={state}
+                    onChange={handleStateChange}
+                  />
+                  <small className="error">{stateErr}</small>
                 </div>
                 <div className="input-box">
                   <label htmlFor="">Address</label>

@@ -1,8 +1,8 @@
 export const googleClientId =
   "563532083340-vq8mqk2q7vje68eiooqphep2v6uss6ch.apps.googleusercontent.com";
 // export const domainName = "http://127.0.0.1:8000";
-export const domainName = "http://142.93.223.117:7700";
-// export const domainName = "https://nandas.onrender.com";
+// export const domainName = "http://142.93.223.117:7700";
+export const domainName = "https://nandas.onrender.com";
 
 export const api = {
   signup: "/api/signup",

@@ -21,6 +21,8 @@ export const Address = ({
   const [state, setState] = useState(address.state);
   const [pincode, setPincode] = useState(address.pin_code);
   const [pincodeErr, setPincodeErr] = useState("");
+  const [cityErr, setCityErr] = useState("");
+  const [stateErr, setStateErr] = useState("");
   const queryClient = useQueryClient();
   const { pathname } = useLocation();
 
@@ -47,31 +49,43 @@ export const Address = ({
 
   // update address
   const doUpdate = async (values) => {
-    values = {
-      ...values,
-      state: state,
-      city: city,
-      pin_code: pincode.toString(),
-      phone_number: values.phone_number.toString(),
-      address_id: address.id,
-    };
-    try {
-      const response = await updateAddress(values);
-      console.log(response, "response");
-      if (response.data?.status[0].Error === "False") {
-        toast.success("Address updated successfully");
-        queryClient.invalidateQueries(["addresses"]);
-        setEditOpen(false);
-        setEditStatus(false);
-      } else {
-        toast.error(response.data?.status[0].ResponseMessage);
+    if (!pincode || !city || !state) {
+      if (!pincode) {
+        setPincodeErr("Pincode is required");
       }
-    } catch (err) {
-      console.log(err);
-      if (err.message) {
-        toast.error(err.message);
-      } else {
-        toast.error("Something went wrong");
+      if (!state) {
+        setStateErr("State is required");
+      }
+      if (!city) {
+        setCityErr("City is required");
+      }
+    } else {
+      values = {
+        ...values,
+        state: state,
+        city: city,
+        pin_code: pincode.toString(),
+        phone_number: values.phone_number.toString(),
+        address_id: address.id,
+      };
+      try {
+        const response = await updateAddress(values);
+        console.log(response, "response");
+        if (response.data?.status[0].Error === "False") {
+          toast.success("Address updated successfully");
+          queryClient.invalidateQueries(["addresses"]);
+          setEditOpen(false);
+          setEditStatus(false);
+        } else {
+          toast.error(response.data?.status[0].ResponseMessage);
+        }
+      } catch (err) {
+        console.log(err);
+        if (err.message) {
+          toast.error(err.message);
+        } else {
+          toast.error("Something went wrong");
+        }
       }
     }
   };
@@ -83,6 +97,8 @@ export const Address = ({
     setState(address.state);
     setPincode(address.pin_code);
     setPincodeErr("");
+    setStateErr("");
+    setCityErr("");
     setEditStatus(false);
     setEditOpen(false);
   };
@@ -128,6 +144,8 @@ export const Address = ({
           setCity(response.data[0].PostOffice[0].Name);
           setState(response.data[0].PostOffice[0].State);
           setPincodeErr("");
+          setCityErr("");
+          setStateErr("");
         } else {
           setCity("");
           setState("");
@@ -137,9 +155,31 @@ export const Address = ({
     }
   };
 
+  const handleCityChange = (e) => {
+    setCity(e.target.value);
+    if (!e.target.value.length) {
+      return setCityErr("City is required");
+    }
+    setCityErr("");
+  };
+
+  const handleStateChange = (e) => {
+    setState(e.target.value);
+    if (!e.target.value.length) {
+      return setStateErr("State is required");
+    }
+    setStateErr("");
+  };
+
   const checkRequiredFields = () => {
-    if (city === "") {
+    if (!pincode) {
       setPincodeErr("Pincode is required");
+    }
+    if (!state) {
+      setStateErr("State is required");
+    }
+    if (!city) {
+      setCityErr("City is required");
     }
   };
   return (
@@ -208,11 +248,17 @@ export const Address = ({
                 </div>
                 <div className="input-box">
                   <label htmlFor="">City</label>
-                  <input type="text" disabled value={city} />
+                  <input type="text" value={city} onChange={handleCityChange} />
+                  <small className="error">{cityErr}</small>
                 </div>
                 <div className="input-box">
                   <label htmlFor="">State</label>
-                  <input type="text" disabled value={state} />
+                  <input
+                    type="text"
+                    value={state}
+                    onChange={handleStateChange}
+                  />
+                  <small className="error">{stateErr}</small>
                 </div>
 
                 <div className="input-box">
@@ -232,11 +278,7 @@ export const Address = ({
                 </div>
               </div>
               <div className="buttons">
-                <button
-                  type="submit"
-                  className="btn-primary"
-                  onClick={checkRequiredFields}
-                >
+                <button type="submit" className="btn-primary" onClick={checkRequiredFields}>
                   save
                 </button>
                 <button className="btn-secondary" onClick={cancelAddAddress}>

@@ -127,7 +127,7 @@ export const Checkout = () => {
                     />
                   );
                 })}
-              <hr />
+              {/* <hr /> */}
               <div className="flex-between">
                 <span>Sub Total</span>
                 <span>₹{cartTotal}</span>

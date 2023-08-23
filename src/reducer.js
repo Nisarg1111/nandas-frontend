@@ -33,6 +33,7 @@ function reducer(state, action) {
 
     case "INCREMENT_CART_QUANTITY":
       const updatedCart = state.userCart.map((item) => {
+        console.log(item.product_details,'item.product_details')
         if (item.product_details.product_id === action.data) {
           let quantity = item.quantity + 1;
           let subtotal = item?.product_details?.price * quantity;

@@ -143,10 +143,12 @@ export const Dashboard = () => {
   );
 
   // get all orders
-  const { isLoading } = useQuery(["all-orders"], getOrders, {
+  const { isLoading: ordersLoading } = useQuery(["all-orders"], getOrders, {
     onSuccess: (data) => {
       if (data.data?.status[0].Error === "False") {
-        setOrders(data.data.value.sort((order1, order2) => order2.id - order1.id));
+        setOrders(
+          data.data.value.sort((order1, order2) => order2.id - order1.id)
+        );
       }
     },
     onError: (err) => console.log(err, "orders error response"),
@@ -349,17 +351,28 @@ export const Dashboard = () => {
         )}
         {page === "my-orders" && (
           <div className="my-orders" data-aos="fade-up">
-            {orders.length > 0 &&
-              orders.map((order) => (
-                <OrderDetails
-                  order={order}
-                  setShowCancelConfirm={setShowCancelConfirm}
-                  setCancellingOrderId={setCancellingOrderId}
-                  setShowReturnConfirm={setShowReturnConfirm}
-                  setReturningOrderId={setReturningOrderId}
-                  key={order.id}
-                />
-              ))}
+            {orders.length > 0
+              ? orders.map((order) => (
+                  <OrderDetails
+                    order={order}
+                    setShowCancelConfirm={setShowCancelConfirm}
+                    setCancellingOrderId={setCancellingOrderId}
+                    setShowReturnConfirm={setShowReturnConfirm}
+                    setReturningOrderId={setReturningOrderId}
+                    key={order.id}
+                  />
+                ))
+              : !ordersLoading && (
+                  <div className="empty-orders">
+                    <h3 className="h3">You haven't ordered anything yet!</h3>
+                    <button
+                      className="btn-primary"
+                      onClick={() => navigate("/shop")}
+                    >
+                      Shop
+                    </button>
+                  </div>
+                )}
           </div>
         )}
         {page === "edit-profile" && (

@@ -106,10 +106,20 @@
   #progressbar li.active:after {
     background: $color-primary;
   }
+  #progressbar li.return:before,
+  #progressbar li.return:after {
+    background: #d40000;
+  }
 
   #progressbar li.active:before {
     font-family: FontAwesome;
     content: "\2713";
+    color: #fff;
+  }
+
+  #progressbar li.return:before {
+    font-family: FontAwesome;
+    content: "";
     color: #fff;
   }
 
