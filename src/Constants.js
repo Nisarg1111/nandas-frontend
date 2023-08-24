@@ -1,5 +1,5 @@
 export const googleClientId =
-  "563532083340-vq8mqk2q7vje68eiooqphep2v6uss6ch.apps.googleusercontent.com";
+  "1033106969051-fak77bk40o0r5vmipov8v0qcdb75r2a0.apps.googleusercontent.com";
 // export const domainName = "http://127.0.0.1:8000";
 // export const domainName = "http://142.93.223.117:7700";
 export const domainName = "https://nandas.onrender.com";

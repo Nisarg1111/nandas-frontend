@@ -61,6 +61,7 @@ export const Dashboard = () => {
   const [notificationStatuses, setNotificationStatuses] = useState(null);
   const [emailNotificationStatus, setEmailNotificationStatus] = useState(false);
   const [chatNotificationStatus, setChatNotificationStatus] = useState(false);
+  const [enableEdit, setEnableEdit] = useState(false);
 
   useEffect(() => {
     setPage(params.page);
@@ -71,6 +72,7 @@ export const Dashboard = () => {
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -80,15 +82,27 @@ export const Dashboard = () => {
     },
   });
 
+  // cancel edit profile
+  const cancelEditProfile = () => {
+    setValue("name", user?.name || "");
+    setValue("email", user?.email || "");
+    setValue("phoneNumber", user?.phone_number || "");
+    setEnableEdit(false);
+  };
+
   // update user details
   const handleFormUpdate = async (values) => {
     try {
       const response = await updateUser(values);
       if (response.data?.status[0].Message === "success") {
         queryClient.invalidateQueries("user-data");
+        toast.success(response.data?.status[0].ResponseMessage);
+        setEnableEdit(false)
+      } else {
+        toast(response.data?.status[0].ResponseMessage, { icon: "⚠️" });
       }
-      toast.success(response.data?.status[0].ResponseMessage);
     } catch (err) {
+      toast.error(err.message);
       console.log(err, "error");
     }
   };
@@ -110,10 +124,12 @@ export const Dashboard = () => {
           if (response.data?.status[0].Error === "False") {
             setProfilePic({ url: URL.createObjectURL(file) });
             queryClient.invalidateQueries("user-data");
+            toast.success(response.data?.status[0].Message);
+          } else {
+            toast(response.data?.status[0].ResponseMessage, { icon: "⚠️" });
           }
-          toast.success(response.data?.status[0].Message);
         } catch (err) {
-          console.log(err, "ERROR");
+          toast.error(err.message);
         }
       } else {
         return toast("Select an image file", {
@@ -260,6 +276,11 @@ export const Dashboard = () => {
       toast.error(err.message);
     }
   };
+
+  // enable edit option
+  const enableEditOption = () => {
+    setEnableEdit(true);
+  };
   return (
     <div className="dashboard-container">
       <div className="options" data-aos="fade-right">
@@ -395,12 +416,12 @@ export const Dashboard = () => {
                 onChange={(e) => onImageSelect(e)}
                 hidden
               />
-              {/* <HiMiniPencilSquare className="icon" onClick={()=>imgRef.current.click()}/> */}
             </div>
             <form onSubmit={handleSubmit(handleFormUpdate)}>
               <div className="input-box">
                 <label htmlFor="">Name</label>
                 <input
+                  className={`${!enableEdit && "disabled"}`}
                   type="text"
                   {...register("name", {
                     required: "Name is required",
@@ -409,12 +430,14 @@ export const Dashboard = () => {
                       message: "Special characters are not allowed",
                     },
                   })}
+                  disabled={!enableEdit}
                 />
                 <small className="error">{errors?.name?.message}</small>
               </div>
               <div className="input-box">
                 <label htmlFor="">Email</label>
                 <input
+                  className={`${!enableEdit && "disabled"}`}
                   type="email"
                   {...register("email", {
                     required: "Email is required",
@@ -423,6 +446,7 @@ export const Dashboard = () => {
                       message: "Enter a valid email",
                     },
                   })}
+                  disabled={!enableEdit}
                 />
                 <small className="error">{errors?.email?.message}</small>
               </div>
@@ -434,6 +458,7 @@ export const Dashboard = () => {
               <div className="input-box">
                 <label htmlFor="">Mobile Number</label>
                 <input
+                  className={`${!enableEdit && "disabled"}`}
                   type="tel"
                   {...register("phoneNumber", {
                     required: "Phone number is required",
@@ -442,13 +467,36 @@ export const Dashboard = () => {
                       message: "Enter a valid phone number",
                     },
                   })}
+                  disabled={!enableEdit}
                 />
                 <small className="error">{errors?.phoneNumber?.message}</small>
               </div>
-              <button type="submit" className="btn-primary">
-                Save
-              </button>
+              <div className="buttons">
+                {enableEdit && (
+                  <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={cancelEditProfile}
+                  >
+                    Cancel
+                  </button>
+                )}
+                {enableEdit && (
+                  <button type="submit" className="btn-primary">
+                    Save
+                  </button>
+                )}
+              </div>
             </form>
+            {!enableEdit && (
+              <button
+                type="button"
+                className="btn-primary"
+                onClick={enableEditOption}
+              >
+                Edit
+              </button>
+            )}
           </div>
         )}
         {page === "shipping" && (

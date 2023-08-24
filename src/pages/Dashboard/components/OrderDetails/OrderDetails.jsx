@@ -369,8 +369,6 @@ const ProductDetails = ({
           <span>₹{product.productDetail.price.toLocaleString("en-IN")}</span>
         </div>
         <div className="buttons">
-          <button className="btn-primary button">Buy it again</button>
-
           {order?.status === "Completed" && (
             <button
               className="btn-secondary button"

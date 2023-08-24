@@ -39,6 +39,7 @@ export const ProductDetails = () => {
   const [product, setProduct] = useState({});
   const navigate = useNavigate();
   const [currentSlide, setCurrentSlide] = useState(null);
+  const [buyNowClicked,setBuyNowClicked] = useState(false)
 
   // fetch product info
   const { data, isLoading } = useQuery(
@@ -83,6 +84,10 @@ export const ProductDetails = () => {
       if (data.data?.status[0]?.Error === "False") {
         toast.success(`${product.title} added to cart`);
         // queryClient.invalidateQueries("cart");
+      }
+      if(buyNowClicked){
+        setBuyNowClicked(false)
+        navigate('/checkout')
       }
     },
     onError: (err) => {
@@ -235,8 +240,8 @@ export const ProductDetails = () => {
                 <button
                   className="btn-primary"
                   onClick={() => {
+                    setBuyNowClicked(true)
                     addProductToCart(product.id);
-                    navigate("/checkout");
                   }}
                 >
                   buy now

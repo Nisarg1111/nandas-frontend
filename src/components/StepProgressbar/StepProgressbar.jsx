@@ -62,39 +62,38 @@ function StepProgressbar({ orderStatus }) {
                 </span>
                 <div className="below-txt date">April 5th 2023, 5:00 PM</div>
               </li>
-              {!orderStatus === "Returned" ? (
-                <li
-                  className={
-                    progressStep > 4 || progressStep === 4
-                      ? "active step0"
-                      : " step0"
-                  }
-                >
-                  <span className="below-txt">
-                    {/* {orderStatus === " */}
-                    Completed
-                    {/* // " || orderStatus === "Returned"
-                      // ? orderStatus
-                      // : "Completed"} */}
-                  </span>
-                  <div className="below-txt date">April 5th 2023, 5:00 PM</div>
-                </li>
-              ) : (
-                <li
-                  className={
-                    progressStep > 4 || progressStep === 4
-                      ? "active step0 return"
-                      : " step0"
-                  }
-                >
-                  <span className="below-txt">
-                    {orderStatus === "Completed" || orderStatus === "Returned"
-                      ? orderStatus
-                      : "Completed"}
-                  </span>
-                  <div className="below-txt date">April 5th 2023, 5:00 PM</div>
-                </li>
-              )}
+              {/* {!orderStatus === "Returned" ? ( */}
+              <li
+                className={`${
+                  progressStep > 4 || progressStep === 4
+                    ? "active step0"
+                    : " step0"
+                }
+                      ${orderStatus === "Returned" && "return"}`}
+              >
+                <span className="below-txt">
+                  {orderStatus === "Completed" || orderStatus === "Returned"
+                    ? orderStatus
+                    : "Completed"}
+                </span>
+                <div className="below-txt date">April 5th 2023, 5:00 PM</div>
+              </li>
+              {/* // ) : (
+              //   <li
+              //     className={
+              //       progressStep > 4 || progressStep === 4
+              //         ? "active step0 return"
+              //         : " step0"
+              //     }
+              //   >
+              //     <span className="below-txt">
+              //       {orderStatus === "Completed" || orderStatus === "Returned"
+              //         ? orderStatus
+              //         : "Completed"}
+              //     </span>
+              //     <div className="below-txt date">April 5th 2023, 5:00 PM</div>
+              //   </li>
+              // )} */}
             </ul>
           ) : (
             <h4 className="cancelled-text">Order cancelled!</h4>

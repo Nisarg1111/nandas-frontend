@@ -19,8 +19,10 @@ import { LuLayoutDashboard, LuSettings } from "react-icons/lu";
 import { FaRegCalendarCheck, FaUserEdit } from "react-icons/fa";
 import { LiaHeart } from "react-icons/lia";
 import { MdOutlineLocalShipping } from "react-icons/md";
-import { fetchUser, getFavorites } from "../../apiCall";
+import { fetchAllProducts, fetchUser, getFavorites } from "../../apiCall";
 import { domainName } from "../../Constants";
+import { ReactSearchAutocomplete } from "react-search-autocomplete";
+import SearchResultItem from "./components/SearchResultItem";
 
 const menuOptions = [
   { title: "shop", url: "/shop" },
@@ -51,6 +53,7 @@ export const Navbar = () => {
   const navigate = useNavigate();
   const userDetails = JSON.parse(sessionStorage.getItem("user_details"));
   const userEmail = userDetails?.email.split("@")[0];
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -69,6 +72,32 @@ export const Navbar = () => {
     backgroundColor: pathname === "/" && "#fffbf6",
     gridTemplateColumns: pathname === "/" ? "1fr 1fr" : undefined,
   };
+
+  // get all products
+  useQuery(
+    ["products-to-search"],
+    fetchAllProducts,
+    {
+      onSuccess: (data) => {
+        setProducts(
+          data.data.value.map((product) => {
+            const item = {
+              id: product.id,
+              name: product.title,
+              price: product.price,
+              image: product.main_image,
+            };
+            return item;
+          })
+        );
+      },
+    }
+  );
+
+  // handle select on search result item
+  const handleOnSelect  =(item)=>{
+    navigate(`/product-info/${item.id}`)
+  }
 
   return (
     <div className="navbar-main" style={customStyles}>
@@ -114,12 +143,21 @@ export const Navbar = () => {
           <img src={Logo} alt="logo" className="logo-img" />
         </Link>
         {pathname !== "/" && (
-          <>
-            <div className="search-box">
-              <input type="text" placeholder="Search" />
-              <HiOutlineSearch className="icon" />
-            </div>
-          </>
+          // <>
+          //   <div className="search-box">
+          //     <input type="text" placeholder="Search" />
+          //     <HiOutlineSearch className="icon" />
+          //   </div>
+          // </>
+          <ReactSearchAutocomplete
+            items={products}
+            // onSearch={handleOnSearch}
+            // onHover={handleOnHover}
+            onSelect={handleOnSelect}
+            // onFocus={handleOnFocus}
+            // autoFocus
+            formatResult={SearchResultItem}
+          />
         )}
         {userLoggedIn && pathname !== "/" ? (
           <>

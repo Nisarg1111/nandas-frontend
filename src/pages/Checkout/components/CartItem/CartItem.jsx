@@ -32,7 +32,7 @@ export const CartItem = ({
   // change quantity mutation
   const changeQuantityMutation = useMutation(updateQuantity, {
     onSuccess: (data) => {
-      console.log(data.data,'response')
+      console.log(data.data, "response");
       if (data.data?.status[0]?.Message === "success") {
         if (currentChange === "+") {
           dispatch({
@@ -114,7 +114,7 @@ export const CartItem = ({
         <div className="info">
           <div className="grid">
             <div className="">
-              <span>{product.product_details.title}</span>
+              <span className="product-title">{product.product_details.title}</span>
               <p>{product.product_details.category}</p>
             </div>
             <div>
@@ -135,8 +135,11 @@ export const CartItem = ({
                 />
               </div>
             </div>
-            <div>
-              <span>₹{currProduct.sub_total}</span>
+            <div style={{ position: "relative", top: "0.5rem" }}>
+              <span className="product-price">
+                ₹{product.product_details.price} X {currProduct.quantity} = ₹
+                {currProduct.sub_total}
+              </span>
               {product.product_details.emi && (
                 <p>₹{product.product_details.emi}/month with EMI</p>
               )}
