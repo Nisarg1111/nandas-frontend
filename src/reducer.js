@@ -8,6 +8,7 @@ export const initialState = {
   cartTotal: "",
   userAddresses: [],
   favorites: [],
+  isLoading: false,
 };
 
 function reducer(state, action) {
@@ -17,6 +18,12 @@ function reducer(state, action) {
       return {
         ...state,
         userLoggedIn: action.status,
+      };
+
+    case "SET_LOADING":
+      return {
+        ...state,
+        isLoading: action.status,
       };
 
     case "PROFILE_OPTIONS_VIEW":
@@ -33,7 +40,7 @@ function reducer(state, action) {
 
     case "INCREMENT_CART_QUANTITY":
       const updatedCart = state.userCart.map((item) => {
-        console.log(item.product_details,'item.product_details')
+        console.log(item.product_details, "item.product_details");
         if (item.product_details.product_id === action.data) {
           let quantity = item.quantity + 1;
           let subtotal = item?.product_details?.price * quantity;

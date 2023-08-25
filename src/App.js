@@ -26,6 +26,7 @@ import { useQuery } from "@tanstack/react-query";
 import { fetchUser, getFavorites } from "./apiCall";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import { googleClientId } from "./Constants";
+import { LoadingSpinner } from "./components/LoadingSpinner";
 
 export const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -36,7 +37,7 @@ export const ScrollToTop = () => {
 };
 
 function App() {
-  const [{ showProfileOptions }, dispatch] = useStateValue();
+  const [{ showProfileOptions, isLoading }, dispatch] = useStateValue();
   AOS.init({
     once: true,
     delay: 400,
@@ -79,6 +80,7 @@ function App() {
         <BrowserRouter>
           <Toaster position="top-center" reverseOrder={false} />
           {showProfileOptions && <ProfileOptions />}
+          {isLoading && <LoadingSpinner />}
           <ScrollToTop />
           <Routes>
             <Route

@@ -26,6 +26,7 @@ export const Login = () => {
   const [, dispatch] = useStateValue();
 
   const handleFormSubmit = async (values) => {
+    dispatch({ type: "SET_LOADING", status: true });
     try {
       const response = await login(values);
       if (response.data?.access_token) {
@@ -49,6 +50,7 @@ export const Login = () => {
       // toast.error("Something went wrong");
       toast.error(err.message);
     }
+    dispatch({ type: "SET_LOADING", status: false });
   };
 
   // google login
@@ -61,6 +63,7 @@ export const Login = () => {
   });
 
   const verifyUser = async (data) => {
+    dispatch({ type: "SET_LOADING", status: true });
     try {
       const response = await googleLogin(data.access_token);
       if (response.data?.access_token) {
@@ -79,6 +82,7 @@ export const Login = () => {
       console.log(err, "error response");
       toast.error("Something went wrong");
     }
+    dispatch({ type: "SET_LOADING", status: false });
   };
 
     // set remember me option

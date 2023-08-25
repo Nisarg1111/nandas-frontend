@@ -26,6 +26,7 @@ export const Signup = () => {
   const [, dispatch] = useStateValue();
 
   const handleFormSubmit = async (values) => {
+    dispatch({ type: "SET_LOADING", status: true });
     values = { ...values, user_type: "normal" };
     try {
       const response = await signup(values);
@@ -44,6 +45,7 @@ export const Signup = () => {
     } catch (err) {
       toast.error("Something went wrong");
     }
+    dispatch({ type: "SET_LOADING", status: false });
   };
 
   const emailAvailability = () => {
@@ -65,6 +67,7 @@ export const Signup = () => {
   });
 
   const verifyUser = async (data) => {
+    dispatch({ type: "SET_LOADING", status: true });
     try {
       const response = await googleLogin(data.access_token);
       if (response.data?.access_token) {
@@ -83,6 +86,7 @@ export const Signup = () => {
       console.log(err, "error response");
       toast.error("Something went wrong");
     }
+    dispatch({ type: "SET_LOADING", status: false });
   };
   return (
     <div className="signup-container">

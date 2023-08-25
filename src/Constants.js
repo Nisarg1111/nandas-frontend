@@ -37,4 +37,5 @@ export const api = {
   getReviews: "/api/get-all-reviews/",
   addReview: "/api/add-review",
   editReview: "/api/edit-review",
+  contactUs: "/api/contact-us",
 };

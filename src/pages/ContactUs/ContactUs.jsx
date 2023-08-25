@@ -1,8 +1,12 @@
 import "./ContactUs.scss";
 import Img from "../../assets/images/contact-us-img.png";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { contact } from "../../apiCall";
+import { useStateValue } from "../../StateProvider";
 
 export const ContactUs = () => {
+  const [, dispatch] = useStateValue();
   const {
     register,
     handleSubmit,
@@ -12,16 +16,27 @@ export const ContactUs = () => {
     defaultValues: {
       name: "",
       email: "",
-      phoneNumber: "",
+      phone_number: "",
       message: "",
     },
   });
 
   // handle form submit
-  const onSubmit = (values)=>{
-    console.log(values)
-    reset()
-  }
+  const onSubmit = async (values) => {
+    dispatch({ type: "SET_LOADING", status: true });
+    try {
+      const response = await contact(values);
+      if (response.data.status[0].Error === "False") {
+        toast.success("Form submitted successfully");
+        reset();
+      } else {
+        toast(response.data.status[0].ResponseMessage, { icon: "⚠️" });
+      }
+    } catch (err) {
+      toast.error(err.message);
+    }
+    dispatch({ type: "SET_LOADING", status: false });
+  };
   return (
     <div className="main-div">
       <div className="left-side" data-aos="fade-right">
@@ -63,7 +78,7 @@ export const ContactUs = () => {
             <input
               type="tel"
               placeholder="Enter your mobile number"
-              {...register("phoneNumber", {
+              {...register("phone_number", {
                 required: "This field is required",
                 pattern: {
                   value: /^[6-9]\d{9}$/i,
@@ -71,7 +86,7 @@ export const ContactUs = () => {
                 },
               })}
             />
-            <small className="error">{errors.phoneNumber?.message}</small>
+            <small className="error">{errors.phone_number?.message}</small>
           </div>
           <div className="input-box">
             <label htmlFor="">Message</label>
@@ -90,7 +105,9 @@ export const ContactUs = () => {
             />
             <small className="error">{errors.message?.message}</small>
           </div>
-          <button type="submit" className="btn-primary">Submit</button>
+          <button type="submit" className="btn-primary">
+            Submit
+          </button>
         </form>
         <span>NandaArt@example.com</span>
         <span>(603) 555-0123</span>

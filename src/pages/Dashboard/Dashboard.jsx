@@ -58,7 +58,6 @@ export const Dashboard = () => {
   const [showReturnConfirm, setShowReturnConfirm] = useState(false);
   const [returningOrderId, setReturningOrderId] = useState("");
   const [returningReason, setReturningReason] = useState("");
-  const [notificationStatuses, setNotificationStatuses] = useState(null);
   const [emailNotificationStatus, setEmailNotificationStatus] = useState(false);
   const [chatNotificationStatus, setChatNotificationStatus] = useState(false);
   const [enableEdit, setEnableEdit] = useState(false);
@@ -97,7 +96,7 @@ export const Dashboard = () => {
       if (response.data?.status[0].Message === "success") {
         queryClient.invalidateQueries("user-data");
         toast.success(response.data?.status[0].ResponseMessage);
-        setEnableEdit(false)
+        setEnableEdit(false);
       } else {
         toast(response.data?.status[0].ResponseMessage, { icon: "⚠️" });
       }
@@ -225,7 +224,6 @@ export const Dashboard = () => {
     onSuccess: (response) => {
       if (response.data?.status[0].Message === "success") {
         console.log("NOTIFICATIONS", response.data);
-        setNotificationStatuses(response.data.user);
         setEmailNotificationStatus(response.data.user.email_notification);
         setChatNotificationStatus(response.data.user.chat_notification);
       }
@@ -288,6 +286,9 @@ export const Dashboard = () => {
           <div
             onClick={() => {
               navigate(`/dashboard/${option.url}`);
+              if (option.url !== "edit-profile") {
+                setEnableEdit(false);
+              }
             }}
             className={`option ${page === option.url && "active"}`}
             key={i}

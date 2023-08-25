@@ -230,3 +230,8 @@ export const editReview = (data) => {
     data,
   });
 };
+
+// contact us
+export const contact = (data) => {
+  return axios.post(`${domainName}${api.contactUs}`, data);
+};
