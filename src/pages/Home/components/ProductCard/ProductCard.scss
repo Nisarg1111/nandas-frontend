@@ -1,5 +1,6 @@
 .slider-item {
-  width: 100% !important;
+  width: 100%;
+  max-width: 20rem;
   padding: 0 1rem !important;
   height: 41rem !important;
   @media (max-width:600px){
@@ -7,7 +8,6 @@
   }
   .slider-img {
     object-fit: cover;
-    height: auto !important;
     height: 28rem !important;
     width: 100%;
     @media (max-width:600px){

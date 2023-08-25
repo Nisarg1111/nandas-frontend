@@ -110,6 +110,8 @@
         }
         img {
           width: 5rem;
+          height: 7rem;
+          object-fit: cover;
           cursor: pointer;
           @media (max-width: 768px) {
             width: 8rem;
